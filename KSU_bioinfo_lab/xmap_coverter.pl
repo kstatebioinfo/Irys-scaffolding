@@ -199,7 +199,7 @@ for my $mol_with_contig (keys %scaffolding)
 $length_scaffolded_contigs=($length_scaffolded_contigs/1000000);
 #print REPORT "IrysView alignments suggest Molecules have scaffolded $total_scaffolds contigs.\n";
 #print REPORT "IrysView alignments suggest Molecules the cummulative length of the scaffolded contigs is $length_scaffolded_contigs.\n";
-print REPORT "Total number of scaffolded contigs,Total number of scaffolded created,Total number of unknowns scaffolded to known contigs,Cummulative length of the scaffolded contigs (Mb),minimum percent aligned, minimum confidence,Number of overlaps\n";
+print REPORT "Total number of contigs used in scaffolds,Total number of scaffolds created,Total number of unknowns scaffolded to known contigs,Cummulative length of the scaffolded contigs (Mb),minimum percent aligned, minimum confidence,Number of overlaps\n";
 print REPORT "$contig_count,$total_scaffolds,$total_unknown_scaffolds,$length_scaffolded_contigs,$min_precent_aligned,$min_confidence,";
 open (NEWXMAP, "<$outfile1")or die "can't open $outfile1 for second pass $!";
 open (OVERLAPS, ">$outfile3")or die "can't open $outfile3 $!";
