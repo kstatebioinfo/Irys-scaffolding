@@ -7,7 +7,7 @@ use warnings;
 # USAGE: perl xmap_coverter.pl [r.cmap] [q.cmap] [xmap] [new_xmap] [min confidence] [min % aligned]
 #
 # Script to filter Xmaps by confidence and the precent of the maximum potential length of the alignment and generates summary stats of the more stringent alignement. An xmap with only molecules that scaffold contigs. Script also lists remaining conflicting alignments. These may be candidates for further assembly using the conflicting contigs and paired end reads. 
-# perl /Users/jennifershelton/Desktop/Perl_course_texts/agp_test/xmap_coverter.pl /Users/jennifershelton/Desktop/agp_chicken_1/chicken1_r.cmap /Users/jennifershelton/Desktop/agp_chicken_1/chicken1_q.cmap /Users/jennifershelton/Desktop/agp_chicken_1/chicken1.xmap new.xmap new_xmap.txt 40 0.01
+# perl xmap_coverter.pl chicken1_r.cmap chicken1_q.cmap chicken1.xmap new.xmap 40 0.3
 #  Created by jennifer shelton on 7/10/13.
 #
 
@@ -15,8 +15,6 @@ my $infile1=$ARGV[0];
 my $infile2=$ARGV[1];
 my $infile3=$ARGV[2];
 my $outfile1=$ARGV[3];
-my $outfile2=$ARGV[4];
-my $outfile3=$ARGV[5];
 
 my $outfile_scf="scaff_"."$outfile1";
 my $outfile2="$outfile1"."_report.txt";
@@ -28,8 +26,8 @@ open (XMAP, "<$infile3")or die "can't open $infile3 $!";
 open (NEWXMAP, ">$outfile1")or die "can't open $outfile1 $!";
 
 ############################## QC thresholds ##############################
-my $min_confidence=$ARGV[6];
-my $min_precent_aligned=$ARGV[7];
+my $min_confidence=$ARGV[4];
+my $min_precent_aligned=$ARGV[5];
 my $first_unknown=0; # first unknown contig in cmap
 my $last_unknown=0; # last unknown contig in cmap
 my (@xmap_table); # 2D arrays
