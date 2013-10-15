@@ -190,7 +190,7 @@ for my $mol_with_contig (keys %scaffolding)
     	################# check for unknowns and knowns on scaffold ##########################
     	my $unknown_scaffolds=(scalar( keys %{ $unknowns{$mol_with_contig} } ));
     	my $known_scaffolds=(scalar( keys %{ $knowns{$mol_with_contig} } ));
-    	if ($unknown_scaffolds>1 && $known_scaffolds>1)
+    	if ($unknown_scaffolds>=1 && $known_scaffolds>=1)
     	{
     		++$total_unknown_scaffolds;
     	}
