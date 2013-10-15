@@ -18,7 +18,9 @@ my $outfile1=$ARGV[3];
 my $outfile2=$ARGV[4];
 my $outfile3=$ARGV[5];
 
-my $outfile_scf="scf"."$outfile1";
+my $outfile_scf="scaff_"."$outfile1";
+my $outfile2="$outfile1"."_report.txt";
+my $outfile3="$outfile1"."_overlaps.csv";
 open (SCFXMAP, ">$outfile_scf")or die "can't open $outfile_scf $!";
 open (CMAP_MOL, "<$infile1") or die "can't open $infile1 $!";
 open (CMAP_CONTIGS, "<$infile2")or die "can't open $infile2 $!";
@@ -28,8 +30,8 @@ open (NEWXMAP, ">$outfile1")or die "can't open $outfile1 $!";
 ############################## QC thresholds ##############################
 my $min_confidence=$ARGV[6];
 my $min_precent_aligned=$ARGV[7];
-my $first_unknown=230; # first unknown contig in cmap
-my $last_unknown=317; # last unknown contig in cmap
+my $first_unknown=0; # first unknown contig in cmap
+my $last_unknown=0; # last unknown contig in cmap
 my (@xmap_table); # 2D arrays
 ############################## define variables ##########################################
 my (%mol_length, %contig_length,%scaffolding,%cumulative,%unknowns,%knowns,$contig_count); #hashes
