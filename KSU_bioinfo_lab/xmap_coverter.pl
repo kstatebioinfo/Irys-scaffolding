@@ -39,7 +39,9 @@ my $length_scaffolded_contigs=0;
 my $overlap_count=0;
 my ($contig_start_pos,$contig_end_pos,$percent_aligned);
 my ($main_loop, $nested_loop,$row,$footprint_start,$footprint_end,$key,$value,$overlap);
+
 ################################ Load input files ########################################
+################################ Load molecule cmap ########################################
 while (<CMAP_MOL>) #make array of molecule contigs and a hash of their lengths
 {
     if ($_ !~ /^#/)
@@ -52,6 +54,7 @@ while (<CMAP_MOL>) #make array of molecule contigs and a hash of their lengths
 	}
 }
 
+################################ Load contig cmap ########################################
 while (<CMAP_CONTIGS>) #make array of contigs from the customer and a hash of their lengths
 {
     if ($_ !~ /^#/)
@@ -62,12 +65,13 @@ while (<CMAP_CONTIGS>) #make array of contigs from the customer and a hash of th
         $contig_length{$cmap_contigs[0]} = $cmap_contigs[1]; ## hash with id as key and sequence generated contig length as value
 	}
 }
+################################ Load xmap ########################################
 while (<XMAP>) #make array of contigs from the customer and a hash of their lengths
 {
 	if ($_ =~ /^#/)
 	{
 		print NEWXMAP;
-        print SCFXMAP;
+        	print SCFXMAP;
 	}
     elsif ($_ !~ /^#/)
 	{
@@ -132,21 +136,22 @@ foreach $row (@xmap_table)## calculate sequence generated contig's footprint on 
         if (!$scaffolding{$row->[2]})
         {
             #### keep track of every unique contig that aligns to each molecule ######
-            $scaffolding{$row->[2]}{$row->[1]}=0; ## initialize the hash of uniquely aligned contigs
+            $scaffolding{$row->[2]}->{$row->[1]}=0; ## initialize the hash of uniquely aligned contigs
             #            print "contig $row->[1] aligns with $percent_aligned \n";
             
-                        ############### check for unknowns and knowns on scaffold ################
-                        if (($row->[1]>=$first_unknown) && ($row->[1]<=$last_unknown))
-                        {
-                            $unknowns{$row->[2]}{$row->[1]}=1;
-                        }
-                        elsif (($row->[1]<$first_unknown) || ($row->[1]>$last_unknown))
-                        {
-                            $knowns{$row->[2]}{$row->[1]}=1;
-                        }
+
+        }
+        ############### check for unknowns and knowns on scaffold ################
+        if (($row->[1]>=$first_unknown) && ($row->[1]<=$last_unknown))
+        {
+        	$unknowns{$row->[2]}->{$row->[1]}=1;
+        }
+        elsif (($row->[1]<$first_unknown) || ($row->[1]>$last_unknown))
+        {
+        	$knowns{$row->[2]}->{$row->[1]}=1;
         }
         ############# count scaffolding events per molecule ##########################
-        ++$scaffolding{$row->[2]}{$row->[1]};
+        ++$scaffolding{$row->[2]}->{$row->[1]};
     }
     else
     {
