@@ -4,30 +4,33 @@ use warnings;
 
 #  xmap_coverter.pl
 #  
-# USAGE: perl xmap_coverter.pl [r.cmap] [q.cmap] [xmap] [new_xmap] [min confidence] [min % aligned]
+# USAGE: perl xmap_filter.pl [r.cmap] [q.cmap] [xmap] [new_xmap] [min confidence] [min % aligned] [second min confidence] [second min % aligned]
 #
 # Script to filter Xmaps by confidence and the precent of the maximum potential length of the alignment and generates summary stats of the more stringent alignement. An xmap with only molecules that scaffold contigs. Script also lists remaining conflicting alignments. These may be candidates for further assembly using the conflicting contigs and paired end reads. 
-# perl xmap_coverter.pl chicken1_r.cmap chicken1_q.cmap chicken1.xmap new.xmap 40 0.3
+# perl xmap_filter.pl chicken1_r.cmap chicken1_q.cmap chicken1.xmap new_basename 40 0.3 5 0.8
 #  Created by jennifer shelton on 7/10/13.
 #
 
-my $infile1=$ARGV[0];
-my $infile2=$ARGV[1];
-my $infile3=$ARGV[2];
-my $outfile1=$ARGV[3];
+my $infile_rcmap=$ARGV[0];
+my $infile_qcmap=$ARGV[1];
+my $infile_xmap=$ARGV[2];
+my $outfile_base=$ARGV[3];
 
-my $outfile_scf="scaff_"."$outfile1";
-my $outfile2="$outfile1"."_report.txt";
-my $outfile3="$outfile1"."_overlaps.csv";
+my $outfile_scf="scaff_"."$outfile_base".".xmap";
+my $outfile2="$outfile_base"."_report.txt";
+my $outfile3="$outfile_base"."_overlaps.csv";
+
+open (CMAP_MOL, "<$infile_rcmap") or die "can't open $infile_rcmap $!";
+open (CMAP_CONTIGS, "<$infile_qcmap")or die "can't open $infile_qcmap $!";
+open (XMAP, "<$infile_xmap")or die "can't open $infile_xmap $!";
+open (NEWXMAP, ">$outfile_base".".xmap")or die "can't open $outfile_base.xmap $!";
 open (SCFXMAP, ">$outfile_scf")or die "can't open $outfile_scf $!";
-open (CMAP_MOL, "<$infile1") or die "can't open $infile1 $!";
-open (CMAP_CONTIGS, "<$infile2")or die "can't open $infile2 $!";
-open (XMAP, "<$infile3")or die "can't open $infile3 $!";
-open (NEWXMAP, ">$outfile1")or die "can't open $outfile1 $!";
 
 ############################## QC thresholds ##############################
 my $min_confidence=$ARGV[4];
 my $min_precent_aligned=$ARGV[5];
+my $second_min_confidence=$ARGV[6];
+my $second_min_precent_aligned=$ARGV[7];
 my $first_unknown=0; # first unknown contig in cmap
 my $last_unknown=0; # last unknown contig in cmap
 my (@xmap_table); # 2D arrays
@@ -109,33 +112,33 @@ foreach $row (@xmap_table)## calculate sequence generated contig's footprint on 
     if (($footprint_start<0)&&($footprint_end<=$mol_length{$row->[2]})) #if their is an overhang on one side
     {
         $percent_aligned=($contig_end_pos-$contig_start_pos+1)/($footprint_end);
-        print "contig $row->[1] left overhang";
+        # print "contig $row->[1] left overhang";
     }
     if (($footprint_start>=0)&&($footprint_end>$mol_length{$row->[2]}))#if their is an overhang on one side
     {
         $percent_aligned=($contig_end_pos-$contig_start_pos+1)/($mol_length{$row->[2]}-$footprint_start+1);
-        print "contig $row->[1] right overhang";
+        # print "contig $row->[1] right overhang";
     }
     if (($footprint_start>=0)&&($footprint_end<=$mol_length{$row->[2]})) ## if contig aligns either perfeactly or within the molecule
     {
         $percent_aligned=($contig_end_pos-$contig_start_pos+1)/$contig_length{$row->[1]};
-        print "contig $row->[1] inside";
+        # print "contig $row->[1] inside";
     }
     if (($footprint_start<0)&&($footprint_end>$mol_length{$row->[2]})) ## if contig aligns with overhang on both ends of the molecule
     {
         $percent_aligned=($contig_end_pos-$contig_start_pos+1)/$mol_length{$row->[2]};
-        print "contig $row->[1] outside both sides";
+        # print "contig $row->[1] outside both sides";
     }
     print "contig $row->[1] aligns with $percent_aligned \n";
     
     #################### check to see if alignemnt passes QC filters #################
-    if (($percent_aligned >= $min_precent_aligned)&&($row->[8]>=$min_confidence))
+    if ((($percent_aligned >= $min_precent_aligned)&&($row->[8]>=$min_confidence))||(($percent_aligned >= $second_min_precent_aligned)&&($row->[8]>=$second_min_confidence)))
     {
         $row->[12] = "passed";
         print NEWXMAP "$row->[0]\t$row->[1]\t$row->[2]\t$row->[3]\t$row->[4]\t$row->[5]\t$row->[6]\t$row->[7]\t$row->[8]\t$row->[9]\n";
         if (!$scaffolding{$row->[2]})
         {
-            #### keep track of every unique contig that aligns to each molecule ######
+            #### initialize new molecule to begin counting total number of alignments ######
             $scaffolding{$row->[2]}->{$row->[1]}=0; ## initialize the hash of uniquely aligned contigs
             #            print "contig $row->[1] aligns with $percent_aligned \n";
             
@@ -206,7 +209,7 @@ $length_scaffolded_contigs=($length_scaffolded_contigs/1000000);
 #print REPORT "IrysView alignments suggest Molecules the cummulative length of the scaffolded contigs is $length_scaffolded_contigs.\n";
 print REPORT "Total number of contigs used in scaffolds,Total number of scaffolds created,Total number of unknowns scaffolded to known contigs,Cummulative length of the scaffolded contigs (Mb),minimum percent aligned, minimum confidence,Number of overlaps\n";
 print REPORT "$contig_count,$total_scaffolds,$total_unknown_scaffolds,$length_scaffolded_contigs,$min_precent_aligned,$min_confidence,";
-open (NEWXMAP, "<$outfile1")or die "can't open $outfile1 for second pass $!";
+open (NEWXMAP, "<$outfile_base".".xmap")or die "can't open $outfile_base.xmap $!";
 open (OVERLAPS, ">$outfile3")or die "can't open $outfile3 $!";
 ################################ identify overlaps in filtered outfile #################################
 print OVERLAPS "overlapping sequence-based scaffold 1,overlapping sequence-based scaffold 2,overlap length (bp)\n";
