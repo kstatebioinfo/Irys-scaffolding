@@ -4,9 +4,9 @@ Irys-scaffolding
 scripts to parse IrysView output
 
 KSU bioinfo lab
-___________
+---------------
 
-**number_fasta.pl**	This script converts headers to autoincremented numbers
+**number_fasta.pl**	- This script converts headers to autoincremented numbers
 
 USAGE: perl number_fasta.pl [fasta] 
 
