@@ -7,7 +7,7 @@ use warnings;
 # USAGE: perl xmap_coverter.pl [r.cmap] [q.cmap] [xmap] [new_xmap] [min confidence] [min % aligned]
 #
 # Script to filter Xmaps by confidence and the precent of the maximum potential length of the alignment and to generate summary stats of the more stringent alignement. Script also lists remaining conflicting alignments. These may be candidates for further assembly using the conflicting contigs and paired end reads. 
-# perl /Users/jennifershelton/Desktop/Perl_course_texts/agp_test/xmap_coverter.pl /Users/jennifershelton/Desktop/agp_chicken_1/chicken1_r.cmap /Users/jennifershelton/Desktop/agp_chicken_1/chicken1_q.cmap /Users/jennifershelton/Desktop/agp_chicken_1/chicken1.xmap new.xmap new_xmap.txt 40 0.01
+# perl /Users/jennifershelton/Desktop/Perl_course_texts/scripts/Irys-scaffolding/KSU_bioinfo_lab/xmap_coverter.pl /Users/jennifershelton/Desktop/agp_chicken_1/chicken1_r.cmap /Users/jennifershelton/Desktop/agp_chicken_1/chicken1_q.cmap /Users/jennifershelton/Desktop/agp_chicken_1/chicken1.xmap new.xmap new_xmap.txt 0 0.0
 #  Created by jennifer shelton on 7/10/13.
 #
 
@@ -25,10 +25,13 @@ open (NEWXMAP, ">$outfile1")or die "can't open $outfile1 $!";
 ############################## QC thresholds ##############################
 my $min_confidence=$ARGV[5];
 my $min_precent_aligned=$ARGV[6];
+my $first_unknown=230;
+my $last_unknown=317;
 my (@xmap_table); # 2D arrays
 ############################## define variables ##########################################
-my (%mol_length, %contig_length,%scaffolding,%cumulative); #hashes
+my (%mol_length, %contig_length,%scaffolding,%cumulative,%unknowns,%knowns); #hashes
 my $total_scaffolds=0;
+my $total_unknown_scaffolds=0;
 my $length_scaffolded_contigs=0;
 my ($contig_start_pos,$contig_end_pos,$percent_aligned);
 my ($main_loop, $nested_loop,$row,$footprint_start,$footprint_end,$key,$value,$overlap);
@@ -112,17 +115,29 @@ foreach $row (@xmap_table)## calculate sequence generated contig's footprint on 
         }
         
         
-        #################### check to see if alignemnt passes QC filters ################
+        #################### check to see if alignemnt passes QC filters #################
         if (($percent_aligned >= $min_precent_aligned)&&($row->[8]>=$min_confidence))
         {
         	$row->[12] = "passed";
-			print NEWXMAP "$row->[0]\t$row->[1]\t$row->[2]\t$row->[3]\t$row->[4]\t$row->[5]\t$row->[6]\t$row->[7]\t$row->[8]\t$row->[9]\n";
+# 			print NEWXMAP "$row->[0]\t$row->[1]\t$row->[2]\t$row->[3]\t$row->[4]\t$row->[5]\t$row->[6]\t$row->[7]\t$row->[8]\t$row->[9]\n";
    			if (!$scaffolding{$row->[2]})
    			{
-   				$scaffolding{$row->[2]}{$row->[1]}=0; initialize the hash of uniquely aligned contigs
+   				#### keep track of every unique contig that aligns to each molecule ######
+   				$scaffolding{$row->[2]}{$row->[1]}=0; ## initialize the hash of uniquely aligned contigs
 #    				print "contig $row->[1] aligns with $percent_aligned \n";
+				
+				############### check for unknowns and knowns on scaffold ################
+				if (($row->[1]>=$first_unknown) && ($row->[1]<=$last_unknown))
+				{
+					$unknowns{$row->[2]}{$row->[1]}=1;
+				}
+				elsif (($row->[1]<$first_unknown) || ($row->[1]>$last_unknown))
+				{
+					$knowns{$row->[2]}{$row->[1]}=1;
+				}
    			}
-   			++$scaffolding{$row->[2]}{$row->[1]}; ## keep track of every unique contig that aligns to each molecule
+   			############# count scaffolding events per molecule ##########################
+   			++$scaffolding{$row->[2]}{$row->[1]}; 
    		}
    		else
    		{
@@ -132,67 +147,74 @@ foreach $row (@xmap_table)## calculate sequence generated contig's footprint on 
 close NEWXMAP;
 
 ############################### count scaffolding events #################################
-open (REPORT, ">$outfile2")or die "can't open $outfile2 $!";
+open (REPORT, ">>$outfile2")or die "can't open $outfile2 $!";
 for my $mol_with_contig (keys %scaffolding)
 {
 	my $counted_scaffolds=(scalar( keys %{ $scaffolding{$mol_with_contig} } ));
-	if  ((scalar( keys %{ $scaffolding{$mol_with_contig} } ))>1)
+	if  ($counted_scaffolds>1)
 	{
 # 		print REPORT "IrysView alignments suggest Molecule $mol_with_contig has scaffolded $counted_scaffolds contigs\n";
 		++$total_scaffolds;
 		for my $contig_on_scaffold ( keys %{ $scaffolding{$mol_with_contig} } )
 		{
-			if (!$cumulative{$contig_on_scaffold}) ### sum non-redundant list of scaffolded contig lengths
+			######### sum non-redundant list of scaffolded contig lengths ################
+			if (!$cumulative{$contig_on_scaffold}) 
 			{
 				$length_scaffolded_contigs+=$contig_length{$contig_on_scaffold};
 				$cumulative{$contig_on_scaffold}=1;
-			}
-		}
-		
+			}			 
+		}	
+	}
+	################# check for unknowns and knowns on scaffold ##########################
+	my $unknown_scaffolds=(scalar( keys %{ $unknowns{$mol_with_contig} } ));
+	my $known_scaffolds=(scalar( keys %{ $knowns{$mol_with_contig} } ));
+	if ($unknown_scaffolds>1 && $known_scaffolds>1)
+	{
+		++$total_unknown_scaffolds;
 	}
 	
 }
 $length_scaffolded_contigs=($length_scaffolded_contigs/1000000);
 print REPORT "IrysView alignments suggest Molecules have scaffolded $total_scaffolds contigs.\n";
 print REPORT "IrysView alignments suggest Molecules the cummulative length of the scaffolded contigs is $length_scaffolded_contigs.\n";
-print REPORT "Total number of scaffolded contigs,Cummulative length of the scaffolded contigs (Mb),minimum percent aligned, minimum confidence\n";
-print REPORT "$total_scaffolds,$length_scaffolded_contigs,$min_precent_aligned,$min_confidence\n";
+print REPORT "Total number of scaffolded contigs,Total number of unknowns scaffolded to known contigs,Cummulative length of the scaffolded contigs (Mb),minimum percent aligned, minimum confidence\n";
+print REPORT "$total_scaffolds,$total_unknown_scaffolds,$length_scaffolded_contigs,$min_precent_aligned,$min_confidence\n";
 open (NEWXMAP, "<$outfile1")or die "can't open $outfile1 for second pass $!";
 
 ################################# identify overlaps in filtered outfile #################################
-print REPORT "overlapping sequence-based scaffold 1,overlapping sequence-based scaffold 2,overlap length (bp)\n";
-foreach $main_loop (@xmap_table)#for each sequence-based contig feature in the xmap
-{
-	if ($main_loop->[12] eq "passed")
-	{
-		foreach $nested_loop (@xmap_table) #compare its footprint to every other contig feature's footprint 
-		{
-        	if ($nested_loop->[12] eq "passed")
-        	{
-            if (($main_loop->[2] eq $nested_loop->[2]))#check only for footprints on the same molecule contig
-            {
-        		
-                if ($nested_loop->[10] <= $main_loop->[10] && $main_loop->[10] <= $nested_loop->[11])#run if the sequenced-based contig in the main loop has start coordinates within any the footprints of any other sequenced-based contig
-                {
-                    if ("$main_loop->[1]" ne "$nested_loop->[1]")#don't calculate overlaps of the same sequence-based contig
-                    {
-                        if ($nested_loop->[11] < $main_loop->[11]) #if the end main loop's footprint is before the end of the nested loop footprint use the end of the main loop's footprint
-                        {
-                            $overlap=$nested_loop->[11]-$main_loop->[10]+1;
-#                         	print REPORT "contig $main_loop->[1] overlaps with $nested_loop->[1] . The length of the overlap is $overlap=$nested_loop->[11]-$main_loop->[10] + 1\n";
-                        	print REPORT "$main_loop->[1],$nested_loop->[1],$overlap\n";
-                        }
-                        else # else use the end of the nested loop's footprint
-                        {
-                            $overlap=$main_loop->[11]-$main_loop->[10]+1;
-#                             print REPORT "Contig $main_loop->[1] overlaps with $nested_loop->[1] . The length of the overlap is $overlap=$main_loop->[11]-$main_loop->[10] + 1\n";
-                            print REPORT "$main_loop->[1],$nested_loop->[1],$overlap\n";
-                        }
-                    }
-                }
-            }
-            }
-        }
-    }
-}
+# print REPORT "overlapping sequence-based scaffold 1,overlapping sequence-based scaffold 2,overlap length (bp)\n";
+# foreach $main_loop (@xmap_table)#for each sequence-based contig feature in the xmap
+# {
+# 	if ($main_loop->[12] eq "passed")
+# 	{
+# 		foreach $nested_loop (@xmap_table) #compare its footprint to every other contig feature's footprint 
+# 		{
+#         	if ($nested_loop->[12] eq "passed")
+#         	{
+#             if (($main_loop->[2] eq $nested_loop->[2]))#check only for footprints on the same molecule contig
+#             {
+#         		
+#                 if ($nested_loop->[10] <= $main_loop->[10] && $main_loop->[10] <= $nested_loop->[11])#run if the sequenced-based contig in the main loop has start coordinates within any the footprints of any other sequenced-based contig
+#                 {
+#                     if ("$main_loop->[1]" ne "$nested_loop->[1]")#don't calculate overlaps of the same sequence-based contig
+#                     {
+#                         if ($nested_loop->[11] < $main_loop->[11]) #if the end main loop's footprint is before the end of the nested loop footprint use the end of the main loop's footprint
+#                         {
+#                             $overlap=$nested_loop->[11]-$main_loop->[10]+1;
+# #                         	print REPORT "contig $main_loop->[1] overlaps with $nested_loop->[1] . The length of the overlap is $overlap=$nested_loop->[11]-$main_loop->[10] + 1\n";
+#                         	print REPORT "$main_loop->[1],$nested_loop->[1],$overlap\n";
+#                         }
+#                         else # else use the end of the nested loop's footprint
+#                         {
+#                             $overlap=$main_loop->[11]-$main_loop->[10]+1;
+# #                             print REPORT "Contig $main_loop->[1] overlaps with $nested_loop->[1] . The length of the overlap is $overlap=$main_loop->[11]-$main_loop->[10] + 1\n";
+#                             print REPORT "$main_loop->[1],$nested_loop->[1],$overlap\n";
+#                         }
+#                     }
+#                 }
+#             }
+#             }
+#         }
+#     }
+# }
 close REPORT;
