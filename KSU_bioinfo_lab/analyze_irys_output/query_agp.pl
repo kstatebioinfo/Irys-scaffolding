@@ -20,8 +20,8 @@ close AGP;
 # read map file
 for(@map) {
   unless(/^#/ || /^Chromosome/) {
-    #my($scaffold_name, $query_id, $scaffold_start, $scaffold_stop) = (split)[2,4,6,7];
-    my($scaffold_name, $query_id, $scaffold_start, $scaffold_stop) = (split)[0,1,3,4];
+    my($scaffold_name, $query_id, $scaffold_start, $scaffold_stop) = (split)[2,4,6,7];
+    #my($scaffold_name, $query_id, $scaffold_start, $scaffold_stop) = (split)[0,1,3,4];
     # find in input AGP file
     my @scaffold;
     my($start, $stop);
