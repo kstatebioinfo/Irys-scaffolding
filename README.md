@@ -22,6 +22,8 @@ In the same csv file, high quality but overlaping alignments in a csv file are l
 
 The script also creates a non-redundant (i.e. no scaffold is used twice) super-scaffold from a user-provided scaffold file and a filtered XMAP. If two scaffolds overlap on the superscaffold then a 30 "n" gap is used as a spacer between them. If adjacent scaffolds do not overlap on the super-scaffold than the distance between the begining and end of each scaffold reported in the XMAP is used as the gap length. If a scaffold has two high quality alignments the longest alignment is selected. If both alignments are equally long the alignment with the highest confidence is selected. 
 
+**test with sample datasets**
+
 `git clone https://github.com/kstatebioinfo/Irys-scaffolding`
 
 `cd Irys-scaffolding/KSU_bioinfo_lab/analyze_irys_output/`
