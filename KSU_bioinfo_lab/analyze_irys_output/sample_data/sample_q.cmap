@@ -1,0 +1,17 @@
+# $ cd C:\Users								
+# r1886 $Header: http://svn.bnm.local:81/svn/Informatics/RefAligner/trunk/RefAligner.cpp 1884 2013-09-04 17:33:09Z tanantharaman $								
+# FLAGS: USE_SSE=0 USE_AVX=0 USE_MIC=0 USE_PFLOAT=1 USE_RFLOAT=1 DEBUG=1 VERB=1								
+# CMAP File Version:	0.1							
+# Label Channels:	1							
+# Nickase Recognition Site 1:	CCTCAGC							
+# Number of Consensus Nanomaps:	174							
+#h CMapId	ContigLength	NumSites	SiteID	LabelChannel	Position	StdDev	Coverage	Occurrence
+#f int	float	int	int	int	float	float	int	int
+1	5	332	1	1	6596.3	1	1	1
+2	12	332	2	1	18310.2	1	1	1
+3	4	332	3	1	39839.3	1	1	1
+4	5	332	1	1	6596.3	1	1	1
+5	12	332	2	1	18310.2	1	1	1
+6	4	332	3	1	39839.3	1	1	1
+7	4	332	1	1	6596.3	1	1	1
+8	7	332	2	1	18310.2	1	1	1
