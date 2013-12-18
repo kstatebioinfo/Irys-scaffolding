@@ -6,6 +6,8 @@ scripts to parse IrysView output
 KSU bioinfo lab
 ---------------
 
+SCRIPT
+
 **analyze_irys_output.pl -**
        a package of scripts that analyze IrysView
        output (i.e. XMAPs). The script filters XMAPs by confidence and the
@@ -23,7 +25,8 @@ KSU bioinfo lab
        user would manually select.
 
 
-**DEPENDENCIES**
+DEPENDENCIES
+
        git - see http://git-scm.com/book/ch1-4.html for instructions
        bioperl - see http://www.bioperl.org/wiki/Installing_BioPerl (the scripts will run without BioPerl it is only required only to create a super-scaffold FASTA)
        
