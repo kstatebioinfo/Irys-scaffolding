@@ -57,14 +57,14 @@ print "Making key for original fasta headers...\n";
 my $makekey=`perl make_key.pl $scaffold_fasta`;
 print "$makekey"; # print errors
 print "Making filtered XMAP...\n";
-my $filter=`perl xmap_filter.pl $r_cmap $q_cmap $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${scaffold_fasta}_key`;
+my $filter=`perl xmap_filter.pl $r_cmap $q_cmap $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${output_basename}_key`;
 print "$filter"; # print errors
 $scaffold_fasta =~ /(.*).fa/;
 print "Converting original fasta headers to headers that match bionano output...\n";
 my $out_number=`perl number_fasta.pl $scaffold_fasta`;
 print "$out_number";
 print "Making super-scaffold fasta file with new super-scaffolds. Unused sequences are printed with original fasta headers...\n";
-my $out_x_to_fasta=`perl xmap_to_fasta.pl ${output_basename}_scaffolds.xmap ${1}_numbered_scaffold.fasta ${scaffold_fasta}_key`;
+my $out_x_to_fasta=`perl xmap_to_fasta.pl ${output_basename}_scaffolds.xmap ${1}_numbered_scaffold.fasta ${output_basename}_key`;
 print "$out_x_to_fasta";
 if (-e "${output_basename}_data_summary.csv") {print "${output_basename}_data_summary.csv file Exists$!\n"; exit;}
 ##################################################################################
