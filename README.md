@@ -128,7 +128,7 @@ DESCRIPTION
 
 **Test with sample datasets**
 ```
-git clone https://github.com/kstatebioinfo/Irys-scaffolding
+git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
 
 cd Irys-scaffolding/KSU_bioinfo_lab/analyze_irys_output
 
