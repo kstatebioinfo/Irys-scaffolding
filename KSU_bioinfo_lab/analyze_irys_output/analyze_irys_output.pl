@@ -54,7 +54,7 @@ pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 ##############       call programs and report if files exist    ##################
 ##################################################################################
 print "Making key for original fasta headers...\n";
-my $makekey=`perl make_key.pl $scaffold_fasta`;
+my $makekey=`perl make_key.pl $scaffold_fasta ${output_basename}`;
 print "$makekey"; # print errors
 print "Making filtered XMAP...\n";
 my $filter=`perl xmap_filter.pl $r_cmap $q_cmap $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${output_basename}_key`;
