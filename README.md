@@ -21,6 +21,10 @@ KSU bioinfo lab
        alignment in order to capture these alignments. Resultant XMAPs should
        be examined in IrysView to see that the alignments agree with what the
        user would manually select.
+**DEPENDENCIES**
+       git - see http://git-scm.com/book/ch1-4.html for instructions
+       bioperl - see http://www.bioperl.org/wiki/Installing_BioPerl (the scripts will run without BioPerl it is only required only to create a super-scaffold FASTA)
+       
 
 USAGE
 
