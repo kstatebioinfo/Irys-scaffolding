@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use List::Util qw(min max);
+
 # usage: ./mismatch.pl bionano_query_from_component.agp tcas_chromosome_from_component.agp scfTrib_cast_0002_15_.3.AGP contig.map > contigs_of_interest.txt
 
 # load input files
@@ -11,8 +13,8 @@ my %qry_agp;
 while(<AGP>) {
   if(/\tW\t/) {						# read only the contig rows
     chomp;
-    my($qry_name,@agp_line) = (split)[0,1,2,5];		# from: Query1  1       1125    1       W       tcas_1  1       1125    +
-    push (@{$qry_agp{$qry_name}}, \@agp_line);		# keep: Query1  1       1125    tcas_1
+    my($qry_name,@agp_line) = (split)[0,1,2,5];		# from: Query1	2248	5116	3	W	tcas_2	1	2869	+
+    push (@{$qry_agp{$qry_name}}, \@agp_line);		# keep: Query1	2248	5116	tcas_2
   }
 }
 close AGP;
@@ -50,6 +52,9 @@ while(<MAP>) {
 }
 close MAP;
 
+my %qry_coordinates;
+&get_superscaffold_coordinates_for_query();
+
 # traverse BioNano AGP
 print "Anchor_name\tAnchor_start\tAnchor_stop\tQuery_name\tQuery_start\tQuery_stop\tQuery_orientation\tQueries_in_superscaffold\tContig_name_40\tScaffold_start_40\tScaffold_stop_40\tContig_name_30\tContig_in_alignment_region\tSuperscaffold_name\tSuperscaffold_start\tSuperscaffold_stop\n";
 for my $anchor_name (keys %bn_agp) {
@@ -62,7 +67,7 @@ for my $anchor_name (keys %bn_agp) {
     my $qry_superscaffold_stop = $qry_agp{$qry_name}->[scalar (@{$qry_agp{$qry_name}}) - 1][1];
     if (defined ($first_contig)) {
       my $superscaffold = $tcas_agp{$first_contig}->[0];
-      push(@{$qry_list{$superscaffold}}, [$qry_name, $agp_line_ref->[1], $agp_line_ref->[2], $agp_line_ref->[6], $agp_line_ref->[7], $agp_line_ref->[8], $qry_superscaffold_start, $qry_superscaffold_stop]);
+      push(@{$qry_list{$superscaffold}}, [$qry_name, $agp_line_ref->[1], $agp_line_ref->[2], $agp_line_ref->[6], $agp_line_ref->[7], $agp_line_ref->[8], $qry_coordinates{$qry_name}->[0], $qry_coordinates{$qry_name}->[1]]);
     }
   }
 
@@ -79,5 +84,13 @@ for my $anchor_name (keys %bn_agp) {
         }
       }
     }
+  }
+}
+
+sub get_superscaffold_coordinates_for_query {
+  for my $qry_name (keys %qry_agp) {
+    my $first_contig = $qry_agp{$qry_name}->[0][2];
+    my $last_contig = $qry_agp{$qry_name}->[scalar (@{$qry_agp{$qry_name}}) - 1][2];
+    $qry_coordinates{$qry_name} = [min ($tcas_agp{$first_contig}->[1], $tcas_agp{$last_contig}->[1]), max ($tcas_agp{$first_contig}->[2], $tcas_agp{$last_contig}->[2])];
   }
 }
