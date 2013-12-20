@@ -11,7 +11,7 @@ use List::Util qw(min max);
 # sample input
 # head -n 2 contigs_of_interest.txt
 #Anchor_name	Anchor_start	Anchor_stop	Query_name	Query_start	Query_stop	Query_orientation	Queries_in_superscaffold	Contig_name_40	Scaffold_start_40	Scaffold_stop_40	Contig_name_30	Contig_in_alignment_region	Superscaffold_name	Superscaffold_start	Superscaffold_stop
-#Anchor18	1259315	1709173.1	Query275	2541.7	452667	+	2	tcas_3722	480656	574935	AAJJ01000216		no	ChLG2
+#Anchor18	1259315	1709173.1	Query275	2541.7	452667	+	2	tcas_3722	480656	574935	AAJJ01000216		no	ChLG2 480656  953381
 
 # head -n 8 tcas40/tcas_chromosome_from_component.agp
 ###agp-version   2.0
