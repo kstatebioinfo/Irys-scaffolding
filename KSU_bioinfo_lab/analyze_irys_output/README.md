@@ -1,11 +1,3 @@
-Irys-scaffolding
-================
-
-scripts to parse IrysView output
-
-KSU bioinfo lab
----------------
-
 SCRIPT
 
 **analyze_irys_output.pl -**
@@ -22,7 +14,7 @@ SCRIPT
        but a much higher percent of the maximum potential length of the
        alignment in order to capture these alignments. Resultant XMAPs should
        be examined in IrysView to see that the alignments agree with what the
-       user would manually select.
+       user would manually select. 
 
 
 DEPENDENCIES
@@ -145,5 +137,3 @@ mkdir results
 
 perl analyze_irys_output.pl -r sample_data/sample.r.cmap -q sample_data/sample_q.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn .3 --s_con 6 --s_algn .9
 ```
-
-
