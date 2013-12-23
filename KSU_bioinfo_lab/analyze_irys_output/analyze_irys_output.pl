@@ -50,6 +50,9 @@ GetOptions (
 or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
+## convert percent aligned to decimal ##
+$first_min_per_aligned=$first_min_per_aligned/100;
+$second_min_per_aligned=$second_min_per_aligned/100;
 ##################################################################################
 ##############       call programs and report if files exist    ##################
 ##################################################################################
