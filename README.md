@@ -23,6 +23,8 @@ SCRIPT
        alignment in order to capture these alignments. Resultant XMAPs should
        be examined in IrysView to see that the alignments agree with what the
        user would manually select.
+       
+![Alt text](https://raw.github.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/scaffolding.png)
 
 
 DEPENDENCIES
