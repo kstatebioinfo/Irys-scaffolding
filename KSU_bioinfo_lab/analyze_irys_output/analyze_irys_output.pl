@@ -200,6 +200,6 @@ cd Irys-scaffolding/KSU_bioinfo_lab/analyze_irys_output
 
 mkdir results
 
-perl analyze_irys_output.pl -r sample_data/sample.r.cmap -q sample_data/sample_q.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn .3 --s_con 6 --s_algn .9
+perl analyze_irys_output.pl -r sample_data/sample.r.cmap -q sample_data/sample_q.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
 
 =cut
