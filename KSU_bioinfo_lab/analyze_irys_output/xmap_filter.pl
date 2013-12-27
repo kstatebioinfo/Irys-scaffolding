@@ -45,7 +45,7 @@ my $total_unknown_scaffolds=0;
 my $length_scaffolded_contigs=0;
 my $overlap_count=0;
 my ($contig_start_pos,$contig_end_pos,$percent_aligned);
-my ($main_loop, $nested_loop,$row,$footprint_start,$footprint_end,$key,$value,$overlap);
+my ($footprint_start,$footprint_end,$key,$value,$overlap);
 ################################ Load input files ########################################
 ################################ Load molecule cmap ########################################
 while (<CMAP_MOL>) #make array of molecule contigs and a hash of their lengths
@@ -103,7 +103,7 @@ while (<KEY>)
     }
 }
 ########################## filter xmap rows ##############################################
-foreach $row (@xmap_table)## calculate sequence generated contig's footprint on the molecule contig and add contig footprint to the xmap array
+for my $row (@xmap_table)## calculate sequence generated contig's footprint on the molecule contig and add contig footprint to the xmap array
 {
     ## object begining = 5 xmap
     ## object end = 6 xmap
@@ -205,7 +205,7 @@ foreach $row (@xmap_table)## calculate sequence generated contig's footprint on 
 ############################################################################################
 ############# print only scaffolding and potential misassemblies alignments ################
 print WEAK_POINTS "#Original fasta header,QryContigID,RefcontigID,QryStartPos,QryEndPos,RefStartPos,RefEndPos\n";
-foreach $row (@xmap_table)
+for my $row (@xmap_table)
 {
     my $counted_scaffolds=(scalar( keys %{ $scaffolding{$row->[2]} } ));
 #    print "scaffold: Row $row->[2] = $counted_scaffolds\n";
@@ -254,8 +254,7 @@ for my $mol_with_contig (keys %scaffolding)
 	
 }
 $length_scaffolded_contigs=($length_scaffolded_contigs/1000000);
-
-print REPORT "Total number of contigs used in scaffolds,Total number of scaffolds created,Total number of unknowns scaffolded to known contigs,Cummulative length of the scaffolded contigs (Mb),minimum percent aligned, minimum confidence,second min percent aligned,secong min confidence, Number of overlaps\n";
+print REPORT "Total number of scaffolds used in super-scaffolds,Total number of super-scaffolds created,Total number of unknowns super-scaffolded to known scaffolds,Cummulative length of the super-scaffolded scaffolds (Mb),minimum percent aligned, minimum confidence,second min percent aligned,second min confidence, Number of overlaps\n";
 print REPORT "$contig_count,$total_scaffolds,$total_unknown_scaffolds,$length_scaffolded_contigs,$min_precent_aligned,$min_confidence,$second_min_precent_aligned,$second_min_confidence,";
 
 open (NEWXMAP, "<${outfile_base}_all_filtered".".xmap")or die "can't open ${outfile_base}_all_filtered.xmap !";
@@ -266,11 +265,11 @@ open (OVERLAPS, ">$outfile_overlaps")or die "can't open $outfile_overlaps !";
 ################################ identify overlaps in filtered outfile #################################
 
 print OVERLAPS "Original fasta header sequence-based scaffold 1,overlapping sequence-based scaffold 1,Original fasta header sequence-based scaffold 2,overlapping sequence-based scaffold 2,overlap length (bp)\n";
-foreach $main_loop (@xmap_table) # for each sequence-based contig feature in the xmap
+for my $main_loop (@xmap_table) # for each sequence-based contig feature in the xmap
 {
  	if ($main_loop->[12] eq "passed")
  	{
- 		foreach $nested_loop (@xmap_table) # compare its footprint to every other contig feature's footprint
+ 		for my $nested_loop (@xmap_table) # compare its footprint to every other contig feature's footprint
  		{
          	if ($nested_loop->[12] eq "passed")
          	{
