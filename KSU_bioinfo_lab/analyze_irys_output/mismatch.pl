@@ -35,8 +35,8 @@ my %iv_xmap;
 while(<XMAP>) {
   unless(/^#/) {					# skip comment rows
     chomp;						# #h XmapEntryID  QryContigID     RefcontigID     QryStartPos     QryEndPos       RefStartPos     RefEndPos       Orientation     Confidence      HitEnum
-    my @xmap_line = split (/\s/, $_);			#     1          115               1                 615821.6        511250.5       234980.0        339943.0       -                 6.03          1M1I4M
-    push(@{$iv_xmap{$xmap_line[2]}}, \@xmap_line);
+    my @xmap_line = split (/\s/+, $_);			#     1          115               1                 615821.6        511250.5       234980.0        339943.0       -                 6.03          1M1I4M
+    push(@{$iv_xmap{$xmap_line[3]}}, \@xmap_line);
   }
 }
 close XMAP;
@@ -61,13 +61,13 @@ for my $anchor_name (keys %iv_xmap) {
   my %qry_list;
   # get the list of Tcas4.0 superscaffolds in this anchor
   for my $xmap_line_ref (@{$iv_xmap{$anchor_name}}) {
-    my $qry_name = $xmap_line_ref->[1];
+    my $qry_name = $xmap_line_ref->[2];
     my $first_contig = $qry_agp{$qry_name}->[0][2];
     my $qry_superscaffold_start = $qry_agp{$qry_name}->[0][0];
     my $qry_superscaffold_stop = $qry_agp{$qry_name}->[scalar (@{$qry_agp{$qry_name}}) - 1][1];
     if (defined ($first_contig)) {
       my $superscaffold = $tcas_agp{$first_contig}->[0];
-      push(@{$qry_list{$superscaffold}}, [$qry_name, $xmap_line_ref->[5], $xmap_line_ref->[6], $xmap_line_ref->[3], $xmap_line_ref->[4], $xmap_line_ref->[7], $qry_coordinates{$qry_name}->[0], $qry_coordinates{$qry_name}->[1]]);
+      push(@{$qry_list{$superscaffold}}, [$qry_name, $xmap_line_ref->[6], $xmap_line_ref->[7], $xmap_line_ref->[4], $xmap_line_ref->[5], $xmap_line_ref->[8], $qry_coordinates{$qry_name}->[0], $qry_coordinates{$qry_name}->[1]]);
     }
   }
 
