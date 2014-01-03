@@ -35,7 +35,7 @@ my %iv_xmap;
 while(<XMAP>) {
   unless(/^#/) {					# skip comment rows
     chomp;						# #h XmapEntryID  QryContigID     RefcontigID     QryStartPos     QryEndPos       RefStartPos     RefEndPos       Orientation     Confidence      HitEnum
-    my @xmap_line = split (/\s/+, $_);			#     1          115               1                 615821.6        511250.5       234980.0        339943.0       -                 6.03          1M1I4M
+    my @xmap_line = split (/\s+/, $_);			#     1          115               1                 615821.6        511250.5       234980.0        339943.0       -                 6.03          1M1I4M
     push(@{$iv_xmap{$xmap_line[3]}}, \@xmap_line);
   }
 }
