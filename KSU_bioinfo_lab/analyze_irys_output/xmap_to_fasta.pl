@@ -68,6 +68,7 @@ while (<XMAP>) #make array of contigs from the customer and a hash of their leng
 ########################     clean up xmap    ###############################
 #############################################################################
 my $main_index=0;
+my %alignments; ## list of best alignments ranked by length with ties broken by confidence score
 for my $row (@xmap_table)## calculate sequence generated scaffold's footprint on the molecule contig 
 {
     ## object begining = 5 xmap
@@ -80,7 +81,6 @@ for my $row (@xmap_table)## calculate sequence generated scaffold's footprint on
     ######### find all redundant alignments of a single contig  #################
     #########               and choose the best                 #################
     #############################################################################
-    my %alignments; ## list of best alignments ranked by length with ties broken by confidence score
     if ($alignments{$row->[1]})
     {
         my ($map_id,$length,$confidence)=split /,/,$alignments{$row->[1]};
