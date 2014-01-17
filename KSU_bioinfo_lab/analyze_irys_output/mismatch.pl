@@ -5,7 +5,7 @@ use warnings;
 
 use List::Util qw(min max);
 
-# usage: ./mismatch.pl bionano_query_from_component.agp tcas_chromosome_from_component.agp scfTrib_cast_0002_15_.3.AGP contig.map > contigs_of_interest.txt
+# usage: ./mismatch.pl bionano_query_from_component.agp tcas_chromosome_from_component.agp IrysView.xmap contig.map > contigs_of_interest.txt
 
 # load input files
 open AGP, '<', $ARGV[0] or die "Couldn't open $ARGV[0]: $!";
@@ -30,16 +30,16 @@ while(<AGP>) {
 }
 close AGP;
 
-open AGP, '<', $ARGV[2] or die "Couldn't open $ARGV[2]: $!";
-my %bn_agp;
-while(<AGP>) {
-  if(!/^#/ && /\tW\t/) {				# read only the contig rows
-    chomp;
-    my @agp_line = split;				# e.g., Anchor2 42155.6 854920.3        2       W       Query319        10623.1 826245.8        +
-    push(@{$bn_agp{$agp_line[0]}}, \@agp_line);
+open XMAP, '<', $ARGV[2] or die "Couldn't open $ARGV[2]: $!";
+my %iv_xmap;
+while(<XMAP>) {
+  unless(/^#/) {					# skip comment rows
+    chomp;						# #h XmapEntryID  QryContigID     RefcontigID     QryStartPos     QryEndPos       RefStartPos     RefEndPos       Orientation     Confidence      HitEnum
+    my @xmap_line = split (/\s+/, $_);			#     1          115               1                 615821.6        511250.5       234980.0        339943.0       -                 6.03          1M1I4M
+    push(@{$iv_xmap{$xmap_line[3]}}, \@xmap_line);
   }
 }
-close AGP;
+close XMAP;
 
 open MAP, '<', $ARGV[3] or die "Couldn't open $ARGV[3]: $!";
 my %contig_map;
@@ -55,19 +55,19 @@ close MAP;
 my %qry_coordinates;
 &get_superscaffold_coordinates_for_query();
 
-# traverse BioNano AGP
+# traverse IrysView XMAP
 print "Anchor_name\tAnchor_start\tAnchor_stop\tQuery_name\tQuery_start\tQuery_stop\tQuery_orientation\tQueries_in_superscaffold\tContig_name_40\tScaffold_start_40\tScaffold_stop_40\tContig_name_30\tContig_in_alignment_region\tSuperscaffold_name\tSuperscaffold_start\tSuperscaffold_stop\n";
-for my $anchor_name (keys %bn_agp) {
+for my $anchor_name (keys %iv_xmap) {
   my %qry_list;
   # get the list of Tcas4.0 superscaffolds in this anchor
-  for my $agp_line_ref (@{$bn_agp{$anchor_name}}) {
-    my $qry_name = $agp_line_ref->[5];
+  for my $xmap_line_ref (@{$iv_xmap{$anchor_name}}) {
+    my $qry_name = $xmap_line_ref->[2];
     my $first_contig = $qry_agp{$qry_name}->[0][2];
     my $qry_superscaffold_start = $qry_agp{$qry_name}->[0][0];
     my $qry_superscaffold_stop = $qry_agp{$qry_name}->[scalar (@{$qry_agp{$qry_name}}) - 1][1];
     if (defined ($first_contig)) {
       my $superscaffold = $tcas_agp{$first_contig}->[0];
-      push(@{$qry_list{$superscaffold}}, [$qry_name, $agp_line_ref->[1], $agp_line_ref->[2], $agp_line_ref->[6], $agp_line_ref->[7], $agp_line_ref->[8], $qry_coordinates{$qry_name}->[0], $qry_coordinates{$qry_name}->[1]]);
+      push(@{$qry_list{$superscaffold}}, [$qry_name, $xmap_line_ref->[6], $xmap_line_ref->[7], $xmap_line_ref->[4], $xmap_line_ref->[5], $xmap_line_ref->[8], $qry_coordinates{$qry_name}->[0], $qry_coordinates{$qry_name}->[1]]);
     }
   }
 
