@@ -1,4 +1,4 @@
-SCRIPT
+SCRIPT (WARNING STRIPT IS CURRENTLY INCOMPLETE. THIS WARNING WILL BE REMOVED WJEN THE SCRIPT IS FINISHED)
 
 **stitch.pl -**
        a package of scripts that analyze IrysView
