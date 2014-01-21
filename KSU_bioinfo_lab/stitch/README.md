@@ -1,6 +1,6 @@
 SCRIPT
 
-**analyze_irys_output.pl -**
+**stitch.pl -**
        a package of scripts that analyze IrysView
        output (i.e. XMAPs). The script filters XMAPs by confidence and the
        percent of the maximum potential length of the alignment and generates
@@ -126,16 +126,21 @@ DESCRIPTION
        each scaffold reported in the XMAP is used as the gap length. If a
        scaffold has two high quality alignments the longest alignment is
        selected. If both alignments are equally long the alignment with the
-       highest confidence is selected.
+       highest confidence is selected. 
+       
+       No scaffold is added to the final fasta twice however, if the first and 
+       second best alignment for a scaffold align to the ends of two molecule 
+       maps that each super-scaffold > 1 scaffold than these alignments are 
+       all used to "stitch" together the final super-scaffold.
 
 
 **Test with sample datasets**
 ```
 git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
 
-cd Irys-scaffolding/KSU_bioinfo_lab/analyze_irys_output
+cd Irys-scaffolding/KSU_bioinfo_lab/stitch
 
 mkdir results
 
-perl analyze_irys_output.pl -r sample_data/sample.r.cmap -q sample_data/sample_q.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
+perl stitch.pl -r sample_data/sample.r.cmap -q sample_data/sample_q.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
 ```
