@@ -5,7 +5,7 @@ TTTTTTTTTTTT
 >scaff3
 GGGG
 >scaff4
-AAAAA
+AAAAATGCTCAAAAA
 >scaff5
 CCCCCCCCCCCC
 >scaff6
@@ -14,3 +14,7 @@ GGGG
 GGGG
 >scaff8
 ATCGGGG
+>scaff9
+CCAAA
+>scaff10
+TTTTTGGGTTTT

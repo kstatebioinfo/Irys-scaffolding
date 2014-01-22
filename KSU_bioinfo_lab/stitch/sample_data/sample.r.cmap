@@ -7,7 +7,10 @@
 # Number of Consensus Nanomaps:	307
 #h CMapId	ContigLength	NumSites	SiteID	LabelChannel	Position	StdDev	Coverage	Occurrence
 #f int	float	int	int	int	float	float	int	int
-2	 20	  26	   1	 1	     20.0	   0.0	  2	  2
-2	 20	  26	   2	 1	  12031.9	   0.0	  2	  2
+2	 22	  26	   1	 1	     20.0	   0.0	  2	  2
+2	 22	  26	   2	 1	  12031.9	   0.0	  2	  2
 4	 20	  26	   3	 1	  16897.3	   0.0	  2	  2
 4	20	  26	   4	 1	  37071.4	   0.0	  2	  2
+6	 22	  26	   3	 1	  16897.3	   0.0	  2	  2
+6	22	  26	   4	 1	  37071.4	   0.0	  2	  2
+

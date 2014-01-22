@@ -71,7 +71,7 @@ OPTIONS
 
        -o, --output_basename
                This is the basename for all output files. Output file include
-               an XMAP with only high quality alignments of molecules that
+               an XMAP with only high quality alignments of molecule maps that
                scaffold contigs, an XMAP of all high quality alignments, a csv
                file with summary metrics, and a non-redundant (i.e. no
                scaffold is used twice) super-scaffold from a user-provided

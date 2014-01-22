@@ -2,8 +2,8 @@
 
 #  perl stitchmap_to_fasta.pl sample.stitchmap sample_scaffold.fasta tcas.scaffolds.fasta_key.txt
 #  USAGE: perl stitchmap_to_fasta.pl [scaff_stitchmap] [scaffold_fasta]
-#   This script creates a non-redundant (i.e. no scaffold is used twice) super scaffold from a scaffold file (ordered so that the scaffold id is the numeric order in the fasta file starting with ">1") and the filtered stitchmap
-#   Run number_fast.pl on your fasta file to create the correct fasta to pass as an arguement to this script. If two scaffolds overlap on the superscaffold than a 30 "n" gap is used as a spacer between them. If a scaffold has two high quality alignments the longest alignment is sellected. If both alignments are equally long the alignment with the highest confidence is sellected. 
+#   This script creates a non-redundant (i.e. no scaffold is used twice unless it is used to stich together molecule maps) super-scaffolds from a scaffold fasta file (ordered so that the scaffold id is the numeric order in the fasta file starting with ">1") and the filtered stitchmap
+#   Run number_fasta.pl on your fasta file to create the correct fasta to pass as an arguement to this script. If two scaffolds overlap on the superscaffold than a 30 "n" gap is used as a spacer between them. If a scaffold has two high quality alignments the longest alignment is sellected. If both alignments are equally long the alignment with the highest confidence is sellected. 
 #  Created by jennifer shelton on 12/2/13.
 #
 ################ Read arguments ###############################################
@@ -54,7 +54,7 @@ while (<STITCHMAP>) #make array of contigs from the customer and a hash of their
 my %alignments; ## list of best alignments ranked by length with ties broken by confidence score
 my %second_alignments; ## list of second best alignments ranked by length with ties broken by confidence score
 my $main_index=0;
-for my $row (@stitchmap_table)## calculate sequence generated scaffold's footprint on the molecule contig 
+for my $row (@stitchmap_table)## calculate sequence generated scaffold's footprint on the molecule map
 {
     ## object begining = 5 stitchmap
     ## object end = 6 stitchmap
@@ -68,16 +68,16 @@ for my $row (@stitchmap_table)## calculate sequence generated scaffold's footpri
     #############################################################################
     if ($alignments{$row->[1]}) # if we already have a "best alignment" for this contig
     {
-        my ($map_id,$length,$confidence)=split /,/,$alignments{$row->[1]};
-        if (($row->[6]-$row->[5])>$length) # if the current alignment is better than the previous "best alignment" make it best
+        my $array_id=$alignments{$row->[1]};
+        if (($row->[6]-$row->[5]) > ($stitchmap_table[$array_id]->[6] - $stitchmap_table[$array_id]->[5])) # if the current alignment is longer than the previous "best alignment" make it best
         {
-            $alignments{$row->[1]}="$main_index,$row->[6]-$row->[5]),$row->[8]";
-            $second_alignments{$row->[1]}="$map_id,$length,$confidence";
+            $alignments{$row->[1]}="$main_index";
+            $second_alignments{$row->[1]}="$array_id";
         }
-        elsif ((($row->[6]-$row->[5])==$length)&&($row->[8]>$confidence))
+        elsif ((($row->[6]-$row->[5])==($stitchmap_table[$array_id]->[6] - $stitchmap_table[$array_id]->[5]))&&($row->[8] > $stitchmap_table[$array_id]->[8])) # if the current alignment is as long than the previous "best alignment" with higher confidence make it best
         {
-            $alignments{$row->[1]}="$main_index,$row->[6]-$row->[5]),$row->[8]";
-            $second_alignments{$row->[1]}="$map_id,$length,$confidence";
+            $alignments{$row->[1]}="$main_index";
+            $second_alignments{$row->[1]}="$array_id";
         }
         #############################################################################
         ######### find all redundant alignments of a single contig  #################
@@ -85,28 +85,47 @@ for my $row (@stitchmap_table)## calculate sequence generated scaffold's footpri
         #############################################################################
         elsif ($second_alignments{$row->[1]})# if the current alignment is not better than the "best alignment" test if it is better than the "second best" (if we already have a "second best alignment" for this contig)
         {
-            my ($second_map_id,$second_length,$second_confidence)=split /,/,$second_alignments{$row->[1]};
+            my $second_array_id = $second_alignments{$row->[1]};
             {
-                if (($row->[6]-$row->[5])>$second_length)
+                if (($row->[6]-$row->[5]) > ($stitchmap_table[$second_array_id]->[6] - $stitchmap_table[$second_array_id]->[5])) # if the current alignment is longer than the previous "second best alignment" make it best
                 {
-                    $second_alignments{$row->[1]}="$main_index,$row->[6]-$row->[5]),$row->[8]";
+                    $second_alignments{$row->[1]}="$main_index";
                 }
-                elsif ((($row->[6]-$row->[5])==$second_length)&&($row->[8]>$second_confidence))
+                elsif ((($row->[6]-$row->[5])==($stitchmap_table[$second_array_id]->[6] - $stitchmap_table[$second_array_id]->[5])) && ($row->[8]>$stitchmap_table[$second_array_id]->[8])) # if the current alignment is as long than the previous "second best alignment" with higher confidence make it best
+
                 {
-                    $second_alignments{$row->[1]}="$main_index,$row->[6]-$row->[5]),$row->[8]";
+                    $second_alignments{$row->[1]}="$main_index";
                 }
             }
         }
         elsif (!$second_alignments{$row->[1]}) ## initialize "second best alignment"
         {
-            $second_alignments{$row->[1]}="$main_index,$row->[6]-$row->[5]),$row->[8]";
+            $second_alignments{$row->[1]}="$main_index";
         }
     }
     elsif (!$alignments{$row->[1]})
     {
-        $alignments{$row->[1]}="$main_index,$row->[6]-$row->[5]),$row->[8]"; ## initialize "best alignment"
+        $alignments{$row->[1]}="$main_index"; ## initialize "best alignment"
     }
     ++$main_index;
+}
+###############################################################################
+##################   check for "stitching scaffolds   #########################
+##################     add them to an overlap hash    #########################
+###############################################################################
+for my $best (keys %alignments)
+{
+    if ($second_alignments{$best})
+    {
+        if (($stitchmap_table[$alignments{$best}]->[14] eq "zero_stitch") && ($stitchmap_table[$second_alignments{$best}]->[14] eq "n_stitch"))
+        {
+            print "MOL:$stitchmap_table[$alignments{$best}]->[2] best= zero_stitch ; MOL:$stitchmap_table[$second_alignments{$best}]->[2] second best = n_stitch\n";
+        }
+        if (($stitchmap_table[$alignments{$best}]->[14] eq "n_stitch") && ($stitchmap_table[$second_alignments{$best}]->[14] eq "zero_stitch"))
+        {
+            print "MOL:$stitchmap_table[$alignments{$best}]->[2] best= n_stitch ; MOL:$stitchmap_table[$second_alignments{$best}]->[2] second = zero_stitch\n";
+        }
+    }
 }
 ###############################################################################
 ##################   identify overlapping footprints  #########################
@@ -121,7 +140,7 @@ for my $main_loop (@stitchmap_table) # for each sequence-based contig feature in
     my $nested_index=0;
  	for my $nested_loop (@stitchmap_table) # compare its footprint to every other contig feature's footprint
     {
-        if (($main_loop->[2] eq $nested_loop->[2]))# check only for footprints on the same molecule contig
+        if (($main_loop->[2] eq $nested_loop->[2]))# check only for footprints on the same molecule map
         {
             
             if ($main_loop->[10] <= $nested_loop->[10] && $nested_loop->[10] <= $main_loop->[11])
