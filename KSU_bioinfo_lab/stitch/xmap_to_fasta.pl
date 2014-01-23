@@ -119,11 +119,11 @@ for my $best (keys %alignments)
     {
         if (($stitchmap_table[$alignments{$best}]->[14] eq "zero_stitch") && ($stitchmap_table[$second_alignments{$best}]->[14] eq "n_stitch"))
         {
-            print "MOL:$stitchmap_table[$alignments{$best}]->[2] best= zero_stitch ; MOL:$stitchmap_table[$second_alignments{$best}]->[2] second best = n_stitch\n";
+            print "MOL:$stitchmap_table[$alignments{$best}]->[2] best= zero_stitch ; MOL:$stitchmap_table[$second_alignments{$best}]->[2] second best = n_stitch for CON: $stitchmap_table[$alignments{$best}]->[1]\n";
         }
         if (($stitchmap_table[$alignments{$best}]->[14] eq "n_stitch") && ($stitchmap_table[$second_alignments{$best}]->[14] eq "zero_stitch"))
         {
-            print "MOL:$stitchmap_table[$alignments{$best}]->[2] best= n_stitch ; MOL:$stitchmap_table[$second_alignments{$best}]->[2] second = zero_stitch\n";
+            print "MOL:$stitchmap_table[$alignments{$best}]->[2] best= n_stitch ; MOL:$stitchmap_table[$second_alignments{$best}]->[2] second = zero_stitch for CON: $stitchmap_table[$alignments{$best}]->[1]\n";
         }
     }
 }
