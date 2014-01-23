@@ -3,7 +3,7 @@
 #  perl stitchmap_to_fasta.pl sample.stitchmap sample_scaffold.fasta tcas.scaffolds.fasta_key.txt
 #  USAGE: perl stitchmap_to_fasta.pl [scaff_stitchmap] [scaffold_fasta]
 #   This script creates a non-redundant (i.e. no scaffold is used twice unless it is used to stich together molecule maps) super-scaffolds from a scaffold fasta file (ordered so that the scaffold id is the numeric order in the fasta file starting with ">1") and the filtered stitchmap
-#   Run number_fasta.pl on your fasta file to create the correct fasta to pass as an arguement to this script. If two scaffolds overlap on the superscaffold than a 30 "n" gap is used as a spacer between them. If a scaffold has two high quality alignments the longest alignment is sellected. If both alignments are equally long the alignment with the highest confidence is sellected. 
+#   Run number_fasta.pl on your fasta file to create the correct fasta to pass as an arguement to this script. If two scaffolds overlap on the superscaffold than a 30 "n" gap is used as a spacer between them. If a scaffold has two high quality alignments the longest alignment is sellected. If both alignments are equally long the alignment with the highest confidence is sellected.
 #  Created by jennifer shelton on 12/2/13.
 #
 ################ Read arguments ###############################################
@@ -92,7 +92,7 @@ for my $row (@stitchmap_table)## calculate sequence generated scaffold's footpri
                     $second_alignments{$row->[1]}="$main_index";
                 }
                 elsif ((($row->[6]-$row->[5])==($stitchmap_table[$second_array_id]->[6] - $stitchmap_table[$second_array_id]->[5])) && ($row->[8]>$stitchmap_table[$second_array_id]->[8])) # if the current alignment is as long than the previous "second best alignment" with higher confidence make it best
-
+                
                 {
                     $second_alignments{$row->[1]}="$main_index";
                 }
@@ -150,7 +150,7 @@ for my $main_loop (@stitchmap_table) # for each sequence-based contig feature in
                 {
                     undef $main_loop->[17]{$nested_index}; ## add all overlaps to a hash in the 17th column (contig_id->[17])
                     undef $nested_loop->[17]{$main_index};
-
+                    
                 }
             }
         }
@@ -175,7 +175,7 @@ for my $row (@reversed_stitchmap_table) # for each stitchmap entry
             {
                 undef $row->[17]{$confounded};
             }
-
+            
         }
         
     }
@@ -209,8 +209,8 @@ for my $row (@stitchmap_table)
             $new_seq = '';
             ++$n;
         }
-
-                    ### continue building superscaffolds ###
+        
+        ### continue building superscaffolds ###
         ###################################################################
         ########             append known gaps                  ###########
         ###################################################################
@@ -225,7 +225,7 @@ for my $row (@stitchmap_table)
         $new_seq = "$new_seq".$db->seq("$row->[1]:$start,$stop"); ## add the new sequence to the growing superscaffold
         $finished{$row->[1]}=1; ## add to the list of superscaffolded sequences
         ++$last_fasta; ## keep track of the array index for the last contig added
-
+        
         ###################################################################
         #########  append overlapping contigs to the scaffold #############
         ###################################################################
@@ -278,5 +278,3 @@ while (my $seq = $stream->next_seq)
         $seq_out->write_seq($scaffold_obj); ## Write the unsuperscaffolded sequence object
     }
 }
-
-

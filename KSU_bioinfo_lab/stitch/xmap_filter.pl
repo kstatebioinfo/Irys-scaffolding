@@ -1,13 +1,16 @@
 #!/bin/perl
 ##################################################################################
 #   xmap_filter.pl
-#	USAGE: perl xmap_filter.pl [r.cmap] [q.cmap] [xmap] [new_xmap] [min confidence] [min % aligned] [second min confidence] [second min % aligned] [fasta key]
+#	USAGE: perl xmap_filter.pl [r.cmap] [numbered fasta] [xmap] [new_xmap] [min confidence] [min % aligned] [second min confidence] [second min % aligned] [fasta key]
 #
 #  Created by jennifer shelton
 #
 ##################################################################################
 use strict;
 use warnings;
+use Bio::Seq;
+use Bio::SeqIO;
+use Bio::DB::Fasta; #makes a searchable db from my fasta file
 # use List::Util qw(max);
 # use List::Util qw(sum);
 ##################################################################################
@@ -15,7 +18,7 @@ use warnings;
 ##################################################################################
 # xmap_filter.pl
 #
-# USAGE: perl xmap_filter.pl [r.cmap] [q.cmap] [xmap] [new_xmap] [min confidence] [min % aligned] [second min confidence] [second min % aligned] [fasta key]
+# USAGE: perl xmap_filter.pl [r.cmap] [numbered fasta] [xmap] [new_xmap] [min confidence] [min % aligned] [second min confidence] [second min % aligned] [fasta key]
 #
 # Script to filter Xmaps by confidence and the precent of the maximum potential length of the alignment and generates summary stats of the more stringent alignment. An xmap with only molecules that scaffold contigs. Script also lists remaining conflicting alignments. These may be candidates for further assembly using the conflicting contigs and paired end reads.
 # perl xmap_filter.pl chicken1_r.cmap chicken1_q.cmap chicken1.xmap new_basename 40 0.3 5 0.8
@@ -23,7 +26,7 @@ use warnings;
 #
 
 my $infile_rcmap=$ARGV[0];
-my $infile_qcmap=$ARGV[1];
+my $infile_numbered_fasta=$ARGV[1];
 my $infile_xmap=$ARGV[2];
 my $outfile_base=$ARGV[3];
 ############################## create filenames ##############################
@@ -38,12 +41,11 @@ if (-e "$outfile_scf") {print "$outfile_scf file Exists!\n"; exit;}
 if (-e "$outfile_all_filtered") {print "$outfile_all_filtered file Exists!\n"; exit;}
 if (-e "$outfile_stitch") {print "$outfile_stitch file Exists!\n"; exit;}
 if (-e "$outfile_weakpoints") {print "$outfile_weakpoints file Exists!\n"; exit;}
-############################## open files ##############################    
+############################## open files ##############################
 open (CMAP_MOL, "<$infile_rcmap") or die "can't open $infile_rcmap !";
-open (CMAP_CONTIGS, "<$infile_qcmap")or die "can't open $infile_qcmap !";
 open (XMAP, "<$infile_xmap")or die "can't open $infile_xmap !";
 open (SCFXMAP, ">$outfile_scf")or die "can't open $outfile_scf !";
-open (NEWXMAP, ">$outfile_all_filtered")or die "can't open $outfile_all_filtered !"; 
+open (NEWXMAP, ">$outfile_all_filtered")or die "can't open $outfile_all_filtered !";
 open (STITCHMAP, ">$outfile_stitch")or die "can't open $outfile_stitch !";
 open (WEAK_POINTS, ">$outfile_weakpoints") or die "can't open $outfile_weakpoints !";
 
@@ -56,7 +58,7 @@ my $first_unknown=0; # first unknown contig in cmap
 my $last_unknown=0; # last unknown contig in cmap
 my (@xmap_table); # 2D arrays
 ############################## define variables ##########################################
-my (%mol_length, %contig_length,%scaffolding,%cumulative,%unknowns,%knowns,$contig_count); #hashes
+my (%mol_length, %scaffolding,%cumulative,%unknowns,%knowns,$contig_count); #hashes
 my $total_scaffolds=0;
 my $total_unknown_scaffolds=0;
 my $length_scaffolded_contigs=0;
@@ -76,16 +78,17 @@ while (<CMAP_MOL>) #make array of molecule contigs and a hash of their lengths
 	}
 }
 
-################################ Load contig cmap ########################################
-while (<CMAP_CONTIGS>) #make array of contigs from the customer and a hash of their lengths
+###############################################################################
+##################### Find contig lengths #####################################
+####### this process uses a 1 base coordinate system #######################
+###############################################################################
+my $db = Bio::DB::Fasta->new("$infile_numbered_fasta");
+my (%contig_length);
+my $stream  = $db->get_PrimarySeq_stream;
+while (my $seq = $stream->next_seq)
 {
-    if ($_ !~ /^#/)
-	{
-        chomp;
-        my @cmap_contigs=split ("\t");
-        s/\s+//g foreach @cmap_contigs;
-        $contig_length{$cmap_contigs[0]} = $cmap_contigs[1]; ## hash with id as key and sequence generated contig length as value
-	}
+	my $contig_length=$db->length("$seq");
+	$contig_length{$seq} = $contig_length; ## hash with id as key and sequence generated contig length as value
 }
 ################################ Load xmap ########################################
 while (<XMAP>) #make array of contigs from the customer and a hash of their lengths
@@ -147,18 +150,18 @@ for my $row (@xmap_table)## calculate sequence generated contig's footprint on t
         $footprint_end=$row->[6]+($row->[4]-1) ;
         $row->[10] = "$footprint_start";
         $row->[11] = "$footprint_end";
-#        print "contig $row->[1] to $row->[2]:\n contig_start_pos=$row->[4];\n contig_end_pos=$row->[3];\n footprint_start=$row->[5]-($contig_length{$row->[1]}-$row->[3]);\n footprint_end=-$row->[6]+($row->[4]-1) ;\n";
+        #        print "contig $row->[1] to $row->[2]:\n contig_start_pos=$row->[4];\n contig_end_pos=$row->[3];\n footprint_start=$row->[5]-($contig_length{$row->[1]}-$row->[3]);\n footprint_end=-$row->[6]+($row->[4]-1) ;\n";
         
     }
-
-
+    
+    
     ################################################################################
     ############################## calculate percent aligned #######################
     ################################################################################
     if (($footprint_start<0)&&($footprint_end<=$mol_length{$row->[2]})) #if their is an overhang on the left side
     {
         $percent_aligned=($contig_end_pos-$contig_start_pos+1)/($footprint_end);
-#         print "contig $row->[1] to $row->[2]left overhang: $percent_aligned\n $percent_aligned=($contig_end_pos-$contig_start_pos+1)/($footprint_end)\n";
+        #         print "contig $row->[1] to $row->[2]left overhang: $percent_aligned\n $percent_aligned=($contig_end_pos-$contig_start_pos+1)/($footprint_end)\n";
         ###########################################################################
         ################ Find potential stiching contigs ##########################
         ###########################################################################
@@ -174,7 +177,7 @@ for my $row (@xmap_table)## calculate sequence generated contig's footprint on t
     if (($footprint_start>=0)&&($footprint_end>$mol_length{$row->[2]}))#if their is an overhang on the right side
     {
         $percent_aligned=($contig_end_pos-$contig_start_pos+1)/($mol_length{$row->[2]}-$footprint_start+1);
-#         print "contig $row->[1] to $row->[2] right overhang: $percent_aligned\n $percent_aligned=($contig_end_pos-$contig_start_pos+1)/($mol_length{$row->[2]}-$footprint_start+1);\n";
+        #         print "contig $row->[1] to $row->[2] right overhang: $percent_aligned\n $percent_aligned=($contig_end_pos-$contig_start_pos+1)/($mol_length{$row->[2]}-$footprint_start+1);\n";
         ###########################################################################
         ################ Find potential stiching contigs ##########################
         ###########################################################################
@@ -190,12 +193,12 @@ for my $row (@xmap_table)## calculate sequence generated contig's footprint on t
     if (($footprint_start>=0)&&($footprint_end<=$mol_length{$row->[2]})) ## if contig aligns either perfectly with or within the molecule
     {
         $percent_aligned=($contig_end_pos-$contig_start_pos+1)/$contig_length{$row->[1]};
-#         print "contig $row->[1] to $row->[2] inside: $percent_aligned\n $percent_aligned=($contig_end_pos-$contig_start_pos+1)/$contig_length{$row->[1]};\n";
+        #         print "contig $row->[1] to $row->[2] inside: $percent_aligned\n $percent_aligned=($contig_end_pos-$contig_start_pos+1)/$contig_length{$row->[1]};\n";
     }
     if (($footprint_start<0)&&($footprint_end>$mol_length{$row->[2]})) ## if contig aligns with overhang on both ends of the molecule
     {
         $percent_aligned=($contig_end_pos-$contig_start_pos+1)/$mol_length{$row->[2]};
-#         print "contig $row->[1] to $row->[2] outside both sides: $percent_aligned\n $percent_aligned=($contig_end_pos-$contig_start_pos+1)/$mol_length{$row->[2]};\n";
+        #         print "contig $row->[1] to $row->[2] outside both sides: $percent_aligned\n $percent_aligned=($contig_end_pos-$contig_start_pos+1)/$mol_length{$row->[2]};\n";
     }
     if ($percent_aligned<0)
     {
@@ -204,7 +207,7 @@ for my $row (@xmap_table)## calculate sequence generated contig's footprint on t
     
     #################### check to see if alignemnt passes QC filters #################
     if ((($percent_aligned >= $min_precent_aligned)&&($row->[8]>=$min_confidence))||(($percent_aligned >= $second_min_precent_aligned)&&($row->[8]>=$second_min_confidence)))
- 
+        
     {
         $row->[12] = "passed";
         print NEWXMAP "$row->[0]\t$row->[1]\t$row->[2]\t$row->[3]\t$row->[4]\t$row->[5]\t$row->[6]\t$row->[7]\t$row->[8]\t$row->[9]\n";
@@ -251,9 +254,9 @@ print WEAK_POINTS "#Original fasta header,QryContigID,RefcontigID,QryStartPos,Qr
 for my $row (@xmap_table)
 {
     my $counted_scaffolds=(scalar( keys %{ $scaffolding{$row->[2]} } ));
-#    print "scaffold: Row $row->[2] = $counted_scaffolds\n";
+    #    print "scaffold: Row $row->[2] = $counted_scaffolds\n";
     if (($row->[12] eq "passed") && ($counted_scaffolds>1))
-
+        
     {
         print SCFXMAP "$row->[0]\t$row->[1]\t$row->[2]\t$row->[3]\t$row->[4]\t$row->[5]\t$row->[6]\t$row->[7]\t$row->[8]\t$row->[9]\n"; # print to the scaffolding xmap
         print STITCHMAP "$row->[0]\t$row->[1]\t$row->[2]\t$row->[3]\t$row->[4]\t$row->[5]\t$row->[6]\t$row->[7]\t$row->[8]\t$row->[9]\t$row->[10]\t$row->[11]\t$row->[12]\t$row->[13]\t"; # print to the stitchmap
@@ -358,4 +361,3 @@ for my $main_loop (@xmap_table) # for each sequence-based contig feature in the 
 print REPORT "$overlap_count\n";
 close REPORT;
 close OVERLAPS;
-
