@@ -38,7 +38,7 @@ my $seq_out = Bio::SeqIO->new('-file' => ">$outfile",'-format' => 'fasta');		#Cr
 my (@stitchmap_table); # 2D arrays
 while (<STITCHMAP>) #make array of contigs from the customer and a hash of their lengths
 {
-	if ($_ !~ /^#/)
+	if (($_ !~ /^#/) && ($_ ne ''))
 	{
         chomp;
         my @stitchmap=split ("\t");
