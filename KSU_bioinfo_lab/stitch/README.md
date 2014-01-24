@@ -22,7 +22,7 @@ SCRIPT (WARNING STRIPT IS CURRENTLY INCOMPLETE. THIS WARNING WILL BE REMOVED WJE
 DEPENDENCIES
 
        git - see http://git-scm.com/book/ch1-4.html for instructions
-       bioperl - see http://www.bioperl.org/wiki/Installing_BioPerl (the scripts will run without BioPerl it is only required only to create a super-scaffold FASTA)
+       bioperl - see http://www.bioperl.org/wiki/Installing_BioPerl 
        
 
 USAGE
@@ -34,7 +34,6 @@ USAGE
           -man     full documentation
         Required options:
           -r        reference CMAP
-          -q        query CMAP
           -x        comparison XMAP
           -f        scaffold FASTA
           -o        base name for the output files
@@ -54,10 +53,6 @@ OPTIONS
                The reference CMAP produced by IrysView when you create an
                XMAP. It can be found in the "Imports" folder within a
                workspace.
-
-       -q, --q_cmap
-               The query CMAP produced by IrysView when you create an XMAP. It
-               can be found in the "Imports" folder within a workspace.
 
        -x, --xmap
                The XMAP produced by IrysView. It can also be found in the
@@ -102,14 +97,14 @@ DESCRIPTION
 
        OUTPUT DETAILS:
 
-       The script outputs an XMAP with only molecules that scaffold contigs
-       and an XMAP of all high quality alignments. Both XMAPs can be imported
-       and viewed in the IrysView "comparisons" window if the original r.cmap
-       and q.cmap are in the same folder when you import.
+       The script outputs an XMAP with only molecule maps that scaffold in 
+       silico maps and an XMAP of all high quality alignments. Both XMAPs can 
+       be imported and viewed in the IrysView "comparisons" window if the 
+       original r.cmap and q.cmap are in the same folder when you import.
 
        The script also lists summary metrics in a csv file.
 
-       In the same csv file, scaffolds that have alignments passing the user-
+       In the same csv file, in silico maps that have alignments passing the user-
        defined length and confidence thresholds that align over less than 60%
        of the total length possible are listed. These may represent mis-
        assembled scaffolds.
@@ -118,20 +113,20 @@ DESCRIPTION
        file are listed. These may be candidates for further assembly using the
        overlaping contigs and paired end reads.
 
-       The script also creates a non-redundant (i.e. no scaffold is used
-       twice) super-scaffold from a user-provided scaffold file and a filtered       
-       XMAP. If two scaffolds overlap on the superscaffold then a 30 "n" gap
-       is used as a spacer between them. If adjacent scaffolds do not overlap
+       The script also creates a non-redundant (i.e. no in silico map is used
+       twice) super-scaffold from a user-provided fasta file and a filtered       
+       XMAP. If two in silico maps overlap on the superscaffold then a 30 "n" gap
+       is used as a spacer between them. If adjacent in silico map do not overlap
        on the super-scaffold than the distance between the begining and end of
-       each scaffold reported in the XMAP is used as the gap length. If a
-       scaffold has two high quality alignments the longest alignment is
+       each in silico map is reported in the XMAP is used as the gap length. If 
+       a scaffold has two high quality alignments the longest alignment is
        selected. If both alignments are equally long the alignment with the
        highest confidence is selected. 
        
-       No scaffold is added to the final fasta twice however, if the first and 
-       second best alignment for a scaffold align to the ends of two molecule 
-       maps that each super-scaffold > 1 scaffold than these alignments are 
-       all used to "stitch" together the final super-scaffold.
+       No in silico map's sequence is added to the final fasta twice; however, 
+       if the first and second best alignment for an in silico map align to the 
+       ends of two molecule maps that each super-scaffold > 1 in silico map than 
+       these alignments are all used to "stitch" together the final super-scaffold.
 
 
 **Test with sample datasets**
@@ -142,5 +137,5 @@ cd Irys-scaffolding/KSU_bioinfo_lab/stitch
 
 mkdir results
 
-perl stitch.pl -r sample_data/sample.r.cmap -q sample_data/sample_q.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
+perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
 ```
