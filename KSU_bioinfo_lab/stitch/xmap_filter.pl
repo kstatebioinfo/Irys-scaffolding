@@ -48,8 +48,9 @@ open (SCFXMAP, ">$outfile_scf")or die "can't open $outfile_scf !";
 open (NEWXMAP, ">$outfile_all_filtered")or die "can't open $outfile_all_filtered !";
 open (STITCHMAP, ">$outfile_stitch")or die "can't open $outfile_stitch !";
 open (WEAK_POINTS, ">$outfile_weakpoints") or die "can't open $outfile_weakpoints !";
-
-############################## QC thresholds ##############################
+###############################################################################
+############################## QC thresholds ##################################
+###############################################################################
 my $min_confidence=$ARGV[4];
 my $min_precent_aligned=$ARGV[5];
 my $second_min_confidence=$ARGV[6];
@@ -57,7 +58,9 @@ my $second_min_precent_aligned=$ARGV[7];
 my $first_unknown=0; # first unknown contig in cmap
 my $last_unknown=0; # last unknown contig in cmap
 my (@xmap_table); # 2D arrays
-############################## define variables ##########################################
+###############################################################################
+############################## define variables ###############################
+###############################################################################
 my (%mol_length, %scaffolding,%cumulative,%unknowns,%knowns,$contig_count); #hashes
 my $total_scaffolds=0;
 my $total_unknown_scaffolds=0;
@@ -65,8 +68,9 @@ my $length_scaffolded_contigs=0;
 my $overlap_count=0;
 my ($contig_start_pos,$contig_end_pos,$percent_aligned);
 my ($footprint_start,$footprint_end,$key,$value,$overlap);
-################################ Load input files ########################################
-################################ Load molecule cmap ########################################
+###############################################################################
+################################ Load molecule cmap ###########################
+###############################################################################
 while (<CMAP_MOL>) #make array of molecule contigs and a hash of their lengths
 {
     if ($_ !~ /^#/)
@@ -77,10 +81,9 @@ while (<CMAP_MOL>) #make array of molecule contigs and a hash of their lengths
         $mol_length{$cmap_mol[0]} = $cmap_mol[1]; ## hash with id as key and molecule contig length as value
 	}
 }
-
 ###############################################################################
-##################### Find contig lengths #####################################
-####### this process uses a 1 base coordinate system #######################
+########## Load sequence fasta with headers converted to numbers ##############
+############# this process uses a 1 base coordinate system ####################
 ###############################################################################
 my $db = Bio::DB::Fasta->new("$infile_numbered_fasta");
 my (%contig_length);
@@ -90,7 +93,9 @@ while (my $seq = $stream->next_seq)
 	my $contig_length=$db->length("$seq");
 	$contig_length{$seq} = $contig_length; ## hash with id as key and sequence generated contig length as value
 }
-################################ Load xmap ########################################
+###############################################################################
+################################ Load xmap ####################################
+###############################################################################
 while (<XMAP>) #make array of contigs from the customer and a hash of their lengths
 {
 	if ($_ =~ /^#/)
@@ -122,7 +127,10 @@ while (<KEY>)
         $key_hash{$row[4]}=$row[2];
     }
 }
-########################## filter xmap rows ##############################################
+###############################################################################
+####################### 1st pass over xmap             ########################
+####################### filter xmap rows               ########################
+###############################################################################
 for my $row (@xmap_table)## calculate sequence generated contig's footprint on the molecule contig and add contig footprint to the xmap array
 {
     ## object begining = 5 xmap
@@ -136,7 +144,9 @@ for my $row (@xmap_table)## calculate sequence generated contig's footprint on t
     {
         $contig_start_pos=$row->[3];
         $contig_end_pos=$row->[4];
-        ############################## calculate footprint ################################
+        ###############################################################################
+        ############################## calculate footprint ############################
+        ###############################################################################
         $footprint_start=$row->[5]-$contig_start_pos+1;
         $footprint_end=$footprint_start + $contig_length{$row->[1]}-1;
         $row->[10] = "$footprint_start";
@@ -153,8 +163,6 @@ for my $row (@xmap_table)## calculate sequence generated contig's footprint on t
         #        print "contig $row->[1] to $row->[2]:\n contig_start_pos=$row->[4];\n contig_end_pos=$row->[3];\n footprint_start=$row->[5]-($contig_length{$row->[1]}-$row->[3]);\n footprint_end=-$row->[6]+($row->[4]-1) ;\n";
         
     }
-    
-    
     ################################################################################
     ############################## calculate percent aligned #######################
     ################################################################################
@@ -204,8 +212,9 @@ for my $row (@xmap_table)## calculate sequence generated contig's footprint on t
     {
         $percent_aligned=$percent_aligned*(-1);
     }
-    
-    #################### check to see if alignemnt passes QC filters #################
+    ###############################################################################
+    #################### check to see if alignemnt passes QC filters ##############
+    ###############################################################################
     if ((($percent_aligned >= $min_precent_aligned)&&($row->[8]>=$min_confidence))||(($percent_aligned >= $second_min_precent_aligned)&&($row->[8]>=$second_min_confidence)))
         
     {
@@ -218,7 +227,9 @@ for my $row (@xmap_table)## calculate sequence generated contig's footprint on t
             
             
         }
-        ############### check for unknowns and knowns on scaffold ################
+        ###############################################################################
+        ################# check for unknowns and knowns on scaffold ###################
+        ###############################################################################
         if (($row->[1]>=$first_unknown) && ($row->[1]<=$last_unknown))
         {
         	$unknowns{$row->[2]}->{$row->[1]}=1;
@@ -227,30 +238,35 @@ for my $row (@xmap_table)## calculate sequence generated contig's footprint on t
         {
         	$knowns{$row->[2]}->{$row->[1]}=1;
         }
-        ############# count scaffolding events per molecule ##########################
+        ###############################################################################
+        ############# count scaffolding events per molecule ###########################
+        ###############################################################################
         ++$scaffolding{$row->[2]}->{$row->[1]};
         
         ###### report if less than %60 percent of possible alignment was made ########
         if ($percent_aligned > .6)
         {
-            $row->[13] = "strong";
+            $row->[13] = "strong"; # aligns over > 60%
         }
         if ($percent_aligned <= .6)
         {
-            $row->[13] = "weak";
+            $row->[13] = "weak"; # aligns over =< 60%
         }
     }
     else
     {
-        $row->[12] = "failed";
+        $row->[12] = "failed"; # failed QC therefore we don't care if the alignment is strong or weak
         $row->[13] = "NA";
     }
 }
 ############################################################################################
-############# print only scaffolding and potential misassemblies alignments ################
+############# Second pass over xmap                                         ################
+############# print only scaffolding molecule maps                          ################
+############# and potential misassemblies alignments  (<60%)                ################
 ############################################################################################
-print STITCHMAP "#0 XmapEntryID\t1 QryContigID\t2 RefcontigID\t3 QryStartPos\t4 QryEndPos\t5 RefStartPos\t6 RefEndPos\t7 Orientation\t8 Confidence\t9 HitEnum\t10 footprint_start\t11 footprint_end\t12 QC filters (passed/failed)\t13 60% alignment (strong/weak)\t14 stitch (zero_stitch/n_stitch/na)\t15 contig length\t16 alignment rank (best/second/'')\n";
-print WEAK_POINTS "#Original fasta header,QryContigID,RefcontigID,QryStartPos,QryEndPos,RefStartPos,RefEndPos\n";
+print STITCHMAP "#0 XmapEntryID\t1 QryContigID\t2 RefcontigID\t3 QryStartPos\t4 QryEndPos\t5 RefStartPos\t6 RefEndPos\t7 Orientation\t8 Confidence\t9 HitEnum\t10 footprint_start\t11 footprint_end\t12 QC filters (passed/failed)\t13 60% alignment (strong/weak)\t14 stitch (zero_stitch/n_stitch/na)\t15 contig length\t16 alignment rank (best/second/'')\n"; # print tab separated headers for stitchmap
+print WEAK_POINTS "#Original fasta header,QryContigID,RefcontigID,QryStartPos,QryEndPos,RefStartPos,RefEndPos\n"; # print comma separated headers for list of weak alignments
+
 for my $row (@xmap_table)
 {
     my $counted_scaffolds=(scalar( keys %{ $scaffolding{$row->[2]} } ));
@@ -300,7 +316,9 @@ for my $mol_with_contig (keys %scaffolding)
 			}
 		}
 	}
-    ################# check for unknowns and knowns on scaffold ##########################
+    ###############################################################################
+    ################ check for unknowns and knowns on scaffold ####################
+    ###############################################################################
     my $unknown_scaffolds=(scalar( keys %{ $unknowns{$mol_with_contig} } ));
     my $known_scaffolds=(scalar( keys %{ $knowns{$mol_with_contig} } ));
     if ($unknown_scaffolds>=1 && $known_scaffolds>=1)
@@ -318,7 +336,7 @@ if (-e "$outfile_overlaps") {print "$outfile_overlaps file Exists!\n"; exit;}
 open (OVERLAPS, ">$outfile_overlaps")or die "can't open $outfile_overlaps !";
 
 ######################################################################################
-####################### 3rd pass                              ########################
+####################### 3rd pass over xmap                    ########################
 ####################### identify overlaps in filtered outfile ########################
 ####################### find best and second best alignment   ########################
 ######################################################################################

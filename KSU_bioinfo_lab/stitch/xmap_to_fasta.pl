@@ -1,4 +1,4 @@
-#!/bin/perl
+ #!/bin/perl
 
 #  perl stitchmap_to_fasta.pl sample.stitchmap sample_scaffold.fasta tcas.scaffolds.fasta_key.txt
 #  USAGE: perl stitchmap_to_fasta.pl [scaff_stitchmap] [scaffold_fasta]
@@ -6,7 +6,9 @@
 #   Run number_fasta.pl on your fasta file to create the correct fasta to pass as an arguement to this script. If two scaffolds overlap on the superscaffold than a 30 "n" gap is used as a spacer between them. If a scaffold has two high quality alignments the longest alignment is sellected. If both alignments are equally long the alignment with the highest confidence is sellected.
 #  Created by jennifer shelton on 12/2/13.
 #
+###############################################################################
 ################ Read arguments ###############################################
+###############################################################################
 use strict;
 use warnings;
 use Bio::Seq;
@@ -18,7 +20,7 @@ my $infile_fasta=$ARGV[1];
 print "infile_stitchmap: $infile_stitchmap\n";
 print "infile_fasta: $infile_fasta\n";
 ###############################################################################
-################ Open stitchmap and create fasta file ##############################
+################ Open stitchmap and create fasta file #########################
 ###############################################################################
 
 open (STITCHMAP, "<$infile_stitchmap")or die "can't open $infile_stitchmap $!";
@@ -36,7 +38,7 @@ my $seq_out = Bio::SeqIO->new('-file' => ">$outfile",'-format' => 'fasta');		#Cr
 ###############################################################################
 
 my (@stitchmap_table); # 2D arrays
-while (<STITCHMAP>) #make array of contigs from the customer and a hash of their lengths
+while (<STITCHMAP>) #make array of the stitchmap
 {
 	if (($_ !~ /^#/) && ($_ ne ''))
 	{
@@ -54,7 +56,7 @@ while (<STITCHMAP>) #make array of contigs from the customer and a hash of their
 my %alignments; ## list of best alignments ranked by length with ties broken by confidence score
 my %second_alignments; ## list of second best alignments ranked by length with ties broken by confidence score
 my $main_index=0;
-for my $row (@stitchmap_table)## calculate sequence generated scaffold's footprint on the molecule map
+for my $row (@stitchmap_table)## find best and second best alignments and "stitching" in silico maps
 {
     ## object begining = 5 stitchmap
     ## object end = 6 stitchmap
@@ -110,7 +112,7 @@ for my $row (@stitchmap_table)## calculate sequence generated scaffold's footpri
     ++$main_index;
 }
 ###############################################################################
-##################   check for "stitching scaffolds   #########################
+################## check for "stitching" in silico maps  ######################
 ##################     add them to an overlap hash    #########################
 ###############################################################################
 for my $best (keys %alignments)
@@ -187,7 +189,7 @@ for my $row (@reversed_stitchmap_table) # for each stitchmap entry
 my $n=1;
 my $last_fasta=-1;
 my %finished; ## we  will use %finished as a list of scaffolds added to super scaffolds so that the remaining contigs can be added
-my $old_mol=-1; ## begins with the last molecule (in theory this should not match the first molecule but must be changed if the first molecule in the stitchmap is also the last e.g. bacterial)
+my $old_mol=-1; ## begins with the last molecule (in generally this should not match the first molecule but must be changed if the first molecule in the stitchmap is also the last e.g. bacterial)
 my $scaffold_id = "Super_scaffold_$n"; ### initialize first superscaffold
 my $new_seq  = ''; ### initialize first superscaffold
 for my $row (@stitchmap_table)
@@ -200,7 +202,7 @@ for my $row (@stitchmap_table)
         ###################################################################
         if ($new_mol != $old_mol) ## if we are not on the same molecule
         {
-            unless ($n==1)
+            unless ($n==1) # unless this is the first molecule map write the old one
             {
                 my $scaffold_obj = Bio::Seq->new( -display_id =>  $scaffold_id, -seq => $new_seq, -alphabet => 'dna');
                 $seq_out->write_seq($scaffold_obj); ## write the finished superscaffold
@@ -209,17 +211,15 @@ for my $row (@stitchmap_table)
             $new_seq = '';
             ++$n;
         }
-        
-        ### continue building superscaffolds ###
         ###################################################################
-        ########             append known gaps                  ###########
+        #### Continue building superscaffolds: append known gaps ##########
         ###################################################################
         if ($old_mol==$new_mol)
         {
             $new_seq = "$new_seq"."n" x ($row->[10]-($stitchmap_table[$last_fasta]->[11])-1); ## add n's (as many as there are positions from the the footprint start of the current contig to the footprint end of the last contig if the last contig is on the same molecule
         }
         ###################################################################
-        ######## append non-overlapping contigs to the scaffold ###########
+        #### append non-overlapping contigs to the superscaffold ##########
         ###################################################################
         my ($start,$stop) = ($row->[7] eq '+')?(1, $row->[15]):($row->[15], 1); # "?:" operator tests if the sequence is in the forward or reverse direction and reverses start and stop if minus strand
         $new_seq = "$new_seq".$db->seq("$row->[1]:$start,$stop"); ## add the new sequence to the growing superscaffold
@@ -227,9 +227,9 @@ for my $row (@stitchmap_table)
         ++$last_fasta; ## keep track of the array index for the last contig added
         
         ###################################################################
-        #########  append overlapping contigs to the scaffold #############
+        ######  append overlapping contigs to the superscaffold ###########
         ###################################################################
-        if (scalar(keys %{ $row->[17] }) > 0 ) # if the molecule has overlaping alignments
+        if (scalar(keys %{ $row->[17] }) > 0 ) # if the in silico map has overlaping alignments
         {
             for my $overlap (sort keys %{ $row->[17] } ) ## for all overlaping alignments
             {
@@ -242,7 +242,7 @@ for my $row (@stitchmap_table)
             }
         }
 		$old_mol=$new_mol; ## now the current molecule will be listed as the last molecule we have seen
-        if ($last_fasta==$#stitchmap_table) ## if this is the last row in the stitchmap
+        if ($last_fasta==$#stitchmap_table) ## if this is the last row in the stitchmap table
         {
             my $scaffold_obj = Bio::Seq->new( -display_id =>  $scaffold_id, -seq => $new_seq, -alphabet => 'dna');
             $seq_out->write_seq($scaffold_obj); ## Write the final sequence object
@@ -250,8 +250,9 @@ for my $row (@stitchmap_table)
     }
 }
 ###############################################################################
-###### Append scaffolds not used to create a super-scaffold to fasta ##########
-####### this process uses a 1 base coordinate system #######################
+####### Append sequence from in silico maps                     ###############
+####### not used to create super-scaffolds to the fasta         ###############
+####### this process uses a 1 base coordinate system            ###############
 ###############################################################################
 my $key_file=$ARGV[2];
 open (KEY,"<",$key_file) or die "couldn't open $key_file $!";

@@ -21,14 +21,14 @@ print "#  stitch.pl                                 #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 12/12/13                   #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
-print "#  perl analyze_irys_output.pl -help # for usage/options  #\n";
-print "#  perl analyze_irys_output.pl -man # for more details    #\n";
+print "#  perl stitch.pl -help # for usage/options  #\n";
+print "#  perl stitch.pl -man # for more details    #\n";
 print "###########################################################\n";
 
 ##################################################################################
 ##############                get arguments                     ##################
 ##################################################################################
-my ($r_cmap,$q_cmap,$xmap,$scaffold_fasta,$output_basename);
+my ($r_cmap,$xmap,$scaffold_fasta,$output_basename);
 my $first_min_confidence=0;
 my $first_min_per_aligned=0;
 my $second_min_confidence=0;
@@ -39,7 +39,6 @@ GetOptions (
 'help|?' => \$help,
 'man' => \$man,
 'r|r_cmap:s' => \$r_cmap,
-'q|q_cmap:s'   => \$q_cmap,
 'x|xmap:s'  => \$xmap,
 'f|scaffold_fasta:s' => \$scaffold_fasta,
 'o|output_basename:s' => \$output_basename,
@@ -59,17 +58,28 @@ my $dirname = dirname(__FILE__);
 ##############       call programs and report if files exist    ##################
 ##################################################################################
 
+##################################################################################
+##############    make key (original headers to bionano cmap id)    ##############
+##################################################################################
 print "Making key for original fasta headers...\n";
 my $makekey=`perl ${dirname}/make_key.pl $scaffold_fasta ${output_basename}`;
 print "$makekey"; # print errors
+##################################################################################
+##########   make fasta with original headers changed to to bionano cmap id)  ####
+##################################################################################
 $scaffold_fasta =~ /(.*).fa/;
 print "Converting original fasta headers to headers that match bionano output...\n";
 my $out_number=`perl ${dirname}/number_fasta.pl $scaffold_fasta`;
 print "$out_number";
+##################################################################################
+##################     filter xmap and create stitchmap         ##################
+##################################################################################
 print "Making filtered XMAP...\n";
 my $filter=`perl ${dirname}/xmap_filter.pl $r_cmap ${1}_numbered_scaffold.fasta $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${output_basename}_key`;
 print "$filter"; # print errors
-
+##################################################################################
+#########      create fasta file and report "stitching contigs"         ##########
+##################################################################################
 print "Making super-scaffold fasta file with new super-scaffolds. Unused sequences are printed with original fasta headers...\n";
 my $out_x_to_fasta=`perl ${dirname}/xmap_to_fasta.pl ${output_basename}_scaffolds.stitchmap ${1}_numbered_scaffold.fasta ${output_basename}_key`;
 print "$out_x_to_fasta";
@@ -111,18 +121,17 @@ __END__
 
 =head1 NAME
  
- analyze_irys_output.pl - a package of scripts that analyze IrysView output (i.e. XMAPs). The script filters XMAPs by confidence and the percent of the maximum potential length of the alignment and generates summary stats of the more stringent alignments. The first settings for confidence and the minimum percent of the full potential length of the alignment should be set to include the range that the researcher decides represent high quality alignments after viewing raw XMAPs. Some alignments have lower than optimal confidence scores because of low label density or short sequence-based scaffold length. The second set of filters should have a user-defined lower minimum confidence score, but a much higher percent of the maximum potential length of the alignment in order to capture these alignments. Resultant XMAPs should be examined in IrysView to see that the alignments agree with what the user would manually select.
+ stitch.pl - a package of scripts that analyze IrysView output (i.e. XMAPs). The script filters XMAPs by confidence and the percent of the maximum potential length of the alignment and generates summary stats of the more stringent alignments. The first settings for confidence and the minimum percent of the full potential length of the alignment should be set to include the range that the researcher decides represent high quality alignments after viewing raw XMAPs. Some alignments have lower than optimal confidence scores because of low label density or short sequence-based scaffold length. The second set of filters should have a user-defined lower minimum confidence score, but a much higher percent of the maximum potential length of the alignment in order to capture these alignments. Resultant XMAPs should be examined in IrysView to see that the alignments agree with what the user would manually select.
  
  =head1 USAGE
  
- perl analyze_irys_output.pl [options]
+ perl stitch.pl [options]
  
  Documentation options:
  -help    brief help message
  -man	    full documentation
  Required options:
  -r	     reference CMAP
- -q	     query CMAP
  -x	     comparison XMAP
  -f	     scaffold FASTA
  -o	     base name for the output files
@@ -147,10 +156,6 @@ __END__
  =item B<-r, --r_cmap>
  
  The reference CMAP produced by IrysView when you create an XMAP. It can be found in the "Imports" folder within a workspace.
- 
- =item B<-q, --q_cmap>
- 
- The query CMAP produced by IrysView when you create an XMAP. It can be found in the "Imports" folder within a workspace.
  
  =item B<-x, --xmap>
  
@@ -200,10 +205,10 @@ __END__
  
  git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
  
- cd Irys-scaffolding/KSU_bioinfo_lab/analyze_irys_output
+ cd Irys-scaffolding/KSU_bioinfo_lab/stitch
  
  mkdir results
  
- perl analyze_irys_output.pl -r sample_data/sample.r.cmap -q sample_data/sample_q.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
+ perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
  
  =cut
