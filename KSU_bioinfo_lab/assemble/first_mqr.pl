@@ -35,6 +35,7 @@ while (my $file = readdir(DIR))
     my (${filename}, ${directories}, ${suffix}) = fileparse($file,'\..*');
     opendir(SUBDIR, "${bnx_dir}/${filename}") or die "can't open ${bnx_dir}/${filename}!\n"; # open directory full of .bnx files
     my (@x,@y);
+    open (REGRESSION_LOG, '>', "${bnx_dir}/${filename}/${filename}_log.txt") or die "can't open ${bnx_dir}/${filename}/${filename}_log.txt \n"; #create log for regression
     while (my $subfile = readdir(SUBDIR))
     {
         next if ($subfile =~ m/^\./); # ignore files beginning with a period
@@ -56,6 +57,7 @@ while (my $file = readdir(DIR))
         open (ERR, '<',"$split_file") or die "can't open $split_file !\n";
         $split_file =~ "(${bnx_dir}/${filename}/${filename})(.*)(.err)";
         push (@x,$2);
+        print REGRESSION_LOG "$2,";
         my $new_bpp;
         while (<ERR>)
         {
@@ -65,6 +67,7 @@ while (my $file = readdir(DIR))
                 $values[5] =~ s/\s+//g;
                 $new_bpp=$values[5];
                 push (@y,$new_bpp);
+                print REGRESSION_LOG "$new_bpp\n";
             }
         }
         ###########################################################################
@@ -81,11 +84,13 @@ while (my $file = readdir(DIR))
     my $validate=1;
     my $lineFit = Statistics::LineFit->new($validate); # $validate = 1 -> Verify input data is numeric (slower execution)
     $lineFit->setData(\@x, \@y) or die "Invalid regression data\n";
+    my $rsquare=$lineFit->rSquared();
+    print REGRESSION_LOG "Rsquare: $rsquare \n";
     if (defined $lineFit->rSquared()
         and $lineFit->rSquared() > $threshold) # if rSquared is defined and above the threshold rewrite the bpp using predicted Y-values
     {
         my ($intercept, $slope) = $lineFit->coefficients();
-        print "Slope: $slope  Y-intercept: $intercept\n";
+        print REGRESSION_LOG "Slope: $slope  Y-intercept: $intercept\n";
         for (my $i = 0; $i <= $#x; $i++)
         {
             ####################################################################
