@@ -54,7 +54,7 @@ while (my $file = readdir(DIR))
         ####################################################################
         ##############           run refaligner           ##################
         ####################################################################
-        my $run_ref=`~/tools/RefAligner -i ${bnx_dir}/${filename}/$subfile -o ${bnx_dir}/${filename}/${subfilename} -bnx -minsites 5 -minlen 150 -M 2 -ref ${ref}`;
+        my $run_ref=`~/tools/RefAligner -i ${bnx_dir}/${filename}/$subfile -o ${bnx_dir}/${filename}/${subfilename} -bnx -minsites 5 -minlen 150 -BestRef 1 -M 2 -ref ${ref}`;
         print "$run_ref";
         ####################################################################
         ##############  remove excess files and find new bpp ###############
