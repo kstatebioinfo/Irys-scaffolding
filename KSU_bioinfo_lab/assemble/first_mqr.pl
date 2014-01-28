@@ -39,7 +39,7 @@ while (my $file = readdir(DIR))
     ####################################################################
     ##############        create regression log       ##################
     ####################################################################
-    open (REGRESSION_LOG, '>', "${bnx_dir}/${filename}_regressionlog.txt") or die "can't open ${bnx_dir}/${filename}/${filename}_log.txt \n"; #create log for regression
+    open (REGRESSION_LOG, '>', "${bnx_dir}/${filename}_regressionlog.txt") or die "can't open ${bnx_dir}/${filename}_regressionlog.txt \n"; #create log for regression
     ####################################################################
     ##############  create list of adjusted BNX files ##################
     ####################################################################
