@@ -79,9 +79,9 @@ while (my $file = readdir(DIR))
                 push (@y,$new_bpp);
             }
         }
-        ####################################################################
-        ##############             rewrite bpp              ################
-        ####################################################################
+        ###########################################################################
+        ## (rewrite bpp) these default values will be used if regression fails ####
+        ###########################################################################
         edit_file("${bnx_dir}/${filename}/${subfilename}.bnx",$new_bpp);
     }
     ####################################################################
@@ -92,11 +92,20 @@ while (my $file = readdir(DIR))
     $lineFit = Statistics::LineFit->new($validate); # $validate = 1 -> Verify input data is numeric (slower execution)
     $lineFit->setData(\@x, \@y) or die "Invalid regression data\n";
     if (defined $lineFit->rSquared()
-        and $lineFit->rSquared() > $threshold)
+        and $lineFit->rSquared() > $threshold) # if rSquared is defined and above the threshold rewrite the bpp using predicted Y-values
     {
         ($intercept, $slope) = $lineFit->coefficients();
         print "Slope: $slope  Y-intercept: $intercept\n";
+        for (my $i = 0; $i <= $#x; $i++)
+        {
+            ####################################################################
+            ##############    rewrite bpp if regression fits    ################
+            ####################################################################
+            my $predicted_y = ($x[$i] * $slope)+$intercept;
+            edit_file("${bnx_dir}/${filename}/${filename}$x[$i].bnx","$predicted_y")
+        }
     }
+
 }
 
 
