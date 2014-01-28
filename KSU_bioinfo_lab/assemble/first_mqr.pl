@@ -46,6 +46,7 @@ while (my $file = readdir(DIR))
 	next if ($file !~ m/\.bnx$/); # ignore files not ending with a period
     my (${filename}, ${directories}, ${suffix}) = fileparse($file,'\..*');
     opendir(SUBDIR, "${bnx_dir}/${filename}") or die "can't open ${bnx_dir}/${filename}!\n"; # open directory full of .bnx files
+    my (@x,@y);
     while (my $subfile = readdir(SUBDIR))
     {
         next if ($subfile =~ m/^\./); # ignore files beginning with a period
@@ -54,7 +55,7 @@ while (my $file = readdir(DIR))
         ####################################################################
         ##############           run refaligner           ##################
         ####################################################################
-        my $run_ref=`~/tools/RefAligner -i ${bnx_dir}/${filename}/$subfile -o ${bnx_dir}/${filename}/${subfilename} -bnx -minsites 5 -minlen 150 -M 2 -ref ${ref}`;
+        my $run_ref=`~/tools/RefAligner -i ${bnx_dir}/${filename}/$subfile -o ${bnx_dir}/${filename}/${subfilename} -bnx -minsites 5 -minlen 150 -BestRef 1 -M 2 -ref ${ref}`;
         print "$run_ref";
         ####################################################################
         ##############  remove excess files and find new bpp ###############
@@ -63,7 +64,10 @@ while (my $file = readdir(DIR))
         `rm ${bnx_dir}/${filename}/${subfilename}_q.cmap`;
         `rm ${bnx_dir}/${filename}/${subfilename}.map`;
         `rm ${bnx_dir}/${filename}/${subfilename}.xmap`;
-        open (ERR, '<',"${bnx_dir}/${filename}/${subfilename}.err") or die "can't open ${bnx_dir}/${filename}/${subfilename}.err !\n";
+        my $split_file="${bnx_dir}/${filename}/${subfilename}.err";
+        open (ERR, '<',"$split_file") or die "can't open $split_file !\n";
+        $split_file =~ "(${bnx_dir}/${filename}/${filename})(.*)(.err)";
+        push (@x,$2);
         my $new_bpp;
         while (<ERR>)
         {
@@ -72,12 +76,27 @@ while (my $file = readdir(DIR))
                 my @values=split/\t/;
                 $values[5] =~ s/\s+//g;
                 $new_bpp=$values[5];
+                push (@y,$new_bpp);
             }
         }
         ####################################################################
         ##############             rewrite bpp              ################
         ####################################################################
         edit_file("${bnx_dir}/${filename}/${subfilename}.bnx",$new_bpp);
-                
+    }
+    ####################################################################
+    ########  do regression use predicted value of y if exists  ########
+    ####################################################################
+    use Statistics::LineFit;
+    my $threshold=.2;
+    $lineFit = Statistics::LineFit->new($validate); # $validate = 1 -> Verify input data is numeric (slower execution)
+    $lineFit->setData(\@x, \@y) or die "Invalid regression data\n";
+    if (defined $lineFit->rSquared()
+        and $lineFit->rSquared() > $threshold)
+    {
+        ($intercept, $slope) = $lineFit->coefficients();
+        print "Slope: $slope  Y-intercept: $intercept\n";
     }
 }
+
+
