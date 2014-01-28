@@ -50,7 +50,14 @@ my $T = 0.00001/$genome;
 ##################################################################################
 print "Spliting BNX by scan...\n";
 my $split=`perl ${dirname}/split_by_scan.pl $bnx_dir`;
-print "split";
+print "$split";
+##################################################################################
+##############                    split by scan                 ##################
+##################################################################################
+print "Generating first Molecule Quality Reports...\n";
+my $first_mqr=`perl ${dirname}/first_mqr.pl $bnx_dir $reference`;
+print "$first_mqr";
+#~/tools/RefAligner -i /home/irys/data/Merged_Molecule_Set/test.bnx -o molecule_qual -bnx -minsites 5 -minlen 150 -M 2 -ref /home/irys/data/Merged_Molecule_Set/tcas.scaffolds_Nt.BbvCI_Nt.BspQI.cmap
 ##################################################################################
 ##############                        run                       ##################
 ##################################################################################
