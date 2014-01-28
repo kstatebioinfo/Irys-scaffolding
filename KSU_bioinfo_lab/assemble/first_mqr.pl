@@ -19,6 +19,7 @@ my $ref=$ARGV[1];
 sub edit_file
 {
     my ($filename) = $_[0];
+    my $replacement_bpp = $_[1];
     # you can re-create the one-liner above by localizing @ARGV as the list of
     # files the <> will process, and localizing $^I as the name of the backup file.
     local (@ARGV) = ($filename);
@@ -27,7 +28,7 @@ sub edit_file
     {
         if (/(# Run Data\t.*\t.*\t.*\t.*\t.*\t)(.*)(\t.*\t.*\t.*)/)
         {
-            s/(# Run Data\t.*\t.*\t.*\t.*\t.*\t)(.*)(\t.*\t.*\t.*)/$1$new_bpp$3/g;
+            s/(# Run Data\t.*\t.*\t.*\t.*\t.*\t)(.*)(\t.*\t.*\t.*)/$1$replacement_bpp$3/g;
         }
     }
     continue
@@ -76,7 +77,7 @@ while (my $file = readdir(DIR))
         ####################################################################
         ##############             rewrite bpp              ################
         ####################################################################
-        edit_file("${bnx_dir}/${filename}/${subfilename}.bnx");
+        edit_file("${bnx_dir}/${filename}/${subfilename}.bnx",$new_bpp);
                 
     }
 }
