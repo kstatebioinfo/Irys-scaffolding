@@ -70,7 +70,7 @@ while (my $file = readdir(DIR))
         ###########################################################################
         ## (rewrite bpp) these default values will be used if regression fails ####
         ###########################################################################
-        my $first_edit=edit_file("${bnx_dir}/${filename}/${subfilename}.bnx","${bnx_dir}/${filename}/${subfilename}_adj.bnx",$new_bpp);
+        my $first_edit=edit_file("${bnx_dir}/${filename}/${subfilename}.bnx","${bnx_dir}/${filename}/${subfilename}_adj",$new_bpp);
         print "$first_edit\n";
     }
     ####################################################################
@@ -92,7 +92,7 @@ while (my $file = readdir(DIR))
             ##############    rewrite bpp if regression fits    ################
             ####################################################################
             my $predicted_y = ($x[$i] * $slope)+$intercept;
-            edit_file("${bnx_dir}/${filename}/${filename}$x[$i].bnx","${bnx_dir}/${filename}/${filename}$x[$i]_adj.bnx","$predicted_y")
+            edit_file("${bnx_dir}/${filename}/${filename}$x[$i].bnx","${bnx_dir}/${filename}/${filename}$x[$i]_adj","$predicted_y")
         }
     }
 
