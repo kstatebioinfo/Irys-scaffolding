@@ -18,23 +18,11 @@ my $bnx_dir=$ARGV[0];
 my $ref=$ARGV[1];
 sub edit_file
 {
-    my ($filename) = $_[0];
-    my $replacement_bpp = $_[1];
-    # you can re-create the one-liner above by localizing @ARGV as the list of
-    # files the <> will process, and localizing $^I as the name of the backup file.
-    local (@ARGV) = ($filename);
-    local($^I) = '.bak';
-    while (<>)
-    {
-        if (/(# Run Data\t.*\t.*\t.*\t.*\t.*\t)(.*)(\t.*\t.*\t.*)/)
-        {
-            s/(# Run Data\t.*\t.*\t.*\t.*\t.*\t)(.*)(\t.*\t.*\t.*)/$1$replacement_bpp$3/g;
-        }
-    }
-    continue
-    {
-        print;
-    }
+    my $filename = $_[0];
+    my $filename_adj = $_[1];
+    my $replacement_bpp = $_[2];
+    my $sub_ref=`~/tools/RefAligner -i $filename -merge -bnx -bpp $replacement_bpp -o $filename_adj`;
+    return $sub_ref;
 }
 ##################################################################################
 ##############      generate first Molecule Quality Reports     ##################
@@ -82,19 +70,21 @@ while (my $file = readdir(DIR))
         ###########################################################################
         ## (rewrite bpp) these default values will be used if regression fails ####
         ###########################################################################
-        edit_file("${bnx_dir}/${filename}/${subfilename}.bnx",$new_bpp);
+        my $first_edit=edit_file("${bnx_dir}/${filename}/${subfilename}.bnx","${bnx_dir}/${filename}/${subfilename}_adj",$new_bpp);
+        print "$first_edit\n";
     }
     ####################################################################
     ########  do regression use predicted value of y if exists  ########
     ####################################################################
     use Statistics::LineFit;
     my $threshold=.2;
-    $lineFit = Statistics::LineFit->new($validate); # $validate = 1 -> Verify input data is numeric (slower execution)
+    my $validate=1;
+    my $lineFit = Statistics::LineFit->new($validate); # $validate = 1 -> Verify input data is numeric (slower execution)
     $lineFit->setData(\@x, \@y) or die "Invalid regression data\n";
     if (defined $lineFit->rSquared()
         and $lineFit->rSquared() > $threshold) # if rSquared is defined and above the threshold rewrite the bpp using predicted Y-values
     {
-        ($intercept, $slope) = $lineFit->coefficients();
+        my ($intercept, $slope) = $lineFit->coefficients();
         print "Slope: $slope  Y-intercept: $intercept\n";
         for (my $i = 0; $i <= $#x; $i++)
         {
@@ -102,7 +92,7 @@ while (my $file = readdir(DIR))
             ##############    rewrite bpp if regression fits    ################
             ####################################################################
             my $predicted_y = ($x[$i] * $slope)+$intercept;
-            edit_file("${bnx_dir}/${filename}/${filename}$x[$i].bnx","$predicted_y")
+            edit_file("${bnx_dir}/${filename}/${filename}$x[$i].bnx","${bnx_dir}/${filename}/${filename}$x[$i]_adj","$predicted_y")
         }
     }
 

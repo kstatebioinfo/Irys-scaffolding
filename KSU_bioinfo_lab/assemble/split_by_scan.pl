@@ -39,7 +39,6 @@ while (my $file = readdir(DIR))
         }
         elsif (/^0/)
         {
-            s/\s+//g;
             if (!$ScanNumber)
             {
                 ##############################################################
@@ -57,6 +56,7 @@ while (my $file = readdir(DIR))
                 print SCAN_BNX;
             }
             ($LabelChannel,$MoleculeId,$Length,$AvgIntensity,$SNR,$NumberofLabels,$OriginalMoleculeId,$ScanNumber,$ScanDirection,$ChipId,$Flowcell)=split /\t/;
+            $ScanNumber =~ s/\s+//g;
             if (($CurrentScanNumber)&&($ScanNumber==$CurrentScanNumber))
             {
                 print SCAN_BNX;
