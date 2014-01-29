@@ -39,7 +39,7 @@ while (my $file = readdir(DIR))
     ####################################################################
     ##############        create regression log       ##################
     ####################################################################
-    open (REGRESSION_LOG, '>', "${bnx_dir}/${filename}_regressionlog.txt") or die "can't open ${bnx_dir}/${filename}/${filename}_log.txt \n"; #create log for regression
+    open (REGRESSION_LOG, '>', "${bnx_dir}/${filename}_regressionlog.txt") or die "can't open ${bnx_dir}/${filename}_regressionlog.txt \n"; #create log for regression
     ####################################################################
     ##############  create list of adjusted BNX files ##################
     ####################################################################
@@ -55,7 +55,7 @@ while (my $file = readdir(DIR))
         ####################################################################
         ###### run refaligner for flowcell molecule quality report  ########
         ####################################################################
-        my $run_ref=`~/tools/RefAligner -i ${bnx_dir}/${filename}/$subfile -o ${bnx_dir}/${filename}/${subfilename} -bnx -minsites 5 -minlen 150 -BestRef 1 -M 2 -T ${T} -ref ${ref}`;
+        my $run_ref=`~/tools/RefAligner -i ${bnx_dir}/${filename}/$subfile -o ${bnx_dir}/${filename}/${subfilename} -T ${T} -ref ${ref} -bnx -nosplit 2 -BestRef 1 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5`;
         print "$run_ref";
         ####################################################################
         ##############  remove excess files and find new bpp ###############

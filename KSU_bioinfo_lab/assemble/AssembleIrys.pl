@@ -71,6 +71,16 @@ print "#########################################################################
 my $second_mqr=`perl ${dirname}/merge_split_by_scan.pl $bnx_dir $reference $T`;
 print "$second_mqr";
 ##################################################################################
+###########  Merge each BNX foreach flowcell and run third molecule quality ######
+###########     report on merged file with and without BestRef. Use ".err"  ######
+###########     file for noise parameters                                   ######
+##################################################################################
+print "##################################################################################\n";
+print "Merging BNXs for each flowcell. Generating third Molecule Quality Report for final merged BNX file. Using the .err file to populate the optArguments.xml noise parameters...\n";
+print "##################################################################################\n";
+my $third_mqr=`perl ${dirname}/third_mqr.pl $bnx_dir $reference $T`;
+print "$third_mqr";
+##################################################################################
 ##############                        run                       ##################
 ##################################################################################
 # ~/tools/RefAligner -if ${file_list} -o /dev/null -bnx -minsites 5 -minlen 150 -M 5
