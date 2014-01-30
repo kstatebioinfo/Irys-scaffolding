@@ -34,9 +34,9 @@ push (@err_files,"${bnx_dir}/all_flowcells_adj_merged_bestref.err");
 ##############   Third molecule quality report:           ##########
 ############## test the final merged BNX without -BestRef ##########
 ####################################################################
-my $third_mqr = `~/tools/RefAligner -i ${bnx_dir}/all_flowcells_adj_merged.bnx -o ${bnx_dir}/all_flowcells_adj_merged -T ${T} -nosplit 2 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5`;
+my $third_mqr = `~/tools/RefAligner -i ${bnx_dir}/all_flowcells_adj_merged.bnx -o ${bnx_dir}/all_flowcells_adj_merged_no_bestref -T ${T} -nosplit 2 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5`;
 print "$third_mqr";
-push (@err_files,"${bnx_dir}/all_flowcells_adj_merged.err");
+push (@err_files,"${bnx_dir}/all_flowcells_adj_merged_no_bestref.err");
 ####################################################################
 ##############  Compare  molecule quality reports         ##########
 ##############  with and without -BestRef                 ##########
