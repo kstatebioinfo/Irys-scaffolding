@@ -24,9 +24,9 @@ my $err="${bnx_dir}/all_flowcells_adj_merged_bestref.err";
 ##################################################################################
 my $T_relaxed = $T * 10;
 my $T_strict = $T/10;
-my pairmerge=100;
+my pairmerge=75;
 open (ERR,'<',"$err") or die "can't open $err!\n";
-while (<ERR>)
+while (<ERR>) # get noise parameters
 {
     if (eof)
     {
@@ -55,7 +55,6 @@ for my $stringency (keys %p-value)
     my $xml_infile = "${dirname}/optArguments.xml";
     my $xml_outfile = "${dirname}/${stringency}_optArguments.xml";
     my $xml = XMLin($xml_infile,KeepRoot => 1,ForceArray => 1,);
-
 
 
     XMLout($xml,KeepRoot => 1,NoAttr => 1,OutputFile => $xml_outfile,);

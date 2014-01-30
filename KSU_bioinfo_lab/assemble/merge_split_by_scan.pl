@@ -19,7 +19,7 @@ my $ref = $ARGV[1];
 my $T = $ARGV[2];
 open (FLOWCELL_BNX_LIST, '>', "$bnx_dir/flowcell_bnx.txt") or die "can't open $bnx_dir/flowcell_bnx.txt !\n"; # create list of flowcell BNXs
 open (FLOWCELL_BNX_SUMMARY, '>', "$bnx_dir/flowcell_summary.csv") or die "can't open $bnx_dir/flowcell_summary.csv !\n"; # create file for summary stats of flowcell BNXs
-print FLOWCELL_BNX_SUMMARY "Filename,FP(/100kb),FNrate,bppSD,Maps,GoodMaps,GoodMaps/Maps\n";
+print FLOWCELL_BNX_SUMMARY "Filename,FP(/100kb),FNrate,bpp,bppSD,Maps,GoodMaps,GoodMaps/Maps\n";
 ##################################################################################
 ######### For each split and adjusted BNX from each orignal BNX file  ############
 ##################################################################################
@@ -45,19 +45,52 @@ while (my $file = readdir(DIR))
     ######## summarize flowcell molecule quality report .err values ####
     ####################################################################
     open (ERR,'<',"${bnx_dir}/${filename}_adj_merged.err") or die "can't open ${bnx_dir}/${filename}_adj_merged.err!\n";
+    my $good_maps;
     while (<ERR>)
     {
-        if (eof)
+        my @other_values;
+        if (/^ 4\t/)
+        {
+            @other_values=split/\t/; # because the final good maps is always reported as 0
+            $other_values[9] =~ s/\s+//g;
+            $good_maps=$other_values[9];
+        }
+        elsif (eof)
         {
             my @values=split/\t/;
             for my $value (@values)
             {
                 s/\s+//g;
             }
+            ##########################################################
+            ######## Test if bpp has returned to ~500 as expected ####
+            ##########################################################
+            unless ((497<$values[5])&&($values[5]<503))
+            {
+                print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+                print "Warning: bpp, $values[5], is not ~500 for flowcell ${filename}_adj_merged.bnx\n";
+            }
+            ##########################################################
+            ######## Test if bppSD value is high after merging    ####
+            ##########################################################
+            if ($values[11]>19)
+            {
+                print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+                print "Warning: bppSD, $values[11], is higher than 19 for flowcell ${filename}_adj_merged.bnx\n";
+            }
+            if (15<$values[11]<20)
+            {
+                print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+                print "Warning: bppSD, $values[11], is higher than 15 for flowcell ${filename}_adj_merged.bnx\n";
+            }
+
+            ##########################################################
+            ######## Print out quality metrics for all flowcells  ####
+            ##########################################################
             if ($values[7] != 0)
             {
-                my $map_ratio = $values[9]/$values[7];
-                print FLOWCELL_BNX_SUMMARY "${bnx_dir}/${filename}_adj_merged.bnx,$values[1],$values[2],$values[11],$values[7],$values[9],$map_ratio\n";
+                my $map_ratio = $good_maps/$values[7];
+                print FLOWCELL_BNX_SUMMARY "${bnx_dir}/${filename}_adj_merged.bnx,$values[1],$values[2],$values[5],$values[11],$values[7],$good_maps,$map_ratio\n";
             }
             else
             {
