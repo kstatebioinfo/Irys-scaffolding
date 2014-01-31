@@ -46,59 +46,57 @@ while (<ERR>) # get noise parameters
 ##################################################################################
 my %p-value;
 %hash = (
-key1 => "$T_strict",
-key2 => 'value2',
-key3 => 'value3',
+strict_t => "$T_strict",
+default_t => '$T',
+relaxed_t => '$T_relaxed',
 );
-########################################
-##             Pairwise               ##
-########################################
-$ref->{pairwise}->{flag}->[0]->{val0} = $T
-########################################
-##               Noise                ##
-########################################
-$ref->{noise0}->{flag}->[0]->{val0} = $FP
-$ref->{noise0}->{flag}->[1]->{val0} = $FN
-$ref->{noise0}->{flag}->[2]->{val0} = $ScalingSD_Kb_square
-$ref->{noise0}->{flag}->[3]->{val0} = $SiteSD_Kb
-########################################
-##            Assembly                ##
-########################################
-$ref->{assembly}->{flag}->[0]->{val0} = $T
-########################################
-##              RefineA               ##
-########################################
-$ref->{refineA}->{flag}->[2]->{val0} = $T
-########################################
-##              RefineB               ##
-########################################
-$ref->{refineB}->{flag}->[2]->{val0} = $T/10
-$ref->{refineB}->{flag}->[9]->{val0} = 25; #min split length
-########################################
-##              RefineFinal           ##
-########################################
-$ref->{refineFinal}->{flag}->[2]->{val0} = $T/10
-$ref->{refineFinal}->{flag}->[16]->{val0} = 1e-5
-$ref->{refineFinal}->{flag}->[17]->{val0} = 1e-5
-########################################
-##              Extension             ##
-########################################
-$ref->{extension}->{flag}->[3]->{val0} = $T/10
-$ref->{extension}->{flag}->[20]->{val0} = 1e-5
-$ref->{extension}->{flag}->[20]->{val0} = 1e-5
-########################################
-##               Merge                ##
-########################################
-$ref->{merge}->{flag}->[0]->{val0} = 75
-$ref->{merge}->{flag}->[1]->{val0} = $T/1000
 
 for my $stringency (keys %p-value)
 {
     my $xml_infile = "${dirname}/optArguments.xml";
-    my $xml_outfile = "${dirname}/${stringency}_optArguments.xml";
+    my $xml_outfile = "${bnx_dir}/${stringency}_optArguments.xml";
     my $xml = XMLin($xml_infile,KeepRoot => 1,ForceArray => 1,);
     
-    $xml->{outer1}->[0]->{inner1}->[1]->{name} = 'hello';
-
+    ########################################
+    ##             Pairwise               ##
+    ########################################
+    $xml->{pairwise}->{flag}->[0]->{val0} = $p-value{$stringency};
+    ########################################
+    ##               Noise                ##
+    ########################################
+    $xml->{noise0}->{flag}->[0]->{val0} = $FP;
+    $xml->{noise0}->{flag}->[1]->{val0} = $FN;
+    $xml->{noise0}->{flag}->[2]->{val0} = $ScalingSD_Kb_square;
+    $xml->{noise0}->{flag}->[3]->{val0} = $SiteSD_Kb;
+    ########################################
+    ##            Assembly                ##
+    ########################################
+    $xml->{assembly}->{flag}->[0]->{val0} = $p-value{$stringency};
+    ########################################
+    ##              RefineA               ##
+    ########################################
+    $xml->{refineA}->{flag}->[2]->{val0} = $p-value{$stringency};
+    ########################################
+    ##              RefineB               ##
+    ########################################
+    $xml->{refineB}->{flag}->[2]->{val0} = $p-value{$stringency}/10;
+    $xml->{refineB}->{flag}->[9]->{val0} = 25; #min split length
+    ########################################
+    ##              RefineFinal           ##
+    ########################################
+    $xml->{refineFinal}->{flag}->[2]->{val0} = $p-value{$stringency}/10;
+    $xml->{refineFinal}->{flag}->[16]->{val0} = 1e-5;
+    $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5;
+    ########################################
+    ##              Extension             ##
+    ########################################
+    $xml->{extension}->{flag}->[3]->{val0} = $p-value{$stringency}/10;
+    $xml->{extension}->{flag}->[20]->{val0} = 1e-5;
+    $xml->{extension}->{flag}->[20]->{val0} = 1e-5;
+    ########################################
+    ##               Merge                ##
+    ########################################
+    $xml->{merge}->{flag}->[0]->{val0} = 75;
+    $xml->{merge}->{flag}->[1]->{val0} = $p-value{$stringency}/1000;
     XMLout($xml,KeepRoot => 1,NoAttr => 1,OutputFile => $xml_outfile,);
 }
