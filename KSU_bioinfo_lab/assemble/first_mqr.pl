@@ -28,6 +28,7 @@ sub edit_file
 ##################################################################################
 ##############      generate first Molecule Quality Reports     ##################
 ##################################################################################
+my @files_to_remove; # list of BNX files to remove after spliting
 opendir(DIR, "${bnx_dir}") or die "can't open ${bnx_dir}!\n"; # open directory full of .bnx files
 while (my $file = readdir(DIR))
 {
@@ -86,6 +87,7 @@ while (my $file = readdir(DIR))
         ###########################################################################
         my $adjusted = edit_file("${bnx_dir}/${filename}/${subfilename}.bnx","${bnx_dir}/${filename}/${subfilename}_adj",$new_bpp);
         print "$adjusted";
+        push (@files_to_remove,"${bnx_dir}/${filename}/${subfilename}.bnx");
         print BNX_LIST "${bnx_dir}/${filename}/${subfilename}_adj.bnx\n"; # print name of adj BNX
     }
     ####################################################################
@@ -115,5 +117,13 @@ while (my $file = readdir(DIR))
     }
 
 }
+####################################################################
+########          Remove unadjusted BNX files                #######
+####################################################################
+for my $remove (@files_to_remove)
+{
+    `rm $remove`;
+}
+
 
 

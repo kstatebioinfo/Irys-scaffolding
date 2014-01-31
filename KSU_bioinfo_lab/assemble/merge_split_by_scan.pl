@@ -78,7 +78,7 @@ while (my $file = readdir(DIR))
                 print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
                 print "Warning: bppSD, $values[11], is higher than 19 for flowcell ${filename}_adj_merged.bnx\n";
             }
-            if (15<$values[11]<20)
+            if ((15<$values[11])&&($values[11]<20))
             {
                 print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
                 print "Warning: bppSD, $values[11], is higher than 15 for flowcell ${filename}_adj_merged.bnx\n";
