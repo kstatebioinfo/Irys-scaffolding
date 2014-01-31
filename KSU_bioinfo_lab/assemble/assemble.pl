@@ -55,7 +55,8 @@ for my $stringency (keys %p-value)
     my $xml_infile = "${dirname}/optArguments.xml";
     my $xml_outfile = "${dirname}/${stringency}_optArguments.xml";
     my $xml = XMLin($xml_infile,KeepRoot => 1,ForceArray => 1,);
-
+    
+    $xml->{outer1}->[0]->{inner1}->[1]->{name} = 'hello';
 
     XMLout($xml,KeepRoot => 1,NoAttr => 1,OutputFile => $xml_outfile,);
 }

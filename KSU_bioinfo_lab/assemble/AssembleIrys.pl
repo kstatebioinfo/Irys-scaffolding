@@ -80,15 +80,15 @@ print "Merging the merged BNX for each flowcell. Generating third Molecule Quali
 print "##################################################################################\n";
 my $third_mqr=`perl ${dirname}/third_mqr.pl $bnx_dir $reference $T`;
 print "$third_mqr";
-##################################################################################
-##########  Use "all_flowcells_adj_merged_bestref.err" for noise parameters ######
-##########  and begin assembly with a range of p-value thresholds           ######
-##################################################################################
-print "##################################################################################\n";
-print "Using \"all_flowcells_adj_merged_bestref.err\" for noise parameters and beginning assembly with a range of p-value thresholds...\n";
-print "##################################################################################\n";
-my $assemble=`perl ${dirname}/assemble.pl $bnx_dir $reference $T $dirname`;
-print "$assemble";
+###################################################################################
+###########  Use "all_flowcells_adj_merged_bestref.err" for noise parameters ######
+###########  and begin assembly with a range of p-value thresholds           ######
+###################################################################################
+#print "##################################################################################\n";
+#print "Using \"all_flowcells_adj_merged_bestref.err\" for noise parameters and beginning assembly with a range of p-value thresholds...\n";
+#print "##################################################################################\n";
+#my $assemble=`perl ${dirname}/assemble.pl $bnx_dir $reference $T $dirname`;
+#print "$assemble";
 
 
 ##################################################################################
