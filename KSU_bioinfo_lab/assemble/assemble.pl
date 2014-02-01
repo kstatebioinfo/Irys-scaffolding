@@ -24,7 +24,7 @@ my $err="${bnx_dir}/all_flowcells_adj_merged_bestref.err";
 ##################################################################################
 my $T_relaxed = $T * 10;
 my $T_strict = $T/10;
-my pairmerge=75;
+my $pairmerge=75;
 my ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square);
 open (ERR,'<',"$err") or die "can't open $err!\n";
 while (<ERR>) # get noise parameters
