@@ -45,7 +45,7 @@ while (<ERR>) # get noise parameters
 ##############                 parse XML                        ##################
 ##################################################################################
 my %p_value;
-%hash = (
+my %hash = (
 strict_t => "$T_strict",
 default_t => '$T',
 relaxed_t => '$T_relaxed',
