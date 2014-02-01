@@ -1,7 +1,7 @@
 #!/bin/perl
 ##################################################################################
 #   
-#	USAGE: perl assemble.pl [bnx_dir] [reference] [p-value Threshold] [script directory]
+#	USAGE: perl assemble.pl [bnx_dir] [reference] [p_value Threshold] [script directory]
 #
 #  Created by jennifer shelton
 #
@@ -44,14 +44,14 @@ while (<ERR>) # get noise parameters
 ##################################################################################
 ##############                 parse XML                        ##################
 ##################################################################################
-my %p-value;
+my %p_value;
 %hash = (
 strict_t => "$T_strict",
 default_t => '$T',
 relaxed_t => '$T_relaxed',
 );
 
-for my $stringency (keys %p-value)
+for my $stringency (keys %p_value)
 {
     my $xml_infile = "${dirname}/optArguments.xml";
     my $xml_outfile = "${bnx_dir}/${stringency}_optArguments.xml";
@@ -60,7 +60,7 @@ for my $stringency (keys %p-value)
     ########################################
     ##             Pairwise               ##
     ########################################
-    $xml->{pairwise}->{flag}->[0]->{val0} = $p-value{$stringency};
+    $xml->{pairwise}->{flag}->[0]->{val0} = $p_value{$stringency};
     ########################################
     ##               Noise                ##
     ########################################
@@ -71,32 +71,32 @@ for my $stringency (keys %p-value)
     ########################################
     ##            Assembly                ##
     ########################################
-    $xml->{assembly}->{flag}->[0]->{val0} = $p-value{$stringency};
+    $xml->{assembly}->{flag}->[0]->{val0} = $p_value{$stringency};
     ########################################
     ##              RefineA               ##
     ########################################
-    $xml->{refineA}->{flag}->[2]->{val0} = $p-value{$stringency};
+    $xml->{refineA}->{flag}->[2]->{val0} = $p_value{$stringency};
     ########################################
     ##              RefineB               ##
     ########################################
-    $xml->{refineB}->{flag}->[2]->{val0} = $p-value{$stringency}/10;
+    $xml->{refineB}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
     $xml->{refineB}->{flag}->[9]->{val0} = 25; #min split length
     ########################################
     ##              RefineFinal           ##
     ########################################
-    $xml->{refineFinal}->{flag}->[2]->{val0} = $p-value{$stringency}/10;
+    $xml->{refineFinal}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
     $xml->{refineFinal}->{flag}->[16]->{val0} = 1e-5;
     $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5;
     ########################################
     ##              Extension             ##
     ########################################
-    $xml->{extension}->{flag}->[3]->{val0} = $p-value{$stringency}/10;
+    $xml->{extension}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
     $xml->{extension}->{flag}->[20]->{val0} = 1e-5;
     $xml->{extension}->{flag}->[20]->{val0} = 1e-5;
     ########################################
     ##               Merge                ##
     ########################################
     $xml->{merge}->{flag}->[0]->{val0} = 75;
-    $xml->{merge}->{flag}->[1]->{val0} = $p-value{$stringency}/1000;
+    $xml->{merge}->{flag}->[1]->{val0} = $p_value{$stringency}/1000;
     XMLout($xml,KeepRoot => 1,NoAttr => 1,OutputFile => $xml_outfile,);
 }
