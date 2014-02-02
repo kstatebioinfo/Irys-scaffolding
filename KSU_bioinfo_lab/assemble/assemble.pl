@@ -18,6 +18,10 @@ my $bnx_dir = $ARGV[0];
 my $ref = $ARGV[1];
 my $T = $ARGV[2];
 my $dirname = $ARGV[3];
+print "bnx_dir = $ARGV[0]\n";
+print "ref = $ARGV[1]\n";
+print "T = $ARGV[2]\n";
+print "dirname = $ARGV[3]\n";
 my $err="${bnx_dir}/all_flowcells_adj_merged_bestref.err";
 ##################################################################################
 ##############              get parameters for XML              ##################
