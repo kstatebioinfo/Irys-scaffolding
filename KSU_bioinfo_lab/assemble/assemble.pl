@@ -46,9 +46,9 @@ while (<ERR>) # get noise parameters
 ##################################################################################
 my %p_value;
 my %hash = (
-strict_t => "$T_strict",
-default_t => '$T',
-relaxed_t => '$T_relaxed',
+'strict_t' => "$T_strict",
+'default_t' => '$T',
+'relaxed_t' => '$T_relaxed',
 );
 
 for my $stringency (keys %p_value)
