@@ -24,7 +24,7 @@ print "bnx_dir = $ARGV[0]\n";
 print "ref = $ARGV[1]\n";
 print "T = $ARGV[2]\n";
 print "dirname = $ARGV[3]\n";
-my $err="${bnx_dir}/all_flowcells_adj_merged_bestref.err";
+my $err="${bnx_dir}/all_flowcells/all_flowcells_adj_merged_bestref.err";
 ##################################################################################
 ##############              get parameters for XML              ##################
 ##################################################################################
@@ -56,13 +56,24 @@ my %p_value = (
 'default_t' => "$T",
 'relaxed_t' => "$T_relaxed",
 );
-
+open (OUT_ASSEMBLE, '>',"${bnx_dir}/assembly_commands.txt"); # for assembly commands
 for my $stringency (keys %p_value)
 {
+    ##################################################################
+    ##############     Create assembly directories  ##################
+    ##################################################################
+    my $out_dir = "${bnx_dir}/${stringency}";
+    unless(mkdir $out_dir)
+    {
+		die "Unable to create $out_dir\n";
+	}
+    ##################################################################
+    ##############        Set assembly parameters   ##################
+    ##################################################################
     my $xml_infile = "${dirname}/optArguments.xml";
-    my $xml_outfile = "${bnx_dir}/${stringency}_optArguments.xml";
+    my $xml_outfile = "${bnx_dir}/${stringency}/${stringency}_optArguments.xml";
     my $xml = XMLin($xml_infile);
-    open (OUT, '>',"${bnx_dir}/dumped.txt");
+    open (OUT, '>',"${bnx_dir}/${stringency}/dumped.txt");
     print OUT Dumper($xml);
     ########################################
     ##             Pairwise               ##
@@ -109,7 +120,7 @@ for my $stringency (keys %p_value)
     #########################################
     ## Correct the document head and tail  ##
     #########################################
-    my $xml_final = "${bnx_dir}/${stringency}_final_optArguments.xml";
+    my $xml_final = "${bnx_dir}/${stringency}/${stringency}_final_optArguments.xml";
     open (OPTARGFINAL, '>', $xml_final) or die "can't open $xml_final\n";
     open (OPTARG, '<', $xml_outfile) or die "can't open $xml_outfile\n";
     while (<OPTARG>)
@@ -134,24 +145,18 @@ for my $stringency (keys %p_value)
     ##################################################################
     ##############        Write assembly command    ##################
     ##################################################################
-    my $out_dir = "${bnx_dir}/${stringency}";
-    unless(mkdir $out_dir)
-    {
-		die "Unable to create $out_dir\n";
-	}
-    open (OUT_ASSEMBLE, '>',"${bnx_dir}/assembly_commands.txt");
-    print OUT_ASSEMBLE "~/scripts/pipelineCL.py -T 64 -j 16 -N 4 -i 5 -a $xml_final -w -t /home/irys/tools -l $out_dir -b ${bnx_dir}/all_flowcells_adj_merged.bnx -e $project -p 0 -V -r $ref\n";
+    print OUT_ASSEMBLE "~/scripts/pipelineCL.py -T 64 -j 16 -N 4 -i 5 -a $xml_final -w -t /home/irys/tools -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -e $project -p 0 -V -r $ref\n";
 }
 #########################################
 ##       Clean some excess files       ##
 #########################################
 `rm ${bnx_dir}/dumped.txt`;
-`rm ${bnx_dir}/all_flowcells_adj_merged_bestref_r.cmap`;
-`rm ${bnx_dir}/all_flowcells_adj_merged_bestref_q.cmap`;
-`rm ${bnx_dir}/all_flowcells_adj_merged_bestref.map`;
-`rm ${bnx_dir}/all_flowcells_adj_merged_bestref.xmap`;
-`rm ${bnx_dir}/all_flowcells_adj_merged_r.cmap`;
-`rm ${bnx_dir}/all_flowcells_adj_merged_q.cmap`;
-`rm ${bnx_dir}/all_flowcells_adj_merged.map`;
-`rm ${bnx_dir}/all_flowcells_adj_merged.xmap`;
+`rm "${bnx_dir}/all_flowcells/all_flowcells_adj_merged_bestref_r.cmap`;
+`rm "${bnx_dir}/all_flowcells/all_flowcells_adj_merged_bestref_q.cmap`;
+`rm "${bnx_dir}/all_flowcells/all_flowcells_adj_merged_bestref.map`;
+`rm "${bnx_dir}/all_flowcells/all_flowcells_adj_merged_bestref.xmap`;
+`rm "${bnx_dir}/all_flowcells/all_flowcells_adj_merged_r.cmap`;
+`rm "${bnx_dir}/all_flowcells/all_flowcells_adj_merged_q.cmap`;
+`rm "${bnx_dir}/all_flowcells/all_flowcells_adj_merged.map`;
+`rm "${bnx_dir}/all_flowcells/all_flowcells_adj_merged.xmap`;
 
