@@ -32,4 +32,5 @@ while (<RAW_BNX_LIST>)
 {
 	my $file = $_;
 	`mv $file $directory/RawMolecules_${i}.bnx`;
+    ++$i;
 }
