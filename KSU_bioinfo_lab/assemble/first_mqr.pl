@@ -22,7 +22,7 @@ sub edit_file
     my $filename = $_[0];
     my $filename_adj = $_[1];
     my $replacement_bpp = $_[2];
-    my $sub_ref=`~/tools/RefAligner -i $filename -merge -bnx -bpp $replacement_bpp -o $filename_adj`;
+    my $sub_ref=`~/tools/RefAligner -i $filename -merge -bnx -bpp $replacement_bpp -o $filename_adj -stdout -stderr -maxthreads 16`;
     return $sub_ref;
 }
 ##################################################################################
@@ -56,7 +56,7 @@ while (my $file = readdir(DIR))
         ####################################################################
         ###### run refaligner for flowcell molecule quality report  ########
         ####################################################################
-        my $run_ref=`~/tools/RefAligner -i ${bnx_dir}/${filename}/$subfile -o ${bnx_dir}/${filename}/${subfilename} -T ${T} -ref ${ref} -bnx -nosplit 2 -BestRef 1 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5`;
+        my $run_ref=`~/tools/RefAligner -i ${bnx_dir}/${filename}/$subfile -o ${bnx_dir}/${filename}/${subfilename} -T ${T} -ref ${ref} -bnx -nosplit 2 -BestRef 1 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5 -stdout -stderr -maxthreads 16`;
         print "$run_ref";
         ####################################################################
         ##############  remove excess files and find new bpp ###############

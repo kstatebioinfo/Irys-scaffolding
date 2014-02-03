@@ -24,7 +24,7 @@ print "#  github.com/                                            #\n";
 print "#  perl AssembleIrys.pl -help # for usage/options         #\n";
 print "#  perl AssembleIrys.pl -man # for more details           #\n";
 print "###########################################################\n";
-#perl /Users/jennifershelton/Desktop/Perl_course_texts/scripts/Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrys.pl -g 230 -b test_bnx
+#perl /Users/jennifershelton/Desktop/Perl_course_texts/scripts/Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrys.pl -g 230 -b test_bnx - p Oryz_sati_0027
 
 ##################################################################################
 ##############                get arguments                     ##################
@@ -38,7 +38,8 @@ GetOptions (
 			  'man' => \$man,
 			  'b|bnx_dir:s' => \$bnx_dir,    
               'g|genome:i' => \$genome,
-              'r|ref:s' => \$reference  
+              'r|ref:s' => \$reference,
+              'p|proj:s' => \$project
               )  
 or pod2usage(2);
 pod2usage(1) if $help;
@@ -87,7 +88,7 @@ print "$third_mqr";
 print "##################################################################################\n";
 print "Using \"all_flowcells_adj_merged_bestref.err\" for noise parameters and beginning assembly with a range of p-value thresholds...\n";
 print "##################################################################################\n";
-my $assemble=`perl ${dirname}/assemble.pl $bnx_dir $reference $T $dirname`;
+my $assemble=`perl ${dirname}/assemble.pl $bnx_dir $reference $T $dirname $project`;
 print "$assemble";
 
 
