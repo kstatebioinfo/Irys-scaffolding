@@ -1,7 +1,7 @@
 #!/bin/perl
 ##################################################################################
 #   
-#	USAGE: perl assemble.pl [bnx_dir] [reference] [p_value Threshold] [script directory]
+#	USAGE: perl assemble.pl [bnx_dir] [reference] [p_value Threshold] [script directory] [project prefix]
 #
 #  Created by jennifer shelton
 #
@@ -19,6 +19,7 @@ my $bnx_dir = $ARGV[0];
 my $ref = $ARGV[1];
 my $T = $ARGV[2];
 my $dirname = $ARGV[3];
+my $project = $ARGV[4];
 print "bnx_dir = $ARGV[0]\n";
 print "ref = $ARGV[1]\n";
 print "T = $ARGV[2]\n";
@@ -105,9 +106,11 @@ for my $stringency (keys %p_value)
     $xml->{merge}->{flag}->[0]->{val0} = 75; # pairmerge
     $xml->{merge}->{flag}->[1]->{val0} = $p_value{$stringency}/1000;
     XMLout($xml,OutputFile => $xml_outfile,);
-    
+    #########################################
+    ## Correct the document head and tail  ##
+    #########################################
     my $xml_final = "${bnx_dir}/${stringency}_final_optArguments.xml";
-    open (OPTARGFINAL, '>', $xml_final) or die "can't open $xml_outfile\n";
+    open (OPTARGFINAL, '>', $xml_final) or die "can't open $xml_final\n";
     open (OPTARG, '<', $xml_outfile) or die "can't open $xml_outfile\n";
     while (<OPTARG>)
     {
@@ -115,11 +118,11 @@ for my $stringency (keys %p_value)
         {
             print OPTARGFINAL '<?xml version="1.0"?>';
             
-            print OPTARGFINAL "\n<moduleArgs>\n";
+            print OPTARGFINAL "\n\n<moduleArgs>\n";
         }
         elsif (/<\/opt>/)
         {
-            print OPTARGFINAL "</moduleArgs>\n";
+            print OPTARGFINAL "\n</moduleArgs>\n";
         }
         else
         {
@@ -128,5 +131,27 @@ for my $stringency (keys %p_value)
 
     }
     `rm $xml_outfile`;
+    ##################################################################
+    ##############        Write assembly command    ##################
+    ##################################################################
+    my $out_dir = "${bnx_dir}/${stringency}";
+    unless(mkdir $out_dir)
+    {
+		die "Unable to create $out_dir\n";
+	}
+    open (OUT_ASSEMBLE, '>',"${bnx_dir}/assembly_commands.txt");
+    print OUT_ASSEMBLE "~/scripts/pipelineCL.py -T 64 -j 16 -N 4 -i 5 -a $xml_final -w -t /home/irys/tools -l $out_dir -b ${bnx_dir}/all_flowcells_adj_merged.bnx -e $project -p 0 -V -r $ref\n";
 }
+#########################################
+##       Clean some excess files       ##
+#########################################
+`rm ${bnx_dir}/dumped.txt`;
+`rm ${bnx_dir}/all_flowcells_adj_merged_bestref_r.cmap`;
+`rm ${bnx_dir}/all_flowcells_adj_merged_bestref_q.cmap`;
+`rm ${bnx_dir}/all_flowcells_adj_merged_bestref.map`;
+`rm ${bnx_dir}/all_flowcells_adj_merged_bestref.xmap`;
+`rm ${bnx_dir}/all_flowcells_adj_merged_r.cmap`;
+`rm ${bnx_dir}/all_flowcells_adj_merged_q.cmap`;
+`rm ${bnx_dir}/all_flowcells_adj_merged.map`;
+`rm ${bnx_dir}/all_flowcells_adj_merged.xmap`;
 
