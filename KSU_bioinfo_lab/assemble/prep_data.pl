@@ -27,7 +27,7 @@ unless(mkdir $directory)
 ##################################################################################
 ##############            Move and rename files                 ##################
 ##################################################################################
-open (RAW_BNX_LIST, '<',"$raw_bnx_list") or die "can't open $raw_bnx_dir!\n";
+open (RAW_BNX_LIST, '<',"$raw_bnx_list") or die "can't open $raw_bnx_list!\n";
 while (<RAW_BNX_LIST>) 
 {
 	my $file = $_;
