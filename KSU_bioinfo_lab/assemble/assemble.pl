@@ -11,6 +11,7 @@ use warnings;
 # use List::Util qw(max);
 # use List::Util qw(sum);
 use XML::Simple;
+use Data::Dumper;
 ##################################################################################
 ##############                     get arguments                ##################
 ##################################################################################
@@ -59,8 +60,9 @@ for my $stringency (keys %p_value)
 {
     my $xml_infile = "${dirname}/optArguments.xml";
     my $xml_outfile = "${bnx_dir}/${stringency}_optArguments.xml";
-    my $xml = XMLin($xml_infile,KeepRoot => 1,ForceArray => 1,);
-    
+    my $xml = XMLin($xml_infile);
+    open (OUT, '>',"${bnx_dir}/dumped.txt");
+    print OUT Dumper($xml);
     ########################################
     ##             Pairwise               ##
     ########################################
@@ -89,18 +91,18 @@ for my $stringency (keys %p_value)
     ##              RefineFinal           ##
     ########################################
     $xml->{refineFinal}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineFinal}->{flag}->[16]->{val0} = 1e-5;
-    $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5;
+    $xml->{refineFinal}->{flag}->[16]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
     ##              Extension             ##
     ########################################
     $xml->{extension}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
-    $xml->{extension}->{flag}->[20]->{val0} = 1e-5;
-    $xml->{extension}->{flag}->[20]->{val0} = 1e-5;
+    $xml->{extension}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
     ##               Merge                ##
     ########################################
-    $xml->{merge}->{flag}->[0]->{val0} = 75;
+    $xml->{merge}->{flag}->[0]->{val0} = 75; # pairmerge
     $xml->{merge}->{flag}->[1]->{val0} = $p_value{$stringency}/1000;
-    XMLout($xml,KeepRoot => 1,NoAttr => 1,OutputFile => $xml_outfile,);
+    XMLout($xml,OutputFile => $xml_outfile,);
 }
