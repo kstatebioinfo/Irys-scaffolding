@@ -28,23 +28,23 @@ unless(mkdir $directory)
 ##############   run refaligner to merge adjusted BNXs    ##########
 ##############   for each flowcell                        ##########
 ####################################################################
-my $merging= `~/tools/RefAligner -if ${bnx_dir}/flowcell_bnx.txt -o ${bnx_dir}/${directory}/all_flowcells_adj_merged -merge -bnx -minsites 5 -minlen 150 -maxthreads 16`;
+my $merging= `~/tools/RefAligner -if ${bnx_dir}/flowcell_bnx.txt -o ${directory}/all_flowcells_adj_merged -merge -bnx -minsites 5 -minlen 150 -maxthreads 16`;
 print "$merging";
 ####################################################################
 ##############   Third molecule quality report:           ##########
 ##############   test the final merged BNX with -BestRef  ##########
 ####################################################################
 my @err_files;
-my $third_mqr_b = `~/tools/RefAligner -i ${bnx_dir}/{directory}/all_flowcells_adj_merged.bnx -o ${bnx_dir}/${directory}/all_flowcells_adj_merged_bestref -T ${T} -ref ${ref} -bnx -nosplit 2 -BestRef 1 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5 -maxthreads 16`;
+my $third_mqr_b = `~/tools/RefAligner -i ${bnx_dir}/{directory}/all_flowcells_adj_merged.bnx -o ${directory}/all_flowcells_adj_merged_bestref -T ${T} -ref ${ref} -bnx -nosplit 2 -BestRef 1 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5 -maxthreads 16`;
 print "$third_mqr_b";
-push (@err_files,"${bnx_dir}/${directory}/all_flowcells_adj_merged_bestref.err");
+push (@err_files,"${directory}/all_flowcells_adj_merged_bestref.err");
 ####################################################################
 ##############   Third molecule quality report:           ##########
 ############## test the final merged BNX without -BestRef ##########
 ####################################################################
-my $third_mqr = `~/tools/RefAligner -i ${bnx_dir}/{directory}/all_flowcells_adj_merged.bnx -o ${bnx_dir}/${directory}/all_flowcells_adj_merged -T ${T} -ref ${ref} -nosplit 2 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5 -maxthreads 16`;
+my $third_mqr = `~/tools/RefAligner -i ${bnx_dir}/{directory}/all_flowcells_adj_merged.bnx -o ${directory}/all_flowcells_adj_merged -T ${T} -ref ${ref} -nosplit 2 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5 -maxthreads 16`;
 print "$third_mqr";
-push (@err_files,"${bnx_dir}/${directory}/all_flowcells_adj_merged.err");
+push (@err_files,"${directory}/all_flowcells_adj_merged.err");
 ####################################################################
 ##############  Compare  molecule quality reports         ##########
 ##############  with and without -BestRef                 ##########
