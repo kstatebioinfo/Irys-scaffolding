@@ -117,7 +117,7 @@ for my $stringency (keys %p_value)
             
             print OPTARGFINAL "\n<moduleArgs>\n";
         }
-        if (/<\/opt>/)
+        elsif (/<\/opt>/)
         {
             print OPTARGFINAL "</moduleArgs>\n";
         }
