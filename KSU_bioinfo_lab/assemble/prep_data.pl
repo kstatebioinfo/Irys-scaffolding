@@ -17,12 +17,12 @@ use warnings;
 ##################################################################################
 ##############                 get arguments                    ##################
 ##################################################################################
-my $raw_bnx_dir=$ARGV[0];
+my $raw_bnx_list=$ARGV[0];
 my $i=1;
 my $directory = "/home/irys/Data/Trib_cast_0002";
 unless(mkdir $directory) 
 {
-	die "Unable to create $directoryn";
+	die "Unable to create $directory\n";
 }
 ##################################################################################
 ##############            Move and rename files                 ##################
