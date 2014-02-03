@@ -105,4 +105,12 @@ for my $stringency (keys %p_value)
     $xml->{merge}->{flag}->[0]->{val0} = 75; # pairmerge
     $xml->{merge}->{flag}->[1]->{val0} = $p_value{$stringency}/1000;
     XMLout($xml,OutputFile => $xml_outfile,);
+    
+    open (OPTARG, '>', $xml_outfile) or die "can't open $xml_outfile\n";
+    while (<OPTARG>)
+    {
+        s/<opt>/<\?xml version=\"1.0\"\?>\n<moduleArgs>/;
+        s/<\/opt>/<\/moduleArgs>/;
+    }
 }
+
