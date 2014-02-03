@@ -35,14 +35,14 @@ print "$merging";
 ##############   test the final merged BNX with -BestRef  ##########
 ####################################################################
 my @err_files;
-my $third_mqr_b = `~/tools/RefAligner -i ${bnx_dir}/{directory}/all_flowcells_adj_merged.bnx -o ${directory}/all_flowcells_adj_merged_bestref -T ${T} -ref ${ref} -bnx -nosplit 2 -BestRef 1 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5 -maxthreads 16`;
+my $third_mqr_b = `~/tools/RefAligner -i ${directory}/all_flowcells_adj_merged.bnx -o ${directory}/all_flowcells_adj_merged_bestref -T ${T} -ref ${ref} -bnx -nosplit 2 -BestRef 1 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5 -maxthreads 16`;
 print "$third_mqr_b";
 push (@err_files,"${directory}/all_flowcells_adj_merged_bestref.err");
 ####################################################################
 ##############   Third molecule quality report:           ##########
 ############## test the final merged BNX without -BestRef ##########
 ####################################################################
-my $third_mqr = `~/tools/RefAligner -i ${bnx_dir}/{directory}/all_flowcells_adj_merged.bnx -o ${directory}/all_flowcells_adj_merged -T ${T} -ref ${ref} -nosplit 2 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5 -maxthreads 16`;
+my $third_mqr = `~/tools/RefAligner -i ${directory}/all_flowcells_adj_merged.bnx -o ${directory}/all_flowcells_adj_merged -T ${T} -ref ${ref} -nosplit 2 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5 -maxthreads 16`;
 print "$third_mqr";
 push (@err_files,"${directory}/all_flowcells_adj_merged.err");
 ####################################################################
@@ -59,10 +59,9 @@ for my $file (@err_files)
     open (ERR,'<',"$file") or die "can't open $file!\n";
     while (<ERR>)
     {
-        my @other_values;
         if (/^ 4\t/)
         {
-            @other_values=split/\t/; # because the final good maps is reported as 0
+            my @other_values=split/\t/; # because the final good maps is reported as 0
             $other_values[9] =~ s/\s+//g;
             $good_maps=$other_values[9];
         }
