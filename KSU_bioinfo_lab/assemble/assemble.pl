@@ -106,11 +106,27 @@ for my $stringency (keys %p_value)
     $xml->{merge}->{flag}->[1]->{val0} = $p_value{$stringency}/1000;
     XMLout($xml,OutputFile => $xml_outfile,);
     
-    open (OPTARG, '>', $xml_outfile) or die "can't open $xml_outfile\n";
+    my $xml_final = "${bnx_dir}/${stringency}_final_optArguments.xml";
+    open (OPTARGFINAL, '>', $xml_final) or die "can't open $xml_outfile\n";
+    open (OPTARG, '<', $xml_outfile) or die "can't open $xml_outfile\n";
     while (<OPTARG>)
     {
-        s/<opt>/<\?xml version=\"1.0\"\?>\n<moduleArgs>/;
-        s/<\/opt>/<\/moduleArgs>/;
+        if (/<opt>/)
+        {
+            print OPTARGFINAL '<?xml version="1.0"?>';
+            
+            print OPTARGFINAL "\n<moduleArgs>\n";
+        }
+        if (/<\/opt>/)
+        {
+            print OPTARGFINAL "</moduleArgs>\n";
+        }
+        else
+        {
+            print OPTARGFINAL;
+        }
+
     }
+    `rm $xml_outfile`;
 }
 
