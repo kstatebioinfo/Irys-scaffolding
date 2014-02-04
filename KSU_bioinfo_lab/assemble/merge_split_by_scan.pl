@@ -17,7 +17,7 @@ use File::Basename; # enable maipulating of the full path
 my $bnx_dir = $ARGV[0];
 my $ref = $ARGV[1];
 my $T = $ARGV[2];
-open (FLOWCELL_BNX_LIST, '>', "$bnx_dir/flowcell_bnx.txt") or die "can't open $bnx_dir/flowcell_bnx.txt !\n"; # create list of flowcell BNXs
+open (FLOWCELL_BNX_LIST, '>>', "$bnx_dir/flowcell_bnx.txt") or die "can't open $bnx_dir/flowcell_bnx.txt !\n"; # create list of flowcell BNXs
 open (FLOWCELL_BNX_SUMMARY, '>', "$bnx_dir/flowcell_summary.csv") or die "can't open $bnx_dir/flowcell_summary.csv !\n"; # create file for summary stats of flowcell BNXs
 print FLOWCELL_BNX_SUMMARY "Filename,FP(/100kb),FNrate,bpp,bppSD,Maps,GoodMaps,GoodMaps/Maps\n";
 ##################################################################################
@@ -32,19 +32,19 @@ while (my $file = readdir(DIR))
     ####################################################################
     ##############   Run refaligner to merge adjusted BNXs    ##########
     ####################################################################
-    my $merging= `~/tools/RefAligner -if ${bnx_dir}/${filename}_adj_bnx_list.txt -o ${bnx_dir}/${filename}_adj_merged -merge -bnx -minsites 5 -minlen 150 -stdout -stderr -maxthreads 16`;
+    my $merging= `~/tools/RefAligner -if ${bnx_dir}/${filename}_adj_bnx_list.txt -o ${bnx_dir}/${filename}/${filename}_adj_merged -merge -bnx -minsites 5 -minlen 150 -maxthreads 16`;
     print "$merging";
     ####################################################################
     ######## Second molecule quality report:                      ######
     ######## run refaligner for flowcell molecule quality report  ######
     ####################################################################
-    my $run_ref=`~/tools/RefAligner -i ${bnx_dir}/${filename}_adj_merged.bnx -o ${bnx_dir}/${filename}_adj_merged  -T ${T} -ref ${ref} -bnx -nosplit 2 -BestRef 1 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5 -stdout -stderr -maxthreads 16`;
+    my $run_ref=`~/tools/RefAligner -i ${bnx_dir}/${filename}/${filename}_adj_merged.bnx -o ${bnx_dir}/${filename}/${filename}_adj_merged  -T ${T} -ref ${ref} -bnx -nosplit 2 -BestRef 1 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5 -maxthreads 16`;
     print "$run_ref";
-    print FLOWCELL_BNX_LIST "${bnx_dir}/${filename}_adj_merged.bnx\n"; # make final merge list
+    print FLOWCELL_BNX_LIST "${bnx_dir}/${filename}/${filename}_adj_merged.bnx\n"; # make final merge list
     ####################################################################
     ######## summarize flowcell molecule quality report .err values ####
     ####################################################################
-    open (ERR,'<',"${bnx_dir}/${filename}_adj_merged.err") or die "can't open ${bnx_dir}/${filename}_adj_merged.err!\n";
+    open (ERR,'<',"${bnx_dir}/${filename}/${filename}_adj_merged.err") or die "can't open ${bnx_dir}/${filename}/${filename}_adj_merged.err!\n";
     my $good_maps;
     while (<ERR>)
     {
@@ -90,11 +90,11 @@ while (my $file = readdir(DIR))
             if ($values[7] != 0)
             {
                 my $map_ratio = $good_maps/$values[7];
-                print FLOWCELL_BNX_SUMMARY "${bnx_dir}/${filename}_adj_merged.bnx,$values[1],$values[2],$values[5],$values[11],$values[7],$good_maps,$map_ratio\n";
+                print FLOWCELL_BNX_SUMMARY "${bnx_dir}/${filename}/${filename}_adj_merged.bnx,$values[1],$values[2],$values[5],$values[11],$values[7],$good_maps,$map_ratio\n";
             }
             else
             {
-                print FLOWCELL_BNX_SUMMARY "${bnx_dir}/${filename}_adj_merged.bnx,bad flow cell 0 Maps\n";
+                print FLOWCELL_BNX_SUMMARY "${bnx_dir}/${filename}/${filename}_adj_merged.bnx,bad flow cell 0 Maps\n";
             }
         }
     }
