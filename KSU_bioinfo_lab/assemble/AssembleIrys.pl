@@ -115,9 +115,11 @@ perl script.pl [options]
    -help    brief help message
    -man	    full documentation
  Required options:
-   -r	     reference CMAP
- Filtering options:
-   --s_algn	 second minimum % of possible alignment   
+    -b	     directory with all BNX's meant for assembly (any BNX in this directory will be used in assembly)
+    -g	     genome size in Mb
+    -r	     reference CMAP
+    -p	     project name for all assemblies
+  
    
 =head1 OPTIONS
 
@@ -129,15 +131,29 @@ Print a brief help message and exits.
 
 =item B<-man>
 
-Prints the more detailed manual page with output details and examples and exits.
+Prints the more detailed manual page with output details and exits.
+ 'help|?' => \$help,
+ 'man' => \$man,
+ 'b|bnx_dir:s' => \$bnx_dir,
+ 'g|genome:i' => \$genome,
+ 'r|ref:s' => \$reference,
+ 'p|proj:s' => \$project
 
-=item B<-r, --r_cmap>
+=item B<-b, --bnx_dir>
 
-The reference CMAP produced by IrysView when you create an XMAP. It can be found in the "Imports" folder within a workspace.
+The directory with all BNX's meant for assembly (any BNX in this directory will be used in assembly. Do not use a trailing / for this directory.
 
-=item B<--f_algn, --sa>
+=item B<-g, --genome>
 
-The minimum percent of the full potential length of the alignment allowed for the second round of filtering. This should be higher than the setting for the first round of filtering.
+The estimated size of the genome in Mb.
+ 
+=item B<-r, --ref>
+ 
+The full path to the reference genome CMAP.
+
+=item B<-p, --project>
+ 
+The project id. This will be used to name all assemblies
 
 =back
 
@@ -145,11 +161,24 @@ The minimum percent of the full potential length of the alignment allowed for th
 
 B<OUTPUT DETAILS:>
 
-This appears when the manual is viewed!!!!
+strict_t - This directory holds the output for the strictest assembly (where the p-value threshold is divided by 10).
+ 
+relaxed_t - This directory holds the output for the laxest assembly (where the p-value threshold is multiplied by 10).
+ 
+default_t - This directory holds the output for the default assembly (where the p-value threshold is used as-is).
+ 
+bestref_effect_summary.csv - this shows the difference between running a molecule quality report with and without - BestRef. If the values change substantially than your p-value threshold may be too lax.
+ 
+assembly_commands.txt - These are the commands to start the first pass of assemblies. In these strict, relaxed, and default p-value thresholds will be used.
+ 
+flowcell_summary.csv - This file can be evaluated to check quality (ability to align to reference for each flowcell.
 
 B<Test with sample datasets:>
 
+git clone https://github.com/i5K-KINBRE-script-share
 
-perl script.pl -r sample_data/sample.r.cmap --s_algn .9
+# no test dataset is available yet but here is an example of a command
+ 
+perl Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrys.pl -g  -b  -r  -p Test_project_name > testing_log.txt
 
 =cut
