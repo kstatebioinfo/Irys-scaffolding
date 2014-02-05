@@ -66,7 +66,7 @@ while (my $file = readdir(DIR))
         `rm ${bnx_dir}/${filename}/${subfilename}.map`;
         `rm ${bnx_dir}/${filename}/${subfilename}.xmap`;
         my $split_file="${bnx_dir}/${filename}/${subfilename}.err";
-        open (ERR, '<',"$split_file") or die "can't open $split_file !\n";
+        open (ERR, '<',"$split_file") or next "can't open $split_file !\n";
         $split_file =~ "(${bnx_dir}/${filename}/${filename}_)(.*)(.err)";
         push (@x,$2);
         print REGRESSION_LOG "$2,";
@@ -97,7 +97,7 @@ while (my $file = readdir(DIR))
     my $threshold=.2;
     my $validate=1;
     my $lineFit = Statistics::LineFit->new($validate); # $validate = 1 -> Verify input data is numeric (slower execution)
-    $lineFit->setData(\@x, \@y) or die "Invalid regression data\n";
+    $lineFit->setData(\@x, \@y) or next "Invalid regression data\n";
     my $rsquare=$lineFit->rSquared();
     print REGRESSION_LOG "Rsquare: $rsquare \n";
     if (defined $lineFit->rSquared()

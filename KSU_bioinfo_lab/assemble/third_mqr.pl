@@ -56,7 +56,7 @@ my $good_maps;
 #my $non_bestref_value; # fill in when you find out which metric to test
 for my $file (@err_files)
 {
-    open (ERR,'<',"$file") or die "can't open $file!\n";
+    open (ERR,'<',"$file") or next "can't open $file!\n";
     while (<ERR>)
     {
         if (/^ 4\t/)
