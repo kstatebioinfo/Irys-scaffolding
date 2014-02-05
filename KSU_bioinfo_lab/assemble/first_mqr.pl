@@ -22,7 +22,7 @@ sub edit_file
     my $filename = $_[0];
     my $filename_adj = $_[1];
     my $replacement_bpp = $_[2];
-    my $sub_ref=`~/tools/RefAligner -i $filename -merge -bnx -bpp $replacement_bpp -o $filename_adj -maxthreads 16`;
+    my $sub_ref=`~/tools/RefAligner -f -i $filename -merge -bnx -bpp $replacement_bpp -o $filename_adj -maxthreads 16`;
     return $sub_ref;
 }
 ##################################################################################
