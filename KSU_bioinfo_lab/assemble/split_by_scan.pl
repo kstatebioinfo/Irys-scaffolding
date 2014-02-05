@@ -48,7 +48,7 @@ while (my $file = readdir(DIR))
                 {
                     mkdir "${bnx_dir}/${filename}";
                 }
-                open (SCAN_BNX, '>',"${bnx_dir}/${filename}/${filename}${scan}.bnx") or die "couldn't open ${bnx_dir}/${filename}/${filename}${scan}.bnx!\n";
+                open (SCAN_BNX, '>',"${bnx_dir}/${filename}/${filename}_${scan}.bnx") or die "couldn't open ${bnx_dir}/${filename}/${filename}_${scan}.bnx!\n";
                for my $head (@headers)
                {
                    print SCAN_BNX "$head";
@@ -67,7 +67,7 @@ while (my $file = readdir(DIR))
             if (($CurrentScanNumber)&&($ScanNumber != $CurrentScanNumber))
             {
                 ++$scan;
-                open (SCAN_BNX, '>',"${bnx_dir}/${filename}/${filename}${scan}.bnx") or die "couldn't open ${bnx_dir}/${filename}/${filename}${scan}.bnx!\n";
+                open (SCAN_BNX, '>',"${bnx_dir}/${filename}/${filename}_${scan}.bnx") or die "couldn't open ${bnx_dir}/${filename}/${filename}_${scan}.bnx!\n";
                 for my $head (@headers)
                 {
                     print SCAN_BNX "$head";

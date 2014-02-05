@@ -22,7 +22,7 @@ sub edit_file
     my $filename = $_[0];
     my $filename_adj = $_[1];
     my $replacement_bpp = $_[2];
-    my $sub_ref=`~/tools/RefAligner -i $filename -merge -bnx -bpp $replacement_bpp -o $filename_adj -maxthreads 16`;
+    my $sub_ref=`~/tools/RefAligner -f -i $filename -merge -bnx -bpp $replacement_bpp -o $filename_adj -maxthreads 16`;
     return $sub_ref;
 }
 ##################################################################################
@@ -66,8 +66,12 @@ while (my $file = readdir(DIR))
         `rm ${bnx_dir}/${filename}/${subfilename}.map`;
         `rm ${bnx_dir}/${filename}/${subfilename}.xmap`;
         my $split_file="${bnx_dir}/${filename}/${subfilename}.err";
-        open (ERR, '<',"$split_file") or die "can't open $split_file !\n";
-        $split_file =~ "(${bnx_dir}/${filename}/${filename})(.*)(.err)";
+        unless (open (ERR, '<',"$split_file"))
+        {
+            print "can't open $split_file!\n";
+            next;
+        }
+        $split_file =~ "(${bnx_dir}/${filename}/${filename}_)(.*)(.err)";
         push (@x,$2);
         print REGRESSION_LOG "$2,";
         my $new_bpp;
@@ -93,11 +97,16 @@ while (my $file = readdir(DIR))
     ####################################################################
     ########  do regression, use predicted value of y if exists  #######
     ####################################################################
+    next if ((scalar(@x))<3);
     use Statistics::LineFit;
     my $threshold=.2;
     my $validate=1;
     my $lineFit = Statistics::LineFit->new($validate); # $validate = 1 -> Verify input data is numeric (slower execution)
-    $lineFit->setData(\@x, \@y) or die "Invalid regression data\n";
+    unless ($lineFit->setData(\@x, \@y))
+    {
+        print "Invalid regression data for ${bnx_dir}/${filename}\n";
+        next;
+    }
     my $rsquare=$lineFit->rSquared();
     print REGRESSION_LOG "Rsquare: $rsquare \n";
     if (defined $lineFit->rSquared()
@@ -111,7 +120,7 @@ while (my $file = readdir(DIR))
             ##############    rewrite bpp if regression fits    ################
             ####################################################################
             my $predicted_y = ($x[$i] * $slope)+$intercept;
-            my $adjusted = edit_file("${bnx_dir}/${filename}/${filename}$x[$i].bnx","${bnx_dir}/${filename}/${filename}$x[$i]_adj","$predicted_y");
+            my $adjusted = edit_file("${bnx_dir}/${filename}/${filename}_$x[$i].bnx","${bnx_dir}/${filename}/${filename}_$x[$i]_adj","$predicted_y");
             print "$adjusted";
         }
     }

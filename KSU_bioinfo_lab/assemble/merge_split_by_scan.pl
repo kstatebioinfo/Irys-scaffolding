@@ -44,7 +44,11 @@ while (my $file = readdir(DIR))
     ####################################################################
     ######## summarize flowcell molecule quality report .err values ####
     ####################################################################
-    open (ERR,'<',"${bnx_dir}/${filename}/${filename}_adj_merged.err") or die "can't open ${bnx_dir}/${filename}/${filename}_adj_merged.err!\n";
+    unless (open (ERR, '<',"${bnx_dir}/${filename}/${filename}_adj_merged.err"))
+    {
+        print "can't open ${bnx_dir}/${filename}/${filename}_adj_merged.err!\n";
+        next;
+    }
     my $good_maps;
     while (<ERR>)
     {
