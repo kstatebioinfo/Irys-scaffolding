@@ -111,7 +111,7 @@ while (my $file = readdir(DIR))
             ##############    rewrite bpp if regression fits    ################
             ####################################################################
             my $predicted_y = ($x[$i] * $slope)+$intercept;
-            my $adjusted = edit_file("${bnx_dir}/${filename}/${filename}$x[$i].bnx","${bnx_dir}/${filename}/${filename}$x[$i]_adj","$predicted_y");
+            my $adjusted = edit_file("${bnx_dir}/${filename}/${filename}_$x[$i].bnx","${bnx_dir}/${filename}/${filename}_$x[$i]_adj","$predicted_y");
             print "$adjusted";
         }
     }
