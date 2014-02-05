@@ -93,6 +93,7 @@ while (my $file = readdir(DIR))
     ####################################################################
     ########  do regression, use predicted value of y if exists  #######
     ####################################################################
+    next if ((scalar(@x))<2);
     use Statistics::LineFit;
     my $threshold=.2;
     my $validate=1;
