@@ -67,7 +67,7 @@ while (my $file = readdir(DIR))
         `rm ${bnx_dir}/${filename}/${subfilename}.xmap`;
         my $split_file="${bnx_dir}/${filename}/${subfilename}.err";
         open (ERR, '<',"$split_file") or die "can't open $split_file !\n";
-        $split_file =~ "(${bnx_dir}/${filename}/${filename})(.*)(.err)";
+        $split_file =~ "(${bnx_dir}/${filename}/${filename}_)(.*)(.err)";
         push (@x,$2);
         print REGRESSION_LOG "$2,";
         my $new_bpp;
