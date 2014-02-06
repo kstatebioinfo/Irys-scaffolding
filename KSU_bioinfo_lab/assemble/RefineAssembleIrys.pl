@@ -13,6 +13,8 @@ use warnings;
 use File::Basename; # enable maipulating of the full path
 use Getopt::Long;
 use Pod::Usage;
+use XML::Simple;
+use Data::Dumper;
 ##################################################################################
 ##############         Print informative message                ##################
 ##################################################################################
@@ -36,16 +38,136 @@ my $help = 0;
 GetOptions (
 			  'help|?' => \$help, 
 			  'man' => \$man,
-			  'b|best_assembly_dir:s' => \$best_assembly_dir,    
-              'g|genome:i' => \$genome,
-              'r|ref:s' => \$reference,
-              'p|proj:s' => \$project
+			  'a|current_assembly_dir:s' => \$current_assembly_dir,
+			  'b|bnx_dir:s' => \$bnx_dir,
+              'r|ref:s' => \$ref,
+              'p|proj:s' => \$project,
+              't|threshold:s' => \$T,
               )  
 or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 my $dirname = dirname(__FILE__);
-my $T = 0.00001/$genome;
+my $err="${bnx_dir}/all_flowcells/all_flowcells_adj_merged_bestref.err";
+##################################################################################
+##############              get parameters for XML              ##################
+##################################################################################
+my ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square);
+open (ERR,'<',"$err") or die "can't open $err!\n";
+while (<ERR>) # get noise parameters
+{
+    if (eof)
+    {
+        my @values=split/\t/;
+        for my $value (@values)
+        {
+            s/\s+//g;
+        }
+        my $map_ratio = $values[9]/$values[7];
+        ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square)=($values[1],$values[2],$values[3],$values[4]);
+    }
+}
+##################################################################################
+##############                 parse XML                        ##################
+##################################################################################
+
+my %min_length = (
+'strict' => 180,
+'relaxed' => 100
+);
+open (OUT_ASSEMBLE, '>',"${bnx_dir}/second_assembly_commands.sh"); # for assembly commands
+for my $stringency (keys %min_length)
+{
+    ##################################################################
+    ##############     Create assembly directories  ##################
+    ##################################################################
+    my $out_dir = "${current_assembly_dir}/${stringency}";
+    unless(mkdir $out_dir)
+    {
+		die "Unable to create $out_dir\n";
+	}
+    ##################################################################
+    ##############        Set assembly parameters   ##################
+    ##################################################################
+    my $xml_infile = "${dirname}/optArguments.xml";
+    my $xml_outfile = "${current_assembly_dir}/${stringency}/${stringency}_optArguments.xml";
+    my $xml = XMLin($xml_infile);
+    open (OUT, '>',"${current_assembly_dir}/${stringency}/dumped.txt");
+    print OUT Dumper($xml);
+    ########################################
+    ##             Pairwise               ##
+    ########################################
+    $xml->{pairwise}->{flag}->[0]->{val0} = $T;
+    ########################################
+    ##               Noise                ##
+    ########################################
+    $xml->{noise0}->{flag}->[0]->{val0} = $FP;
+    $xml->{noise0}->{flag}->[1]->{val0} = $FN;
+    $xml->{noise0}->{flag}->[2]->{val0} = $ScalingSD_Kb_square;
+    $xml->{noise0}->{flag}->[3]->{val0} = $SiteSD_Kb;
+    ########################################
+    ##            Assembly                ##
+    ########################################
+    $xml->{assembly}->{flag}->[0]->{val0} = $T;
+    ########################################
+    ##              RefineA               ##
+    ########################################
+    $xml->{refineA}->{flag}->[2]->{val0} = $T;
+    ########################################
+    ##              RefineB               ##
+    ########################################
+    $xml->{refineB}->{flag}->[2]->{val0} = $T/10;
+    $xml->{refineB}->{flag}->[9]->{val0} = 25; #min split length
+    ########################################
+    ##              RefineFinal           ##
+    ########################################
+    $xml->{refineFinal}->{flag}->[2]->{val0} = $T/10;
+    $xml->{refineFinal}->{flag}->[16]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
+    ########################################
+    ##              Extension             ##
+    ########################################
+    $xml->{extension}->{flag}->[3]->{val0} = $T/10;
+    $xml->{extension}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
+    ########################################
+    ##               Merge                ##
+    ########################################
+    $xml->{merge}->{flag}->[0]->{val0} = 75; # pairmerge
+    $xml->{merge}->{flag}->[1]->{val0} = $T/1000;
+    XMLout($xml,OutputFile => $xml_outfile,);
+    #########################################
+    ## Correct the document head and tail  ##
+    #########################################
+    my $xml_final = "${current_assembly_dir}/${stringency}/${stringency}_final_optArguments.xml";
+    open (OPTARGFINAL, '>', $xml_final) or die "can't open $xml_final\n";
+    open (OPTARG, '<', $xml_outfile) or die "can't open $xml_outfile\n";
+    while (<OPTARG>)
+    {
+        if (/<opt>/)
+        {
+            print OPTARGFINAL '<?xml version="1.0"?>';
+            
+            print OPTARGFINAL "\n\n<moduleArgs>\n";
+        }
+        elsif (/<\/opt>/)
+        {
+            print OPTARGFINAL "\n</moduleArgs>\n";
+        }
+        else
+        {
+            print OPTARGFINAL;
+        }
+        
+    }
+    `rm $xml_outfile`; # remove the intermediate xml file
+    ##################################################################
+    ##############        Write assembly command    ##################
+    ##################################################################
+    print OUT_ASSEMBLE "#!/bin/bash\n";
+    print OUT_ASSEMBLE "python ~/scripts/pipelineCL.py -T 64 -j 16 -N 4 -i 5 -a $xml_final -w -t /home/irys/tools -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -e $project -p 0 -r $ref\n"; # removed -V parameter because an error was reported
+}
+
 ##################################################################################
 ##############          Create new assembly parameters          ##################
 ##################################################################################
