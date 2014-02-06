@@ -23,7 +23,13 @@ print FLOWCELL_BNX_SUMMARY "Filename,FP(/100kb),FNrate,bpp,bppSD,Maps,GoodMaps,G
 ##################################################################################
 ######### For each split and adjusted BNX from each orignal BNX file  ############
 ##################################################################################
-opendir(DIR, "${bnx_dir}") or die "can't open ${bnx_dir}!\n"; # open directory full of .bnx files
+#opendir(DIR, "${bnx_dir}") or die "can't open ${bnx_dir}!\n"; # open directory full of .bnx files
+unless (opendir(DIR, "${bnx_dir}"))
+{
+	print "can't open ${bnx_dir}!\n"; # open directory full of .bnx files
+
+	next;
+}
 while (my $file = readdir(DIR))
 {
 	next if ($file =~ m/^\./); # ignore files beginning with a period
