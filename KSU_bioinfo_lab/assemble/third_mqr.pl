@@ -23,7 +23,6 @@ my $directory = "${bnx_dir}/all_flowcells";
 unless(mkdir $directory)
 {
     "Unable to create $directory\n";
-    next;
 }
 ####################################################################
 ##############   run refaligner to merge adjusted BNXs    ##########
