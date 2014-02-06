@@ -46,31 +46,31 @@ pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 my $dirname = dirname(__FILE__);
 my $T = 0.00001/$genome;
-##################################################################################
-##############                    Split by scan                 ##################
-##################################################################################
-print "##################################################################################\n";
-print "Spliting BNX by scan...\n";
-print "##################################################################################\n";
-my $split=`perl ${dirname}/split_by_scan.pl $bnx_dir`;
-print "$split";
-##################################################################################
-##############  Run first molecule quality report and replace old bpp  ###########
-##################################################################################
-print "##################################################################################\n";
-print "Generating first Molecule Quality Reports...\n";
-print "##################################################################################\n";
-my $first_mqr=`perl ${dirname}/first_mqr.pl $bnx_dir $reference $T`;
-print "$first_mqr";
-##################################################################################
-##############  Merge each split adjusted flowcells BNXs and run            ######
-##############  second molecule quality report on merged file               ######
-##################################################################################
-print "##################################################################################\n";
-print "Merging split, adjusted BNX files for each flowcell. Generating second Molecule Quality Reports for each flowcell...\n";
-print "##################################################################################\n";
-my $second_mqr=`perl ${dirname}/merge_split_by_scan.pl $bnx_dir $reference $T`;
-print "$second_mqr";
+###################################################################################
+###############                    Split by scan                 ##################
+###################################################################################
+#print "##################################################################################\n";
+#print "Spliting BNX by scan...\n";
+#print "##################################################################################\n";
+#my $split=`perl ${dirname}/split_by_scan.pl $bnx_dir`;
+#print "$split";
+###################################################################################
+###############  Run first molecule quality report and replace old bpp  ###########
+###################################################################################
+#print "##################################################################################\n";
+#print "Generating first Molecule Quality Reports...\n";
+#print "##################################################################################\n";
+#my $first_mqr=`perl ${dirname}/first_mqr.pl $bnx_dir $reference $T`;
+#print "$first_mqr";
+###################################################################################
+###############  Merge each split adjusted flowcells BNXs and run            ######
+###############  second molecule quality report on merged file               ######
+###################################################################################
+#print "##################################################################################\n";
+#print "Merging split, adjusted BNX files for each flowcell. Generating second Molecule Quality Reports for each flowcell...\n";
+#print "##################################################################################\n";
+#my $second_mqr=`perl ${dirname}/merge_split_by_scan.pl $bnx_dir $reference $T`;
+#print "$second_mqr";
 ##################################################################################
 ###########  Merge each BNX foreach flowcell and run third molecule quality ######
 ###########     report on merged file with and without BestRef. Use ".err"  ######
