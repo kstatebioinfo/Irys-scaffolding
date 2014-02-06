@@ -22,7 +22,7 @@ my $T = $ARGV[2];
 my $directory = "${bnx_dir}/all_flowcells";
 unless(mkdir $directory)
 {
-    "Unable to create $directory\n";
+    print "Unable to create $directory\n";
 }
 ####################################################################
 ##############   run refaligner to merge adjusted BNXs    ##########
