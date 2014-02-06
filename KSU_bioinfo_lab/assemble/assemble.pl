@@ -56,7 +56,7 @@ my %p_value = (
 'default_t' => "$T",
 'relaxed_t' => "$T_relaxed",
 );
-open (OUT_ASSEMBLE, '>',"${bnx_dir}/assembly_commands.txt"); # for assembly commands
+open (OUT_ASSEMBLE, '>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
 for my $stringency (keys %p_value)
 {
     ##################################################################
@@ -141,11 +141,12 @@ for my $stringency (keys %p_value)
         }
 
     }
-    `rm $xml_outfile`;
+    `rm $xml_outfile`; # remove the intermediate xml file
     ##################################################################
     ##############        Write assembly command    ##################
     ##################################################################
-    print OUT_ASSEMBLE "~/scripts/pipelineCL.py -T 64 -j 16 -N 4 -i 5 -a $xml_final -w -t /home/irys/tools -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -e $project -p 0 -V -r $ref\n";
+    print OUT_ASSEMBLE "#!/bin/bash\n";
+    print OUT_ASSEMBLE "python ~/scripts/pipelineCL.py -T 64 -j 16 -N 4 -i 5 -a $xml_final -w -t /home/irys/tools -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -e $project -p 0 -r $ref\n"; # removed -V parameter because an error was reported
 }
 #########################################
 ##       Clean some excess files       ##

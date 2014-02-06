@@ -29,13 +29,22 @@ sub edit_file
 ##############      generate first Molecule Quality Reports     ##################
 ##################################################################################
 my @files_to_remove; # list of BNX files to remove after spliting
-opendir(DIR, "${bnx_dir}") or die "can't open ${bnx_dir}!\n"; # open directory full of .bnx files
+unless (opendir(DIR, "${bnx_dir}"))
+{
+	print "can't open ${bnx_dir}\n"; # open directory full of .bnx files
+	next;
+}
 while (my $file = readdir(DIR))
 {
 	next if ($file =~ m/^\./); # ignore files beginning with a period
 	next if ($file !~ m/\.bnx$/); # ignore files not ending with a period
     my (${filename}, ${directories}, ${suffix}) = fileparse($file,'\..*');
-    opendir(SUBDIR, "${bnx_dir}/${filename}") or die "can't open ${bnx_dir}/${filename}!\n"; # open directory full of .bnx files
+#    opendir(SUBDIR, "${bnx_dir}/${filename}") or die "can't open ${bnx_dir}/${filename}!\n"; # open subdirectory full of .bnx files
+    unless (opendir(SUBDIR, "${bnx_dir}/${filename}"))
+    {
+        print "${bnx_dir}/${filename}!\n"; # open subdirectory full of .bnx files
+        next;
+    }
     my (@x,@y);
     ####################################################################
     ##############        create regression log       ##################

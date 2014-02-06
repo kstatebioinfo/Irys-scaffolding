@@ -46,9 +46,9 @@ pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 my $dirname = dirname(__FILE__);
 my $T = 0.00001/$genome;
-##################################################################################
-##############                    Split by scan                 ##################
-##################################################################################
+###################################################################################
+###############                    Split by scan                 ##################
+###################################################################################
 print "##################################################################################\n";
 print "Spliting BNX by scan...\n";
 print "##################################################################################\n";
@@ -175,10 +175,12 @@ flowcell_summary.csv - This file can be evaluated to check quality (ability to a
 
 B<Test with sample datasets:>
 
-git clone https://github.com/i5K-KINBRE-script-share
+git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
 
 # no test dataset is available yet but here is an example of a command
  
 perl Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrys.pl -g  -b  -r  -p Test_project_name > testing_log.txt
+ 
+bash assembly_commands.sh
 
 =cut
