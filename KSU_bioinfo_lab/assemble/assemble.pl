@@ -55,7 +55,11 @@ my %p_value = (
 'default_t' => "$T",
 'relaxed_t' => "$T_relaxed",
 );
-open (OUT_ASSEMBLE, '>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
+open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
+print OUT_ASSEMBLE "#!/bin/bash\n";
+print OUT_ASSEMBLE "##################################################################\n";
+print OUT_ASSEMBLE "#####             FIRST ASSEMBLY COMMANDS                 #####\n";
+print OUT_ASSEMBLE "##################################################################\n";
 for my $stringency (keys %p_value)
 {
     ##################################################################
@@ -144,8 +148,15 @@ for my $stringency (keys %p_value)
     ##################################################################
     ##############        Write assembly command    ##################
     ##################################################################
-    print OUT_ASSEMBLE "#!/bin/bash\n";
-    print OUT_ASSEMBLE "python ~/scripts/pipelineCL.py -T 64 -j 16 -N 4 -i 5 -a $xml_final -w -t /home/irys/tools -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -e $project -p 0 -r $ref\n"; # removed -V parameter because an error was reported
+    print OUT_ASSEMBLE "##### FIRST ASSEMBLY: ${stringency} #####\n";
+    print OUT_ASSEMBLE "python ~/scripts/pipelineCL.py -T 64 -j 16 -N 4 -i 5 -a $xml_final -w -t /home/irys/tools -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref\n"; # testing -V 1 for variant calling
+    ##################################################################
+    ##############  Write second round of assembly commands ##########
+    ##################################################################
+    {
+        my $second_commands= `perl RefineAssembleIrys.pl -a ${out_dir} -b ${bnx_dir} -r $ref -p ${project}_${stringency} -t $p_value{$stringency}`;
+        print "$second_commands";
+    }
 }
 #########################################
 ##       Clean some excess files       ##
