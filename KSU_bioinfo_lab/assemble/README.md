@@ -12,7 +12,7 @@ DEPENDENCIES
     Perl module XML::Simple. This can be installed using CPAN http://search.cpan.org/~grantm/XML-Simple-2.20/lib/XML/Simple.pm;
     Perl module Data::Dumper. This can be installed using CPAN http://search.cpan.org/~smueller/Data-Dumper-2.145/Dumper.pm;
 
-NAME
+SCRIPT DETAILS
 
 **AssembleIrys.pl -** a package of scripts that adjust the bases per pixel (bpp) by scan for each flowcell BNX file and then merge each flowcell into a single BNX file. Quality by flowcell is poltted in a CSV file "flowcell_summary.csv." Potential issues are reported in the output (e.g if the bpp does not return to ~500 after adjustment). The script creates optArgument.xml files and commands to run assemblies with strict, relaxed, and default p-value thresholds. The best of these along with the best p-value threshold (-T) should be used to run strict and relaxed assemblies with varing minimum lengths using the script "RefineAssembleIrys.pl."
 
@@ -50,9 +50,7 @@ OPTIONS
        -p, --project
                The project id. This will be used to name all assemblies
 
-DESCRIPTION
-
-       **OUTPUT DETAILS:**
+OUTPUT DESCRIPTION
 
        strict_t - This directory holds the output for the strictest assembly
        (where the p-value threshold is divided by 10).
