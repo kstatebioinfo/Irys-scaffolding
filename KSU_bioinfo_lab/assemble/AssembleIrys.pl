@@ -109,7 +109,7 @@ AssembleIrys.pl - a package of scripts that adjust the bases per pixel (bpp) by 
 
 =head1 USAGE
 
-perl script.pl [options]
+perl AssembleIrys.pl [options]
 
  Documentation options:
    -help    brief help message
