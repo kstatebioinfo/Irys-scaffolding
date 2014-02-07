@@ -1,7 +1,9 @@
 SCRIPT
+
 **RefineAssembleIrys.pl** - a package of scripts that creates optArgument.xml files and commands to run a strict and relaxed assembly by altering the minimum length filter.
 
 USAGE
+
         perl RefineAssembleIrys.pl [options]
 
         Documentation options:
