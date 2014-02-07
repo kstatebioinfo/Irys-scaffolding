@@ -1,10 +1,10 @@
-SCRIPT
+SUMMARY
 
-    AssembleIrys.pl - currently adjusts stretch by scan. Will merge BNXs and initiate assemblies with a range of parameters.
+    AssembleIrys.pl - Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters.
     
 USAGE
     
-    perl AssembleIrys.pl -g [genome size in Mb] -r [reference CMAP] -b [directory with BNX files]
+    perl AssembleIrys.pl -g [genome size in Mb] -r [reference CMAP] -b [directory with BNX files] -p [project name]
     
 DEPENDENCIES
 
@@ -25,6 +25,7 @@ NAME
        "RefineAssembleIrys.pl."
 
 USAGE
+
        perl script.pl [options]
 
         Documentation options:
@@ -37,6 +38,7 @@ USAGE
            -p       project name for all assemblies
 
 OPTIONS
+
        -help   Print a brief help message and exits.
 
        -man    Prints the more detailed manual page with output details and
@@ -57,7 +59,8 @@ OPTIONS
                The project id. This will be used to name all assemblies
 
 DESCRIPTION
-       OUTPUT DETAILS:
+
+       **OUTPUT DETAILS:**
 
        strict_t - This directory holds the output for the strictest assembly
        (where the p-value threshold is divided by 10).
@@ -79,8 +82,9 @@ DESCRIPTION
        flowcell_summary.csv - This file can be evaluated to check quality
        (ability to align to reference for each flowcell.
 
-       Test with sample datasets:
+**Test with sample datasets:**
 
+       ```
        git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
 
        # no test dataset is available yet but here is an example of a command
@@ -89,5 +93,6 @@ DESCRIPTION
        -r  -p Test_project_name > testing_log.txt
 
        bash assembly_commands.sh
+       ```
     
     
