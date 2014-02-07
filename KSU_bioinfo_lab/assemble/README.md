@@ -1,6 +1,17 @@
 SUMMARY
 
 **AssembleIrys.pl -** Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters.
+
+Workflow diagram
+![Alt text](https://raw.github.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble/bionano%20assembly%20workflow.png)
+
+1) The Irys produces tiff files that are converted into BNX text files.
+2) Each chip produces one BNX file for each of two flowcells.
+3) BNX files are split by scan and aligned to the sequence reference. Stretch (bases per pixel) is recalculated from the alignment.
+4) Quality metrics are reported in a CSV file for each adjusted flowcell BNX.
+5) Adjusted flowcell BNXs are merged and aligned to the reference with and without “-BestRef”. If alignment quality changes dramatically your p-value threshold may be lax.
+6) The first assemblies are run with a variety of p-value thresholds.
+7) The best of the first assemblies (red oval) is chosen and a version of this assembly is produced with a variety of minimum molecule length filters.
     
 USAGE
     
@@ -14,7 +25,7 @@ DEPENDENCIES
 
 SCRIPT DETAILS
 
-**AssembleIrys.pl -** a package of scripts that adjust the bases per pixel (bpp) by scan for each flowcell BNX file and then merge each flowcell into a single BNX file. Quality by flowcell is poltted in a CSV file "flowcell_summary.csv." Potential issues are reported in the output (e.g if the bpp does not return to ~500 after adjustment). The script creates optArgument.xml files and commands to run assemblies with strict, relaxed, and default p-value thresholds. The best of these along with the best p-value threshold (-T) should be used to run strict and relaxed assemblies with varing minimum lengths using the script "RefineAssembleIrys.pl."
+**AssembleIrys.pl -** a package of scripts that adjust the bases per pixel (bpp) by scan for each flowcell BNX file and then merge each flowcell into a single BNX file. Quality by flowcell is poltted in a CSV file "flowcell_summary.csv." Potential issues are reported in the output (e.g if the bpp does not return to ~500 after adjustment). The script creates optArgument.xml files and commands to run assemblies with strict, relaxed, and default p-value thresholds. The best of these along with the best p-value threshold (-T) should be used to run strict and relaxed assemblies with varing minimum lengths. Second assembly commands for each first assembly are written to the assembly_commands.sh script. They must be uncommented to run.
 
 USAGE
 

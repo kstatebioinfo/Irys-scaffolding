@@ -75,7 +75,13 @@ my %min_length = (
 'strict' => 180,
 'relaxed' => 100
 );
-open (OUT_ASSEMBLE, '>',"${bnx_dir}/second_assembly_commands.sh"); # for assembly commands
+open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
+print OUT_ASSEMBLE "#!/bin/bash\n";
+print OUT_ASSEMBLE "##################################################################\n";
+print OUT_ASSEMBLE "##### FIRST ASSEMBLY: ${project}_${stringency} #####\n";
+print OUT_ASSEMBLE "##### BEFORE RUNNING SECOND ROUND OF ASSEMBLIES, COMMENT THE SECTION MATCHING ALL FIRST ASSEMBLY COMMANDS AND UNCOMMENT THE SECTION MATCHING THE SECOND ASSEMBLY COMMANDS FOR THE BEST, FIRST ASSEMBLY #####\n";
+print OUT_ASSEMBLE "##################################################################\n";
+print OUT_ASSEMBLE
 for my $stringency (keys %min_length)
 {
     ##################################################################
@@ -164,8 +170,8 @@ for my $stringency (keys %min_length)
     ##################################################################
     ##############        Write assembly command    ##################
     ##################################################################
-    print OUT_ASSEMBLE "#!/bin/bash\n";
-    print OUT_ASSEMBLE "python ~/scripts/pipelineCL.py -T 64 -j 16 -N 4 -i 5 -a $xml_final -w -t /home/irys/tools -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -e $project -p 0 -r $ref\n"; # removed -V parameter because an error was reported
+    print OUT_ASSEMBLE "##### NEW ASSEMBLY STRINGENCY: ${stringency} #####\n";
+    print OUT_ASSEMBLE "# python ~/scripts/pipelineCL.py -T 64 -j 16 -N 4 -i 5 -a $xml_final -w -t /home/irys/tools -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref\n"; # testing -V 1 for variant calling
 }
 
 
