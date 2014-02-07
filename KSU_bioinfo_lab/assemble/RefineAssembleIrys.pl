@@ -31,7 +31,7 @@ print "###########################################################\n";
 ##################################################################################
 ##############                get arguments                     ##################
 ##################################################################################
-my ($bnx_dir,$genome,$reference,$project);
+my ($bnx_dir,$ref,$project,$T,$current_assembly_dir);
 
 my $man = 0;
 my $help = 0;
@@ -168,10 +168,6 @@ for my $stringency (keys %min_length)
     print OUT_ASSEMBLE "python ~/scripts/pipelineCL.py -T 64 -j 16 -N 4 -i 5 -a $xml_final -w -t /home/irys/tools -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -e $project -p 0 -r $ref\n"; # removed -V parameter because an error was reported
 }
 
-##################################################################################
-##############          Create new assembly parameters          ##################
-##################################################################################
-
 
 ##################################################################################
 ##############                  Documentation                   ##################
@@ -183,9 +179,9 @@ __END__
  
  RefineAssembleIrys.pl - a package of scripts that creates optArgument.xml files and commands to run a strict and relaxed assembly by altering the minimum length filter.
  
- =head1 USAGE
+=head1 USAGE
  
- perl script.pl [options]
+ perl RefineAssembleIrys.pl [options]
  
  Documentation options:
  -help    brief help message
@@ -198,43 +194,43 @@ __END__
  -t	     p-value threshold chosen from the first assemblies
  
  
- =head1 OPTIONS
+=head1 OPTIONS
  
- =over 8
+=over 8
  
- =item B<-help>
+=item B<-help>
  
  Print a brief help message and exits.
  
- =item B<-man>
+=item B<-man>
  
  Prints the more detailed manual page with output details and exits.
  
- =item B<-b, --bnx_dir>
+=item B<-b, --bnx_dir>
  
  The directory with all BNX's that were assembled. Do not use a trailing / for this directory.
  
- =item B<-a, --current_assembly_dir>
+=item B<-a, --current_assembly_dir>
  
  The directory with the current best assembly that was assembled (e.g. '/home/data/strict_t'). Do not use a trailing / for this directory. 
  
- =item B<-t, --threshold>
+=item B<-t, --threshold>
  
  The best p-value threshold (chosen from the first assemblies).
  
- =item B<-r, --ref>
+=item B<-r, --ref>
  
  The full path to the reference genome CMAP.
  
- =item B<-p, --project>
+=item B<-p, --project>
  
  The project id. This will be used to name all assemblies
  
- =back
+=back
  
- =head1 DESCRIPTION
+=head1 DESCRIPTION
  
- B<OUTPUT DETAILS:>
+B<OUTPUT DETAILS:>
  
  strict - This directory holds the output for the strictest assembly (where the minimum length was set to 180).
  
@@ -243,7 +239,7 @@ __END__
  second_assembly_commands.sh - These are the commands to start the first pass of assemblies. In these strict and relaxed minimum lengths will be used.
  
  
- B<Test with sample datasets:>
+B<Test with sample datasets:>
  
  git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
  
@@ -251,7 +247,9 @@ __END__
  
  perl Irys-scaffolding/KSU_bioinfo_lab/assemble/RefineAssembleIrys.pl -a  -b  -r  -p -t Test_project_name > testing_log.txt
  
- =cut
+ bash second_assembly_commands.sh
+ 
+=cut
 
 
 
