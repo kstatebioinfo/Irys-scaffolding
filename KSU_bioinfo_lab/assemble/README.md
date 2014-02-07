@@ -13,6 +13,7 @@ DEPENDENCIES
     Perl module Data::Dumper. This can be installed using CPAN http://search.cpan.org/~smueller/Data-Dumper-2.145/Dumper.pm;
 
 NAME
+
        AssembleIrys.pl - a package of scripts that adjust the bases per pixel
        (bpp) by scan for each flowcell BNX file and then merge each flowcell
        into a single BNX file. Quality by flowcell is poltted in a CSV file
@@ -84,15 +85,14 @@ DESCRIPTION
 
 **Test with sample datasets:**
 
-       ```
-       git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
+```
+git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
 
-       # no test dataset is available yet but here is an example of a command
+# no test dataset is available yet but here is an example of a command
 
-       perl Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrys.pl -g  -b
-       -r  -p Test_project_name > testing_log.txt
+perl Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrys.pl -g  -b -r  -p Test_project_name > testing_log.txt
 
-       bash assembly_commands.sh
-       ```
+bash assembly_commands.sh
+```
     
     
