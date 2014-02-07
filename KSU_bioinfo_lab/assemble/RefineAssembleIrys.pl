@@ -1,7 +1,7 @@
 #!/bin/perl
 ##################################################################################
 #   
-#	USAGE: perl script.pl [options]
+#	USAGE: perl RefineAssembleIrys.pl [options]
 #
 #  Created by jennifer shelton
 #
@@ -10,7 +10,7 @@ use strict;
 use warnings;
 # use List::Util qw(max);
 # use List::Util qw(sum);
-use File::Basename; # enable maipulating of the full path
+use File::Basename; # enable manipulating of the full path
 use Getopt::Long;
 use Pod::Usage;
 use XML::Simple;
@@ -19,10 +19,10 @@ use Data::Dumper;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  RefineAssembleIrys.pl                                        #\n";
+print "#  RefineAssembleIrys.pl                                  #\n";
 print "#                                                         #\n";
-print "#  Created by Jennifer Shelton 2/3/14                    #\n";
-print "#  github.com/                                            #\n";
+print "#  Created by Jennifer Shelton 2/3/14                     #\n";
+print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
 print "#  perl AssembleIrys.pl -help # for usage/options         #\n";
 print "#  perl AssembleIrys.pl -man # for more details           #\n";
 print "###########################################################\n";
@@ -181,7 +181,7 @@ __END__
 
 =head1 NAME
  
- script.pl - a package of scripts that ...
+ RefineAssembleIrys.pl - a package of scripts that creates optArgument.xml files and commands to run a strict and relaxed assembly by altering the minimum length filter.
  
  =head1 USAGE
  
@@ -191,10 +191,11 @@ __END__
  -help    brief help message
  -man	    full documentation
  Required options:
- -b	     directory with all BNX's meant for assembly (any BNX in this directory will be used in assembly)
- -g	     genome size in Mb
+ -b	     directory with all BNX's that were assembled 
+ -a	     current best assembly directory
  -r	     reference CMAP
  -p	     project name for all assemblies
+ -t	     p-value threshold chosen from the first assemblies
  
  
  =head1 OPTIONS
@@ -208,20 +209,18 @@ __END__
  =item B<-man>
  
  Prints the more detailed manual page with output details and exits.
- 'help|?' => \$help,
- 'man' => \$man,
- 'b|bnx_dir:s' => \$bnx_dir,
- 'g|genome:i' => \$genome,
- 'r|ref:s' => \$reference,
- 'p|proj:s' => \$project
  
  =item B<-b, --bnx_dir>
  
- The directory with all BNX's meant for assembly (any BNX in this directory will be used in assembly. Do not use a trailing / for this directory.
+ The directory with all BNX's that were assembled. Do not use a trailing / for this directory.
  
- =item B<-g, --genome>
+ =item B<-a, --current_assembly_dir>
  
- The estimated size of the genome in Mb.
+ The directory with the current best assembly that was assembled (e.g. '/home/data/strict_t'). Do not use a trailing / for this directory. 
+ 
+ =item B<-t, --threshold>
+ 
+ The best p-value threshold (chosen from the first assemblies).
  
  =item B<-r, --ref>
  
@@ -237,27 +236,23 @@ __END__
  
  B<OUTPUT DETAILS:>
  
- strict_t - This directory holds the output for the strictest assembly (where the p-value threshold is divided by 10).
+ strict - This directory holds the output for the strictest assembly (where the minimum length was set to 180).
  
- relaxed_t - This directory holds the output for the laxest assembly (where the p-value threshold is multiplied by 10).
+ relaxed - This directory holds the output for the laxest assembly (where the minimum length was set to 100).
  
- default_t - This directory holds the output for the default assembly (where the p-value threshold is used as-is).
+ second_assembly_commands.sh - These are the commands to start the first pass of assemblies. In these strict and relaxed minimum lengths will be used.
  
- bestref_effect_summary.csv - this shows the difference between running a molecule quality report with and without - BestRef. If the values change substantially than your p-value threshold may be too lax.
- 
- assembly_commands.txt - These are the commands to start the first pass of assemblies. In these strict, relaxed, and default p-value thresholds will be used.
- 
- flowcell_summary.csv - This file can be evaluated to check quality (ability to align to reference for each flowcell.
  
  B<Test with sample datasets:>
  
- git clone https://github.com/i5K-KINBRE-script-share
+ git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
  
  # no test dataset is available yet but here is an example of a command
  
- perl Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrys.pl -g  -b  -r  -p Test_project_name > testing_log.txt
+ perl Irys-scaffolding/KSU_bioinfo_lab/assemble/RefineAssembleIrys.pl -a  -b  -r  -p -t Test_project_name > testing_log.txt
  
  =cut
+
 
 
 

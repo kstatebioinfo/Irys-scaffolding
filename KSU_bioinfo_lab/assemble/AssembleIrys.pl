@@ -1,7 +1,7 @@
 #!/bin/perl
 ##################################################################################
 #   
-#	USAGE: perl script.pl [options]
+#	USAGE: perl AssembleIrys.pl [options]
 #
 #  Created by jennifer shelton
 #
@@ -10,7 +10,7 @@ use strict;
 use warnings;
 # use List::Util qw(max);
 # use List::Util qw(sum);
-use File::Basename; # enable maipulating of the full path
+use File::Basename; # enable manipulating of the full path
 use Getopt::Long;
 use Pod::Usage;
 ##################################################################################
@@ -20,7 +20,7 @@ print "###########################################################\n";
 print "#  AssembleIrys.pl                                        #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 1/27/14                    #\n";
-print "#  github.com/                                            #\n";
+print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
 print "#  perl AssembleIrys.pl -help # for usage/options         #\n";
 print "#  perl AssembleIrys.pl -man # for more details           #\n";
 print "###########################################################\n";
@@ -105,7 +105,7 @@ __END__
 
 =head1 NAME
 
-script.pl - a package of scripts that ...
+AssembleIrys.pl - a package of scripts that adjust the bases per pixel (bpp) by scan for each flowcell BNX file and then merge each flowcell into a single BNX file. Quality by flowcell is poltted in a CSV file "flowcell_summary.csv." Potential issues are reported in the output (e.g if the bpp does not return to ~500 after adjustment). The script creates optArgument.xml files and commands to run assemblies with strict, relaxed, and default p-value thresholds. The best of these along with the best p-value threshold (-T) should be used to run strict and relaxed assemblies with varing minimum lengths using the script "RefineAssembleIrys.pl."
 
 =head1 USAGE
 
@@ -132,12 +132,7 @@ Print a brief help message and exits.
 =item B<-man>
 
 Prints the more detailed manual page with output details and exits.
- 'help|?' => \$help,
- 'man' => \$man,
- 'b|bnx_dir:s' => \$bnx_dir,
- 'g|genome:i' => \$genome,
- 'r|ref:s' => \$reference,
- 'p|proj:s' => \$project
+
 
 =item B<-b, --bnx_dir>
 
@@ -169,7 +164,7 @@ default_t - This directory holds the output for the default assembly (where the 
  
 bestref_effect_summary.csv - this shows the difference between running a molecule quality report with and without - BestRef. If the values change substantially than your p-value threshold may be too lax.
  
-assembly_commands.txt - These are the commands to start the first pass of assemblies. In these strict, relaxed, and default p-value thresholds will be used.
+assembly_commands.sh - These are the commands to start the first pass of assemblies. In these strict, relaxed, and default p-value thresholds will be used.
  
 flowcell_summary.csv - This file can be evaluated to check quality (ability to align to reference for each flowcell.
 
