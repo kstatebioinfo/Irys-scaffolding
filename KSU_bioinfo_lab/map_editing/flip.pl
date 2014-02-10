@@ -5,6 +5,7 @@
 #
 #  Created by jennifer shelton
 #
+# to test a CMAP run "RefAligner -i FILENAME.cmap -o outfile  -bnx"
 ##################################################################################
 use strict;
 use warnings;
@@ -92,12 +93,12 @@ for my $linenr (0 .. $#file)
                     #### for the original start of the map ######
                     if ($i == 0)
                     {
-                        $reversed[$i] =~ s/(.*\t.*\t.*\t)(.*)(\t)(.*)(\t.*\t.*\t.*\t)(.*)(\n)/${1}${j}${3}0${5}${4}${7}/;
+                        $reversed[$i] =~ s/(.*\t.*\t.*\t)(.*)(\t)(.*)(\t.*\t.*\t.*\t)(.*)(\n)/${1}${j}${3}0${5}${6}${7}/;
                     }
                     #### for the original end of the map ######
                     elsif ($i == $#reversed)
                     {
-                        $reversed[$i] =~ s/(.*\t.*\t.*\t)(.*)(\t)(.*)(\t.*\t.*\t.*\t)(.*)(\n)/${1}${j}${3}${4}${5}0${7}/;
+                        $reversed[$i] =~ s/(.*\t.*\t.*\t)(.*)(\t)(.*)(\t.*\t.*\t.*\t)(.*)(\n)/${1}${j}${3}1${5}${6}${7}/;
                     }
                     #### for all other maps ######
                     else
