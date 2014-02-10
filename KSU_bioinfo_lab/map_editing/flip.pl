@@ -1,25 +1,25 @@
 #!/bin/perl
-###############################################################################
+##################################################################################
 #   Script reads from a list of maps to flip from a txt file (one CMmap id per line) and creates a CMap with the requested flips.
 #	USAGE: perl flip.pl [cmap] [list of maps to flip]
 #
 #  Created by jennifer shelton
 #
-###############################################################################
+##################################################################################
 use strict;
 use warnings;
 # use List::Util qw(max);
 # use List::Util qw(sum);
 use File::Basename;
 use Tie::File;
-###############################################################################
-##############                Get arguements                 ##################
-###############################################################################
+##################################################################################
+##############                   Get arguements                 ##################
+##################################################################################
 my $cmap = $ARGV[0];
 my $flip_list = $ARGV[1];
-###############################################################################
-##############        find cmap id of all maps to flip       ##################
-###############################################################################
+##################################################################################
+##############         find cmap id of all maps to flip         ##################
+##################################################################################
 my %flips;
 open (FLIP, '<',$flip_list) or die "Can't open $flip_list!\n";
 while (<FLIP>)
@@ -27,18 +27,18 @@ while (<FLIP>)
     chomp;
     $flips{$_} = 1;
 }
-###############################################################################
-##############                   create output files         ##################
-###############################################################################
-my (${filename}, ${directories}, ${suffix}) = fileparse($cmap,'\..*'); 
+##################################################################################
+##############                   create output files            ##################
+##################################################################################
+my (${filename}, ${directories}, ${suffix}) = fileparse($cmap,'\..*');
 my $out =  "${directories}${filename}_flip.cmap";
 print "${directories}${filename}_flip.cmap\n";
 open (OUT_CMAP, '>',$out) or die "Can't open $out!\n";
 my $line; # row in cmap to reverse
 my @reversed; # array of one molecule to be reversed
-###############################################################################
-########### Open cmap as an array to flip maps in the flip list ###############
-###############################################################################
+##################################################################################
+############## Open cmap as an array to flip maps in the flip list ###############
+##################################################################################
 tie my @file, 'Tie::File', "$cmap" or die $!; # Access the lines of a disk file via a Perl array
 for my $linenr (0 .. $#file)
 {
@@ -60,7 +60,7 @@ for my $linenr (0 .. $#file)
         ###################################################
         ####    Flip map if it should be reversed    ######
         ###################################################
-        if ($flips{$cmaps[0]}) 
+        if ($flips{$cmaps[0]})
         {
             #### rewrite label position ######
             $cmaps[5]=$cmaps[1] - $cmaps[5] + 20; #(because the BioNano maps start at 20?)
@@ -89,7 +89,21 @@ for my $linenr (0 .. $#file)
                 my $j=1;
                 for my $i (reverse 0..$#reversed)
                 {
-                    $reversed[$i] =~ s/(.*\t.*\t)(.*)(\t.*\t.*\t.*\t.*\t.*\n)/$1$j$3/; #print site id in reverse order
+                    #### for the original start of the map ######
+                    if ($i == 0)
+                    {
+                        $reversed[$i] =~ s/(.*\t.*\t.*\t)(.*)(\t)(.*)(\t.*\t.*\t.*\t)(.*)(\n)/${1}${j}${3}0${5}${4}${7}/;
+                    }
+                    #### for the original end of the map ######
+                    elsif ($i == $#reversed)
+                    {
+                        $reversed[$i] =~ s/(.*\t.*\t.*\t)(.*)(\t)(.*)(\t.*\t.*\t.*\t)(.*)(\n)/${1}${j}${3}${4}${5}0${7}/;
+                    }
+                    #### for all other maps ######
+                    else
+                    {
+                        $reversed[$i] =~ s/(.*\t.*\t.*\t)(.*)(\t)(.*)(\t.*\t.*\t.*\t)(.*)(\n)/${1}${j}${3}${4}${5}${6}${7}/;
+                    }
                     print OUT_CMAP "$reversed[$i]";
                     ++$j;
                 }
