@@ -54,6 +54,10 @@ print "Spliting BNX by scan...\n";
 print "##################################################################################\n";
 my $split=`perl ${dirname}/split_by_scan.pl $bnx_dir`;
 print "$split";
+if ($split =~ /BNX version is not 1!!!\n/)
+{
+	die;
+}
 ##################################################################################
 ##############  Run first molecule quality report and replace old bpp  ###########
 ##################################################################################
