@@ -5,8 +5,10 @@
 #
 #  Created by jennifer shelton
 #
-# Script moves RawMolecules.bnx files into a common bnx directory and renames with auto-incremented numbers. do not include trailing spaces in paths.
+# Script moves RawMolecules.bnx files into a common bnx directory and renames with auto-incremented numbers. Make paths absolute and do not include trailing spaces in paths.
 # rename 's/ /_/g' /home/irys/Data/Datasets/*
+#
+# perl /home/irys/Data/Goni_pect_0004/Irys-scaffolding/KSU_bioinfo_lab/assemble/prep_bnx.pl /home/irys/Data/Goni_pect_0004/bnx_original_list.txt /home/irys/Data/Goni_pect_0004/bnx
 #
 ###############################################################################
 use strict;
