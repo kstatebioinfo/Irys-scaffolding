@@ -26,6 +26,7 @@ while (my $file = readdir(DIR))
     my ($LabelChannel,$MoleculeId,$Length,$AvgIntensity,$SNR,$NumberofLabels,$OriginalMoleculeId,$ScanNumber,$ScanDirection,$ChipId,$Flowcell,$CurrentScanNumber);
     my @headers;
     my $scan=1;
+    my $line_count=1;
 	my (${filename}, ${directories}, ${suffix}) = fileparse($file,'\..*');
 	open (WHOLE_BNX, '<', "${bnx_dir}/${file}") or die "can't open ${bnx_dir}/${file}!\n";
 	while (<WHOLE_BNX>)
@@ -33,9 +34,18 @@ while (my $file = readdir(DIR))
         ####################################################################
         ##############   make array of the header lines   ##################
         ####################################################################
+        
         if (/^#/)
         {
-            push (@headers,$_);
+        	if (($line_count == 1) && ($_ !~ /# BNX File Version:\t1/))
+        	{
+        	 	die "BNX version is not 1!!!\n";
+        	}
+        	else
+        	{
+            		push (@headers,$_);
+            		++ $line_count;
+        	}
         }
         elsif (/^0/)
         {
