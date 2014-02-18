@@ -42,7 +42,7 @@ while (my $file = readdir(DIR))
 #    opendir(SUBDIR, "${bnx_dir}/${filename}") or die "can't open ${bnx_dir}/${filename}!\n"; # open subdirectory full of .bnx files
     unless (opendir(SUBDIR, "${bnx_dir}/${filename}"))
     {
-        print "${bnx_dir}/${filename}!\n"; # open subdirectory full of .bnx files
+        print "can't open ${bnx_dir}/${filename}!\n"; # open subdirectory full of .bnx files
         next;
     }
     my (@x,@y);

@@ -37,12 +37,12 @@ unless (opendir(DIR, "${bnx_dir}"))
 while (my $file = readdir(DIR))
 {
 	next if ($file =~ m/^\./); # ignore files beginning with a period
-	next if ($file !~ m/\.bnx$/); # ignore files not ending with a period
+	next if ($file !~ m/\.bnx$/); # ignore files not ending with a ".bnx"
     my (${filename}, ${directories}, ${suffix}) = fileparse($file,'\..*');
 #    opendir(SUBDIR, "${bnx_dir}/${filename}") or die "can't open ${bnx_dir}/${filename}!\n"; # open subdirectory full of .bnx files
     unless (opendir(SUBDIR, "${bnx_dir}/${filename}"))
     {
-        print "${bnx_dir}/${filename}!\n"; # open subdirectory full of .bnx files
+        print "can't open ${bnx_dir}/${filename}!\n"; # open subdirectory full of .bnx files
         next;
     }
     my (@x,@y);
