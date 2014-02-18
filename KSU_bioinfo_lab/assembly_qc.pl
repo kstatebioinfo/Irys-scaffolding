@@ -89,27 +89,27 @@ for my $assembly_dir (@directories)
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Total Contig Len (Mb):/)
+                if (/Total Contig Len \(Mb\):/)
                 {
-                    s/(Total Contig Len (Mb):\s+)(.*)/$2/;
+                    s/(Total Contig Len \(Mb\):\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Avg. Contig Len  (Mb):/)
+                if (/Avg. Contig Len  \(Mb\):/)
                 {
-                    s/(Avg. Contig Len  (Mb):\s+)(.*)/$2/;
+                    s/(Avg. Contig Len  \(Mb\):\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Contig n50       (Mb):/)
+                if (/Contig n50       \(Mb\):/)
                 {
-                    s/(Contig n50       (Mb):\s+)(.*)/$2/;
+                    s/(Contig n50       \(Mb\):\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Total Ref Len    (Mb):/)
+                if (/Total Ref Len    \(Mb\):/)
                 {
-                    s/(Total Ref Len    (Mb):\s+)(.*)/$2/;
+                    s/(Total Ref Len    \(Mb\):\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
@@ -125,9 +125,9 @@ for my $assembly_dir (@directories)
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Total Aligned Len             (Mb) :/)
+                if (/Total Aligned Len             \(Mb\) :/)
                 {
-                    s/(Total Aligned Len             (Mb) :\s+)(.*)/$2/;
+                    s/(Total Aligned Len             \(Mb\) :\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
@@ -137,9 +137,9 @@ for my $assembly_dir (@directories)
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Total Unique Aligned Len      (Mb) :/)
+                if (/Total Unique Aligned Len      \(Mb\) :/)
                 {
-                    s/(Total Unique Aligned Len      (Mb) :\s+)(.*)/$2/;
+                    s/(Total Unique Aligned Len      \(Mb\) :\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
@@ -156,15 +156,15 @@ for my $assembly_dir (@directories)
     $final = 0;
 }
 #            N contigs: 216
-#            Total Contig Len (Mb):   200.473
-#            Avg. Contig Len  (Mb):    0.928
-#            Contig n50       (Mb):    1.350
-#            Total Ref Len    (Mb):   157.186
+##            Total Contig Len (Mb):   200.473
+##            Avg. Contig Len  (Mb):    0.928
+##            Contig n50       (Mb):    1.350
+##            Total Ref Len    (Mb):   157.186
 #            Total Contig Len / Ref Len  : 1.275
 #            N contigs total align       :   147 (0.68)
-#            Total Aligned Len             (Mb) : 114.090
+##            Total Aligned Len             (Mb) : 114.090
 #            Total Aligned Len / Ref Len        :  0.726
-#            Total Unique Aligned Len      (Mb) : 110.120
+##            Total Unique Aligned Len      (Mb) : 110.120
 #            Total Unique Len / Ref Len         :  0.701
 #Stage Complete: Assembly
 #Stage Complete: refineB
