@@ -74,7 +74,7 @@ for my $assembly_dir (@directories)
             #########################################################
             if (($final == 0) && (/Contig n50/))
             {
-                s/(Contig n50\s+(Mb):\s+)(.*)/$2/;
+                s/(Contig n50\s+\(Mb\):\s+)(.*)/$2/;
                 print QC_METRICS;
                 print QC_METRICS ",";
             }
@@ -148,12 +148,12 @@ for my $assembly_dir (@directories)
                     s/(Total Unique Len \/ Ref Len         :\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS "\n";
+                    $final = 0;
                 }
             }
                 
         }   
     }
-    $final = 0;
 }
 #            N contigs: 216
 ##            Total Contig Len (Mb):   200.473
