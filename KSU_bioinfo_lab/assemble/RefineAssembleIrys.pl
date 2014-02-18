@@ -78,8 +78,8 @@ my %min_length = (
 open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
 print OUT_ASSEMBLE "#!/bin/bash\n";
 print OUT_ASSEMBLE "##################################################################\n";
-print OUT_ASSEMBLE "##### FIRST ASSEMBLY: ${project}_${stringency} #####\n";
-print OUT_ASSEMBLE "##### BEFORE RUNNING SECOND ROUND OF ASSEMBLIES, COMMENT THE SECTION MATCHING ALL FIRST ASSEMBLY COMMANDS AND UNCOMMENT THE SECTION MATCHING THE SECOND ASSEMBLY COMMANDS FOR THE BEST, FIRST ASSEMBLY #####\n";
+print OUT_ASSEMBLE "##### FIRST ASSEMBLY: ${project}_${current_assembly_dir} \n";
+print OUT_ASSEMBLE "##### BEFORE RUNNING SECOND ROUND OF ASSEMBLIES, COMMENT THE SECTION MATCHING ALL FIRST ASSEMBLY COMMANDS AND UNCOMMENT THE SECTION MATCHING THE SECOND ASSEMBLY COMMANDS FOR THE BEST, FIRST ASSEMBLY \n";
 print OUT_ASSEMBLE "##################################################################\n";
 for my $stringency (keys %min_length)
 {

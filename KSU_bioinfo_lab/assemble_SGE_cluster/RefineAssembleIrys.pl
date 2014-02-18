@@ -85,8 +85,8 @@ for my $stringency (keys %min_length)
     print OUT_ASSEMBLE "workon bionano\n";
     print OUT_ASSEMBLE "export DRMAA_LIBRARY_PATH=/opt/sge/lib/lx3-amd64/libdrmaa.so.1.0\n";
     print OUT_ASSEMBLE "##################################################################\n";
-    print OUT_ASSEMBLE "##### FIRST ASSEMBLY: ${project}_${stringency} #####\n";
-    print OUT_ASSEMBLE "##### BEFORE RUNNING SECOND ROUND OF ASSEMBLIES, COMMENT THE SECTION MATCHING ALL FIRST ASSEMBLY COMMANDS AND UNCOMMENT THE SECTION MATCHING THE SECOND ASSEMBLY COMMANDS FOR THE BEST, FIRST ASSEMBLY #####\n";
+    print OUT_ASSEMBLE "##### FIRST ASSEMBLY: ${project}_${current_assembly_dir} \n";
+    print OUT_ASSEMBLE "##### BEFORE RUNNING SECOND ROUND OF ASSEMBLIES, COMMENT THE SECTION MATCHING ALL FIRST ASSEMBLY COMMANDS AND UNCOMMENT THE SECTION MATCHING THE SECOND ASSEMBLY COMMANDS FOR THE BEST, FIRST ASSEMBLY \n";
     print OUT_ASSEMBLE "##################################################################\n";
 
     ##################################################################
