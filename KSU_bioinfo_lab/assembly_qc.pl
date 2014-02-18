@@ -74,7 +74,7 @@ for my $assembly_dir (@directories)
             #########################################################
             if (($final == 0) && (/Contig n50/))
             {
-                s/(Contig n50.*(Mb):\s+)(.*)/$2/;
+                s/(Contig n50\s+(Mb):\s+)(.*)/$2/;
                 print QC_METRICS;
                 print QC_METRICS ",";
             }
