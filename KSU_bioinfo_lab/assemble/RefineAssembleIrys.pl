@@ -103,6 +103,7 @@ for my $stringency (keys %min_length)
     ##             Pairwise               ##
     ########################################
     $xml->{pairwise}->{flag}->[0]->{val0} = $T;
+    $xml->{pairwise}->{flag}->[1]->{val0} = $stringency; # min length
     ########################################
     ##               Noise                ##
     ########################################
@@ -114,27 +115,32 @@ for my $stringency (keys %min_length)
     ##            Assembly                ##
     ########################################
     $xml->{assembly}->{flag}->[0]->{val0} = $T;
+    $xml->{assembly}->{flag}->[2]->{val0} = $stringency; # min length
     ########################################
     ##              RefineA               ##
     ########################################
+    $xml->{refineA}->{flag}->[0]->{val0} = $stringency; # min length
     $xml->{refineA}->{flag}->[2]->{val0} = $T;
     ########################################
     ##              RefineB               ##
     ########################################
+    $xml->{refineB}->{flag}->[0]->{val0} = $stringency; # min length
     $xml->{refineB}->{flag}->[2]->{val0} = $T/10;
     $xml->{refineB}->{flag}->[9]->{val0} = 25; #min split length
     ########################################
     ##              RefineFinal           ##
     ########################################
+    $xml->{refineFinal}->{flag}->[0]->{val0} = $stringency; # min length
     $xml->{refineFinal}->{flag}->[2]->{val0} = $T/10;
     $xml->{refineFinal}->{flag}->[16]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
     ##              Extension             ##
     ########################################
+    $xml->{extension}->{flag}->[0]->{val0} = $stringency; # min length
     $xml->{extension}->{flag}->[3]->{val0} = $T/10;
     $xml->{extension}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension}->{flag}->[21]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
     ##               Merge                ##
     ########################################
@@ -143,7 +149,6 @@ for my $stringency (keys %min_length)
     XMLout($xml,OutputFile => $xml_outfile,);
     #########################################
     ## Correct the document head and tail  ##
-    #########################################
     my $xml_final = "${current_assembly_dir}/${stringency}/${stringency}_final_optArguments.xml";
     open (OPTARGFINAL, '>', $xml_final) or die "can't open $xml_final\n";
     open (OPTARG, '<', $xml_outfile) or die "can't open $xml_outfile\n";

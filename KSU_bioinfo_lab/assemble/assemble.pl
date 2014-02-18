@@ -113,7 +113,7 @@ for my $stringency (keys %p_value)
     ########################################
     $xml->{extension}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
     $xml->{extension}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension}->{flag}->[21]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
     ##               Merge                ##
     ########################################
