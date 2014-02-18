@@ -53,7 +53,7 @@ print QC_METRICS "Assembly Name,Assembly,refineB,Extension 1,Merge 1,Extension 2
 my $final=0;
 for my $assembly_dir (@directories)
 {
-    my $report= "$bnx_dir/$assembly_dir/$project_informaticsReport.txt";
+    my $report= "$bnx_dir/$assembly_dir/${project}_informaticsReport.txt";
     if (-e $report)
     {
         print QC_METRICS "$project: $assembly_dir,";
