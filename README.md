@@ -3,13 +3,19 @@ Irys-scaffolding
 
 scripts to parse IrysView output
 
-KSU bioinfo lab
+KSU_bioinfo_lab
 ---------------
 ### map_editing/flip.pl 
 
 **flip.pl -** This utility script reads from a list of maps to flip from a txt file (one CMmap id per line) and creates a CMap with the requested flips.
 
-### AssembleIrys.pl
+### assemble_SGE_cluster/AssembleIrysCluster.pl 
+
+SUMMARY
+
+**AssembleIrysCluster.pl -** Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters. This script uses the same workflow as AssembleIrys.pl but it runs on the Beocat SGE cluster.
+
+###assemble/AssembleIrys.pl
 
 SUMMARY
 
@@ -36,7 +42,7 @@ DEPENDENCIES
     Perl module XML::Simple. This can be installed using CPAN http://search.cpan.org/~grantm/XML-Simple-2.20/lib/XML/Simple.pm;
     Perl module Data::Dumper. This can be installed using CPAN http://search.cpan.org/~smueller/Data-Dumper-2.145/Dumper.pm;
     
-### stitch.pl
+### stitch/stitch.pl
 
 **stitch.pl -** This script will replace analyze_irys_output.pl. The major 
        difference is that though no in silico map's sequence is added to the final 
@@ -57,7 +63,7 @@ mkdir results
 perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
 ```
 
-### analyze_irys_output.pl
+### analyze_irys_output/analyze_irys_output.pl
 
 SUMMARY
 
