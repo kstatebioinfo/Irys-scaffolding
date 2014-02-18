@@ -46,7 +46,7 @@ pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 ###############################################################################
 my @directories = ( "strict_t", "default_t", "relaxed_t", "strict_t/strict_ml", "strict_t/relaxed_ml", "default_t/strict_ml", "default_t/relaxed_ml", "relaxed_t/strict_ml", "relaxed_t/relaxed_ml");
 open (QC_METRICS,'>>',"$bnx_dir/Assembly_quality_metrics.csv") or die "couldn't open $bnx_dir/Assembly_quality_metrics.csv!";
-print QC_METRICS "Assembly Name,Assembly,refineB,Extension 1,Merge 1,Extension 2,Merge 2,Extension 3,Merge 3,Extension 4,Merge 4,Extension 5,Merge 5,N contigs,Total Contig Len(Mb),Avg. Contig Len(Mb),Contig n50(Mb),Total Ref Len(Mb),Total Contig Len / Ref Len,N contigs total align,Total Aligned Len(Mb),Total Aligned Len / Ref Len,Total Unique Aligned Len(Mb),Total Unique Len / Ref Len\n";
+print QC_METRICS "Assembly Name,Assembly n50,refineB n50,Extension 1 n50,Merge 1 n50,Extension 2 n50,Merge 2 n50,Extension 3 n50,Merge 3 n50,Extension 4 n50,Merge 4 n50,Extension 5 n50,Merge 5 n50,N contigs,Total Contig Len(Mb),Avg. Contig Len(Mb),Contig n50(Mb),Total Ref Len(Mb),Total Contig Len / Ref Len,N contigs total align,Total Aligned Len(Mb),Total Aligned Len / Ref Len,Total Unique Aligned Len(Mb),Total Unique Len / Ref Len\n";
 ###############################################################################
 ##########            open all assembly directories           #################
 ###############################################################################
