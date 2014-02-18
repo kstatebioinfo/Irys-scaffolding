@@ -85,8 +85,8 @@ for my $stringency (keys %min_length)
     print OUT_ASSEMBLE "workon bionano\n";
     print OUT_ASSEMBLE "export DRMAA_LIBRARY_PATH=/opt/sge/lib/lx3-amd64/libdrmaa.so.1.0\n";
     print OUT_ASSEMBLE "##################################################################\n";
-    print OUT_ASSEMBLE "##### FIRST ASSEMBLY: ${project}_${stringency} #####\n";
-    print OUT_ASSEMBLE "##### BEFORE RUNNING SECOND ROUND OF ASSEMBLIES, COMMENT THE SECTION MATCHING ALL FIRST ASSEMBLY COMMANDS AND UNCOMMENT THE SECTION MATCHING THE SECOND ASSEMBLY COMMANDS FOR THE BEST, FIRST ASSEMBLY #####\n";
+    print OUT_ASSEMBLE "##### FIRST ASSEMBLY: ${project}_${current_assembly_dir} \n";
+    print OUT_ASSEMBLE "##### BEFORE RUNNING SECOND ROUND OF ASSEMBLIES, COMMENT THE SECTION MATCHING ALL FIRST ASSEMBLY COMMANDS AND UNCOMMENT THE SECTION MATCHING THE SECOND ASSEMBLY COMMANDS FOR THE BEST, FIRST ASSEMBLY \n";
     print OUT_ASSEMBLE "##################################################################\n";
 
     ##################################################################
@@ -109,7 +109,7 @@ for my $stringency (keys %min_length)
     ##             Pairwise               ##
     ########################################
     $xml->{pairwise}->{flag}->[0]->{val0} = $T;
-    $xml->{pairwise}->{flag}->[1]->{val0} = $stringency; # min length
+    $xml->{pairwise}->{flag}->[1]->{val0} = $min_length{$stringency}; # min length
     ########################################
     ##               Noise                ##
     ########################################
@@ -121,29 +121,29 @@ for my $stringency (keys %min_length)
     ##            Assembly                ##
     ########################################
     $xml->{assembly}->{flag}->[0]->{val0} = $T;
-    $xml->{assembly}->{flag}->[2]->{val0} = $stringency; # min length
+    $xml->{assembly}->{flag}->[2]->{val0} = $min_length{$stringency}; # min length
     ########################################
     ##              RefineA               ##
     ########################################
-    $xml->{refineA}->{flag}->[0]->{val0} = $stringency; # min length
+    $xml->{refineA}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
     $xml->{refineA}->{flag}->[2]->{val0} = $T;
     ########################################
     ##              RefineB               ##
     ########################################
-    $xml->{refineB}->{flag}->[0]->{val0} = $stringency; # min length
+    $xml->{refineB}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
     $xml->{refineB}->{flag}->[2]->{val0} = $T/10;
     $xml->{refineB}->{flag}->[9]->{val0} = 25; #min split length
     ########################################
     ##              RefineFinal           ##
     ########################################
-    $xml->{refineFinal}->{flag}->[0]->{val0} = $stringency; # min length
+    $xml->{refineFinal}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
     $xml->{refineFinal}->{flag}->[2]->{val0} = $T/10;
     $xml->{refineFinal}->{flag}->[16]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
     ##              Extension             ##
     ########################################
-    $xml->{extension}->{flag}->[0]->{val0} = $stringency; # min length
+    $xml->{extension}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
     $xml->{extension}->{flag}->[3]->{val0} = $T/10;
     $xml->{extension}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{extension}->{flag}->[21]->{val0} = 1e-5; # endoutlier/outlier
