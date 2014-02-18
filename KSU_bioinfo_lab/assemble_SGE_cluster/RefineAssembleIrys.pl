@@ -72,18 +72,23 @@ while (<ERR>) # get noise parameters
 ##################################################################################
 
 my %min_length = (
-'strict' => 180,
-'relaxed' => 100
+'strict_ml' => 180,
+'relaxed_ml' => 100
 );
 open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
 print OUT_ASSEMBLE "#!/bin/bash\n";
-print OUT_ASSEMBLE "##################################################################\n";
-print OUT_ASSEMBLE "##### FIRST ASSEMBLY: ${project}_${stringency} #####\n";
-print OUT_ASSEMBLE "##### BEFORE RUNNING SECOND ROUND OF ASSEMBLIES, COMMENT THE SECTION MATCHING ALL FIRST ASSEMBLY COMMANDS AND UNCOMMENT THE SECTION MATCHING THE SECOND ASSEMBLY COMMANDS FOR THE BEST, FIRST ASSEMBLY #####\n";
-print OUT_ASSEMBLE "##################################################################\n";
-print OUT_ASSEMBLE
 for my $stringency (keys %min_length)
 {
+    open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands_$stringency.sh"); # for assembly commands
+    print OUT_ASSEMBLE "#!/bin/bash\n";
+    print OUT_ASSEMBLE ". /usr/bin/virtualenvwrapper.sh\n";
+    print OUT_ASSEMBLE "workon bionano\n";
+    print OUT_ASSEMBLE "export DRMAA_LIBRARY_PATH=/opt/sge/lib/lx3-amd64/libdrmaa.so.1.0\n";
+    print OUT_ASSEMBLE "##################################################################\n";
+    print OUT_ASSEMBLE "##### FIRST ASSEMBLY: ${project}_${stringency} #####\n";
+    print OUT_ASSEMBLE "##### BEFORE RUNNING SECOND ROUND OF ASSEMBLIES, COMMENT THE SECTION MATCHING ALL FIRST ASSEMBLY COMMANDS AND UNCOMMENT THE SECTION MATCHING THE SECOND ASSEMBLY COMMANDS FOR THE BEST, FIRST ASSEMBLY #####\n";
+    print OUT_ASSEMBLE "##################################################################\n";
+
     ##################################################################
     ##############     Create assembly directories  ##################
     ##################################################################

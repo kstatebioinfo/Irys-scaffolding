@@ -55,13 +55,20 @@ my %p_value = (
 'default_t' => "$T",
 'relaxed_t' => "$T_relaxed",
 );
-open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
-print OUT_ASSEMBLE "#!/bin/bash\n";
 print OUT_ASSEMBLE "##################################################################\n";
 print OUT_ASSEMBLE "#####             FIRST ASSEMBLY COMMANDS                 #####\n";
 print OUT_ASSEMBLE "##################################################################\n";
 for my $stringency (keys %p_value)
 {
+    ##################################################################
+    ##############        Write bash scripts        ##################
+    ##################################################################
+    open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands_$stringency.sh"); # for assembly commands
+    print OUT_ASSEMBLE "#!/bin/bash\n";
+    print OUT_ASSEMBLE ". /usr/bin/virtualenvwrapper.sh\n";
+    print OUT_ASSEMBLE "workon bionano\n";
+    print OUT_ASSEMBLE "export DRMAA_LIBRARY_PATH=/opt/sge/lib/lx3-amd64/libdrmaa.so.1.0\n";
+#    print OUT_ASSEMBLE "python2 bioinfo_software/bionano/scripts/pipelineCL.py\n";
     ##################################################################
     ##############     Create assembly directories  ##################
     ##################################################################
@@ -149,7 +156,7 @@ for my $stringency (keys %p_value)
     ##############        Write assembly command    ##################
     ##################################################################
     print OUT_ASSEMBLE "##### FIRST ASSEMBLY: ${stringency} #####\n";
-    print OUT_ASSEMBLE "python2 /homes/bioinfo/bioinfo_software/bionano/scripts/pipelineCL.py -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -d -U -C ${dirname}/clusterArguments.xml\n"; # testing -V 1 for variant calling
+    print OUT_ASSEMBLE "python2 /homes/bioinfo/bioinfo_software/bionano/scripts/pipelineCL.py -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -d -U -C ${dirname}/clusterArguments.xml\n"; 
     ##################################################################
     ##############  Write second round of assembly commands ##########
     ##################################################################
