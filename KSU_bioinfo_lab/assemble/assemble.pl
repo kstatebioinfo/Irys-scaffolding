@@ -53,7 +53,7 @@ while (<ERR>) # get noise parameters
 my %p_value = (
 'strict_t' => "$T_strict",
 'default_t' => "$T",
-'relaxed_t' => "$T_relaxed",
+'relaxed_t' => "$T_relaxed"
 );
 open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
 print OUT_ASSEMBLE "#!/bin/bash\n";
