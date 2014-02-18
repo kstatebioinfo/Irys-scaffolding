@@ -5,10 +5,13 @@
 #
 #  Created by jennifer shelton
 #
-# Script moves RawMolecules.bnx files into a common bnx directory and renames with auto-incremented numbers. Make paths absolute and do not include trailing spaces in paths.
+# Script moves Molecules.bnx files into a common bnx directory and renames with auto-incremented numbers. Make paths absolute and do not include trailing spaces in paths.
+
+# The script takes a list of flowcell directories (e.g. one directory up from the Molecules.bnx files) and the new BNX directory name. This organizes the raw data in the correct format to run AssembleIrys.pl.
+
 # rename 's/ /_/g' /home/irys/Data/Datasets/*
 #
-# perl /home/irys/Data/Goni_pect_0004/Irys-scaffolding/KSU_bioinfo_lab/assemble/prep_bnx.pl /home/irys/Data/Goni_pect_0004/bnx_original_list.txt /home/irys/Data/Goni_pect_0004/bnx
+# Example: perl /home/irys/Data/Goni_pect_0004/Irys-scaffolding/KSU_bioinfo_lab/assemble/prep_bnx.pl /home/irys/Data/Goni_pect_0004/bnx_original_list.txt /home/irys/Data/Goni_pect_0004/bnx
 #
 ###############################################################################
 use strict;

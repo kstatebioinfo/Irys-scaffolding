@@ -50,7 +50,8 @@ print QC_METRICS "Assembly Name,Assembly n50,refineB n50,Extension 1 n50,Merge 1
 ###############################################################################
 ##########            open all assembly directories           #################
 ###############################################################################
-my $final=0;
+my $final = 0;
+my $single_mol_breadth_of_coverage = 0;
 for my $assembly_dir (@directories)
 {
     my $report= "$bnx_dir/$assembly_dir/${project}_informaticsReport.txt";
@@ -153,6 +154,11 @@ for my $assembly_dir (@directories)
             }
                 
         }   
+    }
+    my $report= "$bnx_dir/$assembly_dir/all_flowcells/all_flowcells_adj_merged_bestref.xmap";
+    if (-e $report)
+    {
+        # ADD SCRIPT TO CALCULATE SINGLE MOLECULE BREADTH OF COVERAGE FROM XMAP
     }
 }
 #            N contigs: 216
