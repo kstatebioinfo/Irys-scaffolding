@@ -64,6 +64,7 @@ for my $assembly_dir (@directories)
         ###################################################################
         while (<BIOINFO_REPORT>)
         {
+            chomp;
             if (/Stage Complete: refineFinal/)
             {
                 $final = 1;
@@ -73,7 +74,6 @@ for my $assembly_dir (@directories)
             #########################################################
             if (($final == 0) && (/Contig n50/))
             {
-                chomp;
                 s/(Contig n50.*(Mb):\s+)(.*)/$2/;
                 print QC_METRICS;
                 print QC_METRICS ",";
@@ -83,7 +83,6 @@ for my $assembly_dir (@directories)
             #########################################################
             if ($final == 1)
             {
-                chomp;
                 if (/N contigs:/)
                 {
                     s/(N contigs:\s+)(.*)/$2/;
@@ -152,8 +151,9 @@ for my $assembly_dir (@directories)
                 }
             }
                 
-        }
+        }   
     }
+    $final = 0;
 }
 #            N contigs: 216
 #            Total Contig Len (Mb):   200.473
