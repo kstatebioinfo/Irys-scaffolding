@@ -39,7 +39,8 @@ while (<RAW_BNX_LIST>)
 {
     chomp;
     my $file = $_;
-    my $link= `ln -s \'${file}/Detect Molecules/Molecules.bnx\' \'${directory}/Molecules_${i}.bnx\'`;
+    `rename 's/ /_/g' ${file}/*`;
+    my $link= `ln -s \'${file}/Detect_Molecules/Molecules.bnx\' \'$directory/Molecules_${i}.bnx\'`;
     print "$link";
     ++$i;
 }
