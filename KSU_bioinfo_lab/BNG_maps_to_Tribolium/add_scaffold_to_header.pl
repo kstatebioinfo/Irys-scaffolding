@@ -4,6 +4,7 @@
 #	USAGE: perl add_scaffold_to_header.pl [tcas.in_silico.fasta] [tcas_chromosome_from_scaffold.agp]
 #
 #  Created by jennifer shelton
+# perl /home/irys/Data/Irys-scaffolding/KSU_bioinfo_lab/BNG_maps_to_Tribolium/add_scaffold_to_header.pl /home/irys/Data/Trib_cast_0002/tcas.in_silico.fasta /home/irys/Trib_cast_0002_gam-ngs/tcas_chromosome_from_scaffold.agp
 #
 ##################################################################################
 use strict;
@@ -23,7 +24,7 @@ while (<AGP>)
     {
         chomp;
         my @columns = split;
-        $scaffolds{"$column[0]:$column[1]..$column[2]"} = $column[4];
+        $scaffolds{"$columns[0]:$columns[1]..$columns[2]"} = $columns[4];
     }
 }
 while (<FASTA>)
