@@ -1,6 +1,6 @@
 #!/bin/perl
 ###############################################################################
-#   
+#
 #	USAGE: perl agp2bed.pl [fasta] [agp]
 #
 #  Created by jennifer shelton
@@ -14,15 +14,15 @@ use warnings;
 ##############                      notes                       ###############
 ###############################################################################
 my $fasta= $ARGV[0];
-#my $agp= $ARGV[1];
+my $agp= $ARGV[1];
+my $scaffold = 1;
 open (FASTA,'<',$fasta) or die "can't open $fasta\n";
-#open (AGP,'<',$agp) or die "can't open $agp\n";
+open (AGP,'<',$agp) or die "can't open $agp\n";
 while (<FASTA>)
 {
     if (/^>/)
     {
+        />Scaffold[0]*(.*)\s\|/;
         
-        />(.*)[0]*(.*)\s/;
-        print "$1$2\n";
     }
 }
