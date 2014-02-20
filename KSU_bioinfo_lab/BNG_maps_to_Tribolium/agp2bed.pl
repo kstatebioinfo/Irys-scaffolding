@@ -13,8 +13,8 @@ use warnings;
 ###############################################################################
 ##############                      notes                       ###############
 ###############################################################################
-my $fasta= ARGV[0];
-#my $agp= ARGV[1];
+my $fasta= $ARGV[0];
+#my $agp= $ARGV[1];
 open (FASTA,'<',$fasta) or die "can't open $fasta\n";
 #open (AGP,'<',$agp) or die "can't open $agp\n";
 while (<FASTA>)
