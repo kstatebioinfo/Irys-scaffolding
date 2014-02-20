@@ -16,27 +16,32 @@ use warnings;
 my $fasta= $ARGV[0];
 my $agp= $ARGV[1];
 my $scaffold = 1;
+my $bng_id;
 open (FASTA,'<',$fasta) or die "can't open $fasta\n";
-open (AGP,'<',$agp) or die "can't open $agp\n";
-$fasta ~= /(.*)\.agp/$1\.bed/;
-open (BED,'>',"$fasta") or die "can't open $fasta\n";
+open (BED,'>',"$fasta.bed") or die "can't open output\n";
 while (<FASTA>)
 {
     if (/^>/)
     {
         />Scaffold[0]*(.*)\s\|/;
+        if (($bng_id )&&($bng_id != $1))
+        {
+            ++$scaffold ;
+        }
+        $bng_id = "$1";
+        open (AGP,'<',$agp) or die "can't open $agp\n";
         while (<AGP>)
         {
             unless (/^#/)
             {
-                my @rows = split(\t);
-                if (($rows[4] eq "W")&&("Scaffold$1" eq "$rows[0]"))
+                my @rows = split("\t");
+                if (($rows[4] eq "W")&&("Scaffold${bng_id}" eq "$rows[0]"))
                 {
-                    print BED "$count\t$rows[1]\t$rows[2]\t$rows[5]\n";
+                    print BED "$scaffold\t$rows[1]\t$rows[2]\t$rows[5]\n";
                 }
             }
         }
-        ++$count;
+        close (AGP);
     }
     
 }
