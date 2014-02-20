@@ -23,7 +23,8 @@ while (<FASTA>)
 {
     if (/^>/)
     {
-        />Scaffold[0]*(.*)\s\|/;
+        chomp;
+        />Scaffold[0]*.*\s\|\sScaffold(.*)/;
         if (($bng_id )&&($bng_id != $1))
         {
             ++$scaffold ;
