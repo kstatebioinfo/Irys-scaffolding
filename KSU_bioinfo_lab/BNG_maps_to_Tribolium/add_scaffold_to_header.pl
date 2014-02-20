@@ -37,8 +37,16 @@ while (<FASTA>)
         />Scaffold[0]*.*\s\|\s(.*)/;
         if ($scaffolds{$1})
         {
-            print "$_ | $scaffolds{$1}\n";
+            print NEWFASTA "$_ | $scaffolds{$1}\n";
         }
+        else
+        {
+            print "can't find $_ in AGP\n";
+        }
+    }
+    else
+    {
+        print NEWFASTA;
     }
 }
 	
