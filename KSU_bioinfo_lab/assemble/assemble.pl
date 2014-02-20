@@ -161,10 +161,6 @@ for my $stringency (keys %p_value)
 #########################################
 ##       Clean some excess files       ##
 #########################################
-`rm ${bnx_dir}/all_flowcells/all_flowcells_adj_merged_bestref_r.cmap`;
-`rm ${bnx_dir}/all_flowcells/all_flowcells_adj_merged_bestref_q.cmap`;
-`rm ${bnx_dir}/all_flowcells/all_flowcells_adj_merged_bestref.map`;
-`rm ${bnx_dir}/all_flowcells/all_flowcells_adj_merged_bestref.xmap`;
 `rm ${bnx_dir}/all_flowcells/all_flowcells_adj_merged_r.cmap`;
 `rm ${bnx_dir}/all_flowcells/all_flowcells_adj_merged_q.cmap`;
 `rm ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.map`;
