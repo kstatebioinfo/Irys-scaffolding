@@ -27,6 +27,7 @@ while (<AGP>)
         $scaffolds{"$columns[0]:$columns[1]..$columns[2]"} = $columns[4];
     }
 }
+open (FASTA,'<',"$fasta") or die "can't open $fasta!\n";
 while (<FASTA>)
 {
     if (/^>/)
