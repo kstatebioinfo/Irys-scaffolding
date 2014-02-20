@@ -27,6 +27,7 @@ while (<AGP>)
         $scaffolds{"$columns[0]:$columns[1]..$columns[2]"} = $columns[4];
     }
 }
+open (NEWFASTA,'>',"tcas.in_silico_header.fasta") or die "can't open tcas.in_silico_header.fasta!\n";
 open (FASTA,'<',"$fasta") or die "can't open $fasta!\n";
 while (<FASTA>)
 {
