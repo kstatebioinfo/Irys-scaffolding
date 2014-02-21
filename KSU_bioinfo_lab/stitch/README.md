@@ -27,7 +27,7 @@ DEPENDENCIES
 
 USAGE
 
-       perl analyze_irys_output.pl [options]
+       perl stitch.pl [options]
 
         Documentation options:
           -help    brief help message
