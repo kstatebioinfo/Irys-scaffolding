@@ -1,4 +1,4 @@
-SCRIPT (WARNING STRIPT IS CURRENTLY INCOMPLETE. THIS WARNING WILL BE REMOVED WJEN THE SCRIPT IS FINISHED)
+SCRIPT 
 
 **stitch.pl -**
        a package of scripts that analyze IrysView
@@ -126,7 +126,8 @@ DESCRIPTION
        No in silico map's sequence is added to the final fasta twice; however, 
        if the first and second best alignment for an in silico map align to the 
        ends of two molecule maps that each super-scaffold > 1 in silico map than 
-       these alignments are all used to "stitch" together the final super-scaffold.
+       these alignments are listed and can be used to "stitch" together the final 
+       super-scaffold.
 
 
 **Test with sample datasets**
@@ -137,5 +138,5 @@ cd Irys-scaffolding/KSU_bioinfo_lab/stitch
 
 mkdir results
 
-perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
+perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 8 --s_algn 90
 ```
