@@ -26,6 +26,7 @@ my $out = "tcas.scaffolds_plus_gam.fasta"; ## changed name to plus to indicate t
 my $seq_out = Bio::SeqIO->new('-file' => ">$out",'-format' => 'fasta');		#Create new fasta outfile object.
 my $header;
 $/=">";
+my $seq_obj;
 while (<FASTA>)
 {
     my ($header,@seq)=split/\n/;
