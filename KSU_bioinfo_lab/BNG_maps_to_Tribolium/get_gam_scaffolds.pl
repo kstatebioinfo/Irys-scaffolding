@@ -24,6 +24,8 @@ my $db = Bio::DB::Fasta->new("$infile_fasta");
 open (FASTA, '<', "tcas.in_silico_header.fasta") or die "can't open tcas.in_silico_header.fasta !\n";
 my $out = "tcas.scaffolds_plus_gam.fasta"; ## changed name to plus to indicate that they reversed if aligning in the minus direction to the superscaffold
 my $seq_out = Bio::SeqIO->new('-file' => ">$out",'-format' => 'fasta');		#Create new fasta outfile object.
+my $c_out = "tcas.scaffolds_gam_only.fasta"; ## file of gam-scaffolds to break into contigs
+my $contig_out = Bio::SeqIO->new('-file' => ">$c_out",'-format' => 'fasta');		#Create new fasta outfile object.
 my $header;
 $/=">";
 my $seq_obj;
@@ -48,6 +50,10 @@ while (<FASTA>)
     {
     	$seq_obj = $db->get_Seq_by_id($changed{$1}); #get altered fasta files
     	$seq_out->write_seq($seq_obj);
+        $contig_out->write_seq($seq_obj);
+        my $len = $seq->length($seq_obj);
+        print "$changed{$1} $1 length: $len\n";
+        
     }
     else
     {
@@ -59,6 +65,8 @@ for my $new (@new)
 {
 	$seq_obj = $db->get_Seq_by_id($new); #get altered fasta files
 	$seq_out->write_seq($seq_obj);
+    my $len = $seq->length($seq_obj);
+    print "$new length: $len\n";
 }
 
 
