@@ -65,6 +65,7 @@ for my $new (@new)
 {
 	$seq_obj = $db->get_Seq_by_id($new); #get altered fasta files
 	$seq_out->write_seq($seq_obj);
+    $contig_out->write_seq($seq_obj);
     my $len = $seq_obj->length();
     print "$new length: $len\n";
 }
