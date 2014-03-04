@@ -1,7 +1,7 @@
 #!/bin/perl
 ##################################################################################
 #   
-#	USAGE: perl get_gam_scaffolds.pl
+#	USAGE: perl /home/irys/Data/Irys-scaffolding/KSU_bioinfo_lab/BNG_maps_to_Tribolium/get_gam_scaffolds.pl
 # Scripts brings gam-ngs scaffolds into the reoriented scaffold fasta file
 #  Created by jennifer shelton
 #
@@ -21,8 +21,8 @@ my %changed = ("Scaffold297"=>"PairedContig_307", "Scaffold128"=>"PairedContig_6
 my @new = qw/PairedContig_71 PairedContig_325/;
 my $infile_fasta = "master.tcas4.0.slave.scaffolds_merge.gam_reverted.fasta";
 my $db = Bio::DB::Fasta->new("$infile_fasta");
-open (FASTA, '<', "${dir}/tcas.in_silico_plus.fasta") or die "can't open ${dir}tcas.contigs.fasta !\n";
-my $out = "${dir}/tcas.scaffolds_plus_gam.fasta"; ## changed name to plus to indicate that they reversed if aligning in the minus direction to the superscaffold
+open (FASTA, '<', "tcas.in_silico_plus.fasta") or die "can't open tcas.in_silico_plus.fasta !\n";
+my $out = "tcas.scaffolds_plus_gam.fasta"; ## changed name to plus to indicate that they reversed if aligning in the minus direction to the superscaffold
 my $seq_out = Bio::SeqIO->new('-file' => ">$out",'-format' => 'fasta');		#Create new fasta outfile object.
 my $header;
 $/=">";
