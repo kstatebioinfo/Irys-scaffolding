@@ -51,7 +51,7 @@ while (<FASTA>)
     	$seq_obj = $db->get_Seq_by_id($changed{$1}); #get altered fasta files
     	$seq_out->write_seq($seq_obj);
         $contig_out->write_seq($seq_obj);
-        my $len = $seq->length($seq_obj);
+        my $len = $seq_obj->length();
         print "$changed{$1} $1 length: $len\n";
         
     }
@@ -65,7 +65,7 @@ for my $new (@new)
 {
 	$seq_obj = $db->get_Seq_by_id($new); #get altered fasta files
 	$seq_out->write_seq($seq_obj);
-    my $len = $seq->length($seq_obj);
+    my $len = $seq_obj->length();
     print "$new length: $len\n";
 }
 
