@@ -21,7 +21,7 @@ my %changed = ("Scaffold297"=>"PairedContig_307", "Scaffold128"=>"PairedContig_6
 my @new = qw/PairedContig_71 PairedContig_325/;
 my $infile_fasta = "master.tcas4.0.slave.scaffolds_merge.gam_reverted.fasta";
 my $db = Bio::DB::Fasta->new("$infile_fasta");
-open (FASTA, '<', "tcas.in_silico_plus.fasta") or die "can't open tcas.in_silico_plus.fasta !\n";
+open (FASTA, '<', "tcas.in_silico_header.fasta") or die "can't open tcas.in_silico_header.fasta !\n";
 my $out = "tcas.scaffolds_plus_gam.fasta"; ## changed name to plus to indicate that they reversed if aligning in the minus direction to the superscaffold
 my $seq_out = Bio::SeqIO->new('-file' => ">$out",'-format' => 'fasta');		#Create new fasta outfile object.
 my $header;
