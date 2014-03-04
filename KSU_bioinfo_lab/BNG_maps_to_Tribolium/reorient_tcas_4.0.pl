@@ -7,7 +7,6 @@
 #   Step 1: curl -O ftp://ftp.bioinformatics.ksu.edu/pub/BeetleBase/4.0_draft/tcas_chromosome_from_scaffold.agp
 #   Step 1: curl -O ftp://ftp.bioinformatics.ksu.edu/pub/BeetleBase/4.0_draft/tcas_scaffold_from_component.agp
 #   Step 1: curl -O ftp://ftp.bioinformatics.ksu.edu/pub/BeetleBase/4.0_draft/tcas.contigs.fasta
-#   Step 1: curl -O ftp://ftp.bioinformatics.ksu.edu/pub/BeetleBase/4.0_draft/in_silico_for_bng/tcas.in_silico.fasta
 #   Step 2: perl reorient_tcas_4.0.pl [path to tcas4.0 files]
 #   Step 3: perl /home/irys/Data/Irys-scaffolding/KSU_bioinfo_lab/BNG_maps_to_Tribolium/add_scaffold_to_header.pl tcas.in_silico.fasta tcas_chromosome_from_scaffold.agp
 #   Step 3: perl /home/irys/Data/Irys-scaffolding/KSU_bioinfo_lab/BNG_maps_to_Tribolium/agp2bed.pl tcas.in_silico_header.fasta tcas_scaffold_from_component.agp
