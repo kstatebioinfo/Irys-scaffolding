@@ -100,7 +100,7 @@ while (<REORIENTED_CONTIGS>)
     my $seq=join '', @seq;
     $seq =~ s/>//g; ## removed the > used as record seperator
     $header =~ s/ //g; ## removed white space because bioperl doesn't allow it in headers
-	if ($header == ''){next}; ## skip blank first record
+	if ($header eq ''){next}; ## skip blank first record
     $header =~ /(.*).organism/;
     #######################################################################
     ##     print unchanged to  tcas_contigs_gam_plus.fasta             ####
