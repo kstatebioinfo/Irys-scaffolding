@@ -54,14 +54,16 @@ while (<REORIENTED_AGP>)
         {
             if ($altered_scaffold{$row[0]} ne '0')
             {
-                for my $line (@gam_agp_array)
+                while(@gam_agp_array)
                 {
-                    chomp;
+                    my $line = $gam_agp_array[0];
+                    chomp $line;
                     my @inner_row= split ("\t",$line);
                     if ($inner_row[0] eq $altered_scaffold{$row[0]})
                     {
                         $inner_row[0]=$row[0];
                         print SCAFF_CONTIG_GAM_AGP join("\t", @inner_row), "\n";
+                        shift @gam_agp_array;
                     }
                 }
                 $altered_scaffold{$row[0]}= 0;
@@ -81,7 +83,7 @@ while (<REORIENTED_AGP>)
         ###################################################################
         ##############      print unchanged scaffolds    ##################
         ###################################################################
-        else
+        if (!exists $former_scaffolds{$row[0]})
         {
             print SCAFF_CONTIG_GAM_AGP;
             print SCAFF_CONTIG_GAM_AGP "\n";
@@ -93,6 +95,16 @@ while (<REORIENTED_AGP>)
     else
     {
         print SCAFF_CONTIG_GAM_AGP;
+    }
+}
+for my $line (@gam_agp_array)
+{
+    chomp $line;
+    my @row= split ("\t",$line);
+    if (row[0] eq $altered_scaffold{$row[0]})
+    {
+        $inner_row[0]=$row[0];
+        print SCAFF_CONTIG_GAM_AGP join("\t", @inner_row), "\n";
     }
 }
 
