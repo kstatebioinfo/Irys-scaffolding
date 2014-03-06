@@ -103,8 +103,8 @@ for my $line (@gam_agp_array)
     my @row= split ("\t",$line);
     if ($row[0] eq $altered_scaffold{$row[0]})
     {
-        $inner_row[0]=$row[0];
-        print SCAFF_CONTIG_GAM_AGP join("\t", @inner_row), "\n";
+        $row[0]=$row[0];
+        print SCAFF_CONTIG_GAM_AGP join("\t", @row), "\n";
     }
 }
 
