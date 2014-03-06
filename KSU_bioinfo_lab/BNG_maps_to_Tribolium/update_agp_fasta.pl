@@ -38,14 +38,14 @@ while (<REORIENTED_AGP>)
         ###################################################################
         if (($former_scaffolds{$row[0]})&& ($row[4] eq 'W'))
         {
-            $contigs_to_remove{$row[5]};
+            undef $contigs_to_remove{$row[5]};
         }
         ###################################################################
         ##############      change altered scaffolds     ##################
         ###################################################################
         if ($altered_scaffold{$row[0]})
         {
-            if ($altered_scaffold{$row[0]} != 0)
+            if ($altered_scaffold{$row[0]} ne '0')
             {
                 for my $line (@gam_agp_array)
                 {
@@ -59,7 +59,7 @@ while (<REORIENTED_AGP>)
                 }
                 $altered_scaffold{$row[0]}= 0;          
             }
-            if ($altered_scaffold{$row[0]} == 0)
+            if ($altered_scaffold{$row[0]} eq '0')
             {
                 next;
             }
@@ -100,7 +100,7 @@ while (<REORIENTED_CONTIGS>)
     my $seq=join '', @seq;
     $seq =~ s/>//g; ## removed the > used as record seperator
     $header =~ s/ //g; ## removed white space because bioperl doesn't allow it in headers
-	if ($header eq ''){next}; ## skip blank first record
+	if ($header =~ />/){next}; ## skip blank first record
     $header =~ /(.*).organism/;
     #######################################################################
     ##     print unchanged to  tcas_contigs_gam_plus.fasta             ####
