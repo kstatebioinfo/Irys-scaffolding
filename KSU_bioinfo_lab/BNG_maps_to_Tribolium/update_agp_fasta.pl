@@ -65,6 +65,10 @@ while (<REORIENTED_AGP>)
                         print SCAFF_CONTIG_GAM_AGP join("\t", @inner_row), "\n";
                         shift @gam_agp_array;
                     }
+                    else
+                    {
+                        last;
+                    }
                 }
                 $altered_scaffold{$row[0]}= 0;
             }
@@ -74,7 +78,7 @@ while (<REORIENTED_AGP>)
             }
         }
         ###################################################################
-        ##############      change joined  scaffolds     ##################
+        ##############      skip   joined  scaffolds     ##################
         ###################################################################
         elsif (exists $new_scaffold{$row[0]})
         {
@@ -97,15 +101,23 @@ while (<REORIENTED_AGP>)
         print SCAFF_CONTIG_GAM_AGP;
     }
 }
+###################################################################
+##############      add    joined  scaffolds     ##################
+###################################################################
+#"Scaffold2229"
+my $scaffold_number=2229;
+my $paired_id;
 for my $line (@gam_agp_array)
 {
     chomp $line;
-    my @row= split ("\t",$line);
-    if ($row[0] eq $altered_scaffold{$row[0]})
+    my @inner_row= split ("\t",$line);
+    if ((defined $paired_id) && ($paired_id ne $inner_row[0]))
     {
-        $row[0]=$row[0];
-        print SCAFF_CONTIG_GAM_AGP join("\t", @row), "\n";
+        ++$scaffold_number;
     }
+    $paired_id = $inner_row[0];
+    $inner_row[0]="Scaffold".$scaffold_number;
+    print SCAFF_CONTIG_GAM_AGP join("\t", @inner_row), "\n";
 }
 
 #######################################################################
