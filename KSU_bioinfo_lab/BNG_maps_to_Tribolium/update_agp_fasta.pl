@@ -39,6 +39,7 @@ while (<REORIENTED_AGP>)
         if (($former_scaffolds{$row[0]})&& ($row[4] eq 'W'))
         {
             undef $contigs_to_remove{$row[5]};
+            print "$row[5]\n";
         }
         ###################################################################
         ##############      change altered scaffolds     ##################
