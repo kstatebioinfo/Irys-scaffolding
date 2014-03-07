@@ -23,11 +23,11 @@ while (<FASTA>)
     chomp;
     if ($bad_headers{$_})
     {
-        print FASTA "$bad_headers{$_}\n";
+        print NEW_FASTA "$bad_headers{$_}\n";
     }
     else
     {
-        print FASTA "$_\n";;
+        print NEW_FASTA "$_\n";;
     }
 }
 
