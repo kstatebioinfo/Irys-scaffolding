@@ -1,11 +1,11 @@
 #!/bin/perl
-##################################################################################
+###############################################################################
 #   
 #	USAGE: perl /home/irys/Data/Irys-scaffolding/KSU_bioinfo_lab/BNG_maps_to_Tribolium/get_gam_scaffolds.pl
 # Scripts brings gam-ngs scaffolds into the reoriented scaffold fasta file
 #  Created by jennifer shelton
 #
-##################################################################################
+###############################################################################
 use strict;
 use warnings;
 use Bio::Seq;
@@ -13,9 +13,9 @@ use Bio::SeqIO;
 use Bio::DB::Fasta; #makes a searchable db from my fasta file
 # use List::Util qw(max);
 # use List::Util qw(sum);
-##################################################################################
-##############                      notes                       ##################
-##################################################################################
+###############################################################################
+##############                      notes                   ##################
+###############################################################################
 my %joined = ("Scaffold1655"=>undef, "Scaffold661"=>undef, "Scaffold1773"=>undef, "Scaffold378"=>undef);
 my %changed = ("Scaffold297"=>"PairedContig_307", "Scaffold128"=>"PairedContig_606");
 my @new = qw/PairedContig_71 PairedContig_325/;
