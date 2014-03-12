@@ -94,7 +94,7 @@ print "Using \"all_flowcells_adj_merged_bestref.err\" for noise parameters and b
 print "##################################################################################\n";
 my $assemble=`perl ${dirname}/assemble.pl $bnx_dir $reference $T $dirname $project`;
 print "$assemble";
-
+print "Finished running AssembleIrys.pl\n";
 
 ##################################################################################
 ##############                        run                       ##################

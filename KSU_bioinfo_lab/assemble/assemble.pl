@@ -165,4 +165,4 @@ for my $stringency (keys %p_value)
 `rm ${bnx_dir}/all_flowcells/all_flowcells_adj_merged_q.cmap`;
 `rm ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.map`;
 `rm ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.xmap`;
-
+print "done\n";

@@ -142,6 +142,6 @@ for my $remove (@files_to_remove)
 {
     `rm $remove`;
 }
-
+print "done\n";
 
 

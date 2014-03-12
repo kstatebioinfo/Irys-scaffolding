@@ -44,3 +44,4 @@ for my $dir (@dir_array)
         ++$i;
     }
 }
+print "done\n";
