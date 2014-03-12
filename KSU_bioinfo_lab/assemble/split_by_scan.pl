@@ -93,3 +93,4 @@ while (my $file = readdir(DIR))
         }
 	}
 }
+print "done\n";

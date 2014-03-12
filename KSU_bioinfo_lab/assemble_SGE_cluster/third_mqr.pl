@@ -90,7 +90,7 @@ for my $file (@err_files)
         }
     }
 }
-
+print "done\n";
 #if (($non_bestref_value >= $bestref_value+($bestref_value*.05) || ($non_bestref_value <= $bestref_value-($bestref_value*.05))
 #{
 #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
