@@ -161,7 +161,7 @@ for my $stringency (keys %p_value)
     ##############  Write second round of assembly commands ##########
     ##################################################################
     {
-        my $second_commands= `perl RefineAssembleIrys.pl -a ${out_dir} -b ${bnx_dir} -r $ref -p ${project}_${stringency} -t $p_value{$stringency}`;
+        my $second_commands= `perl ${dirname}/RefineAssembleIrys.pl -a ${out_dir} -b ${bnx_dir} -r $ref -p ${project}_${stringency} -t $p_value{$stringency}`;
         print "$second_commands";
     }
 }

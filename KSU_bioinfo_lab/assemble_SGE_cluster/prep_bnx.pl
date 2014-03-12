@@ -1,22 +1,21 @@
 #!/bin/perl
 ###############################################################################
 #
-#	USAGE: perl prep_bnx.pl [dataset list] [bnx directory]
+#	USAGE: perl prep_bnx.pl [dataset directory] [bnx directory]
 #
 #  Created by jennifer shelton
 #
 # Script moves Molecules.bnx files into a common bnx directory and renames with auto-incremented numbers. Make paths absolute and do not include trailing spaces in paths.
 
-# The script takes a list of flowcell directories (e.g. one directory up from the Molecules.bnx files) and the new BNX directory name. This organizes the raw data in the correct format to run AssembleIrys.pl.
+# The script takes the path to the directory with the transfered datasets from the IrysView workspaces and the new BNX directory name. This organizes the raw data in the correct format to run AssembleIrys.pl.
 
-# rename 's/ /_/g' /home/irys/Data/Datasets/*
 #
-# Example: perl /home/irys/Data/Goni_pect_0004/Irys-scaffolding/KSU_bioinfo_lab/assemble/prep_bnx.pl /home/irys/Data/Goni_pect_0004/bnx_original_list.txt /home/irys/Data/Goni_pect_0004/bnx
+# Example: perl /home/irys/Data/Irys-scaffolding/KSU_bioinfo_lab/assemble/prep_bnx.pl /home/irys/Data/Esch_coli_0000 /home/irys/Data/Esch_coli_0000/bnx
 #
-
 ###############################################################################
 use strict;
 use warnings;
+#use File::Find::Rule;
 # use List::Util qw(max);
 # use List::Util qw(sum);
 #
@@ -24,7 +23,7 @@ use warnings;
 ###############################################################################
 ##############                 get arguments                 ##################
 ###############################################################################
-my $raw_bnx_list=$ARGV[0];
+my $dataset_directory=$ARGV[0];
 my $i=1;
 my $directory = $ARGV[1];
 unless(mkdir $directory)
@@ -34,13 +33,14 @@ unless(mkdir $directory)
 ###############################################################################
 ##############            Move and rename files              ##################
 ###############################################################################
-open (RAW_BNX_LIST, '<',"$raw_bnx_list") or die "can't open $raw_bnx_list!\n";
-while (<RAW_BNX_LIST>)
+my @dir_array = ('/home', grep -d, glob "$dataset_directory/*");
+for my $dir (@dir_array)
 {
-    chomp;
-    my $file = $_;
-    `rename 's/ /_/g' ${file}/*`;
-    my $link= `ln -s \'${file}/Detect_Molecules/Molecules.bnx\' \'$directory/Molecules_${i}.bnx\'`;
-    print "$link";
-    ++$i;
+    `rename 's/ /_/g' ${dir}/*`;
+    if (-e "${dir}/Detect_Molecules/Molecules.bnx")
+    {
+        my $link= `ln -s \'${dir}/Detect_Molecules/Molecules.bnx\' \'$directory/Molecules_${i}.bnx\'`;
+        print "$link";
+        ++$i;
+    }
 }

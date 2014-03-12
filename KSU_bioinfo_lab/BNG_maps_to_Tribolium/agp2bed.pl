@@ -4,6 +4,7 @@
 #	USAGE: perl agp2bed.pl [fasta] [agp]
 #
 #  Created by jennifer shelton
+# perl /home/irys/Data/Irys-scaffolding/KSU_bioinfo_lab/BNG_maps_to_Tribolium/agp2bed.pl /home/irys/Data/Trib_cast_0002/tcas.in_silico_header.fasta /home/irys/Data/Trib_cast_0002/tcas_scaffold_from_component.agp
 #
 ###############################################################################
 use strict;
