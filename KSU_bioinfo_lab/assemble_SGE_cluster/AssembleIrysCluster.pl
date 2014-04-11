@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ##################################################################################
 #   
-#	USAGE: perl AssembleIrys.pl [options]
+#	USAGE: perl AssembleIrysCluster.pl [options]
 #
 #  Created by jennifer shelton
 #
@@ -17,14 +17,14 @@ use Pod::Usage;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  AssembleIrys.pl                                        #\n";
+print "#  AssembleIrysCluster.pl                                        #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 1/27/14                    #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
-print "#  perl AssembleIrys.pl -help # for usage/options         #\n";
-print "#  perl AssembleIrys.pl -man # for more details           #\n";
+print "#  perl AssembleIrysCluster.pl -help # for usage/options         #\n";
+print "#  perl AssembleIrysCluster.pl -man # for more details           #\n";
 print "###########################################################\n";
-#perl /Users/jennifershelton/Desktop/Perl_course_texts/scripts/Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrys.pl -g 230 -b test_bnx - p Oryz_sati_0027
+#perl /Users/jennifershelton/Desktop/Perl_course_texts/scripts/Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrysCluster.pl -g 230 -b test_bnx - p Oryz_sati_0027
 
 ##################################################################################
 ##############                get arguments                     ##################
@@ -109,11 +109,11 @@ __END__
 
 =head1 NAME
 
-AssembleIrys.pl - a package of scripts run on the Beocat SGE cluster. They adjust the bases per pixel (bpp) by scan for each flowcell BNX file and then merge each flowcell into a single BNX file. Quality by flowcell is poltted in a CSV file "flowcell_summary.csv." Potential issues are reported in the output (e.g if the bpp does not return to ~500 after adjustment). The script creates optArgument.xml files and commands to run assemblies with strict, relaxed, and default p-value thresholds. The best of these along with the best p-value threshold (-T) should be used to run strict and relaxed assemblies with varing minimum lengths. Second assembly commands for each first assembly are written to the assembly_commands.sh script. They must be uncommented to run.
+AssembleIrysCluster.pl - a package of scripts run on the Beocat SGE cluster. They adjust the bases per pixel (bpp) by scan for each flowcell BNX file and then merge each flowcell into a single BNX file. Quality by flowcell is poltted in a CSV file "flowcell_summary.csv." Potential issues are reported in the output (e.g if the bpp does not return to ~500 after adjustment). The script creates optArgument.xml files and commands to run assemblies with strict, relaxed, and default p-value thresholds. The best of these along with the best p-value threshold (-T) should be used to run strict and relaxed assemblies with varing minimum lengths. Second assembly commands for each first assembly are written to the assembly_commands.sh script. They must be uncommented to run.
 
 =head1 USAGE
 
-perl AssembleIrys.pl [options]
+perl AssembleIrysCluster.pl [options]
 
  Documentation options:
    -help    brief help message
@@ -178,7 +178,7 @@ git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
 
 # no test dataset is available yet but here is an example of a command
  
-perl Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrys.pl -g  -b  -r  -p Test_project_name > testing_log.txt
+perl Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrysCluster.pl -g  -b  -r  -p Test_project_name > testing_log.txt
  
 bash assembly_commands.sh
 
