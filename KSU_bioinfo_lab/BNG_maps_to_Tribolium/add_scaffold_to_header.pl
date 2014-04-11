@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 ##################################################################################
 #   
 #	USAGE: perl add_scaffold_to_header.pl [tcas.in_silico.fasta] [tcas_chromosome_from_scaffold.agp]

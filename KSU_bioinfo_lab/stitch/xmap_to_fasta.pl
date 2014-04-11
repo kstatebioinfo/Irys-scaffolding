@@ -1,4 +1,4 @@
- #!/bin/perl
+#!/usr/bin/perl
 
 #  perl stitchmap_to_fasta.pl sample.stitchmap sample_scaffold.fasta tcas.scaffolds.fasta_key.txt
 #  USAGE: perl stitchmap_to_fasta.pl [scaff_stitchmap] [scaffold_fasta]
