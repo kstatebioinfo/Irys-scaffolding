@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 ##################################################################################
 #   
 #	USAGE: perl first_mqr.pl [bnx directory] [reference] [p-value Threshold]
@@ -8,7 +8,9 @@
 ##################################################################################
 use strict;
 use warnings;
+use lib '/homes/bioinfo/bioinfo_software/perl_modules/lib/perl5/';
 use File::Basename; # enable maipulating of the full path
+use Statistics::LineFit;
 # use List::Util qw(max);
 # use List::Util qw(sum);
 ##################################################################################

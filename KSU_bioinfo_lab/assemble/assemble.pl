@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 ##################################################################################
 #   
 #	USAGE: perl assemble.pl [bnx_dir] [reference] [p_value Threshold] [script directory] [project prefix]

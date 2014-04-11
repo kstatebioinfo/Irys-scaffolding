@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 ##################################################################################
 #   xmap_filter.pl
 #	USAGE: perl xmap_filter.pl [r.cmap] [numbered fasta] [xmap] [new_xmap] [min confidence] [min % aligned] [second min confidence] [second min % aligned] [fasta key]

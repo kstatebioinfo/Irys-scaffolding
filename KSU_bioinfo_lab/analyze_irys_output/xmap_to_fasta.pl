@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 
 #  perl xmap_to_fasta.pl sample.xmap sample_scaffold.fasta tcas.scaffolds.fasta_key.txt
 #  USAGE: perl xmap_to_fasta.pl [scaff_xmap] [scaffold_fasta]

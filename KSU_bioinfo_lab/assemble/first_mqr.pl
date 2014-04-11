@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 ##################################################################################
 #   
 #	USAGE: perl first_mqr.pl [bnx directory] [reference] [p-value Threshold]
@@ -9,6 +9,7 @@
 use strict;
 use warnings;
 use File::Basename; # enable maipulating of the full path
+use Statistics::LineFit;
 # use List::Util qw(max);
 # use List::Util qw(sum);
 ##################################################################################
@@ -31,7 +32,7 @@ sub edit_file
 my @files_to_remove; # list of BNX files to remove after spliting
 unless (opendir(DIR, "${bnx_dir}"))
 {
-	print "can't open ${bnx_dir}\n"; # open directory full of .bnx files
+	print "can't directory open ${bnx_dir}\n"; # open directory full of .bnx files
 	next;
 }
 while (my $file = readdir(DIR))

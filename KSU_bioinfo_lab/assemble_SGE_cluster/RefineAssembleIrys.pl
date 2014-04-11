@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 ##################################################################################
 #   
 #	USAGE: perl RefineAssembleIrys.pl [options]
@@ -10,6 +10,7 @@ use strict;
 use warnings;
 # use List::Util qw(max);
 # use List::Util qw(sum);
+use lib '/homes/bioinfo/bioinfo_software/perl_modules/lib/perl5/';
 use File::Basename; # enable manipulating of the full path
 use Getopt::Long;
 use Pod::Usage;

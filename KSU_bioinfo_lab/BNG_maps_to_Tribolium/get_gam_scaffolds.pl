@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 ###############################################################################
 #   
 #	USAGE: perl /home/irys/Data/Irys-scaffolding/KSU_bioinfo_lab/BNG_maps_to_Tribolium/get_gam_scaffolds.pl

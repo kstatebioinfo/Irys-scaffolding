@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 ##################################################################################
 #   
 #	USAGE: perl split_by_scan.pl [bnx directory]
@@ -22,7 +22,7 @@ opendir(DIR, $bnx_dir) or die "can't open $bnx_dir!\n"; # open directory full of
 while (my $file = readdir(DIR)) 
 {
 	next if ($file =~ m/^\./); # ignore files beginning with a period
-	next if ($file !~ m/\.bnx$/); # ignore files not ending with a period
+	next if ($file !~ m/Molecules.*\.bnx$/); # if the filename is Molecules.bnx
     my ($LabelChannel,$MoleculeId,$Length,$AvgIntensity,$SNR,$NumberofLabels,$OriginalMoleculeId,$ScanNumber,$ScanDirection,$ChipId,$Flowcell,$CurrentScanNumber);
     my @headers;
     my $scan=1;

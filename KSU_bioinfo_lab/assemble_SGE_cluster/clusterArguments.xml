@@ -8,15 +8,15 @@
         <minthreads attr="${maxthreads}"/>
     </reducedMinThreads>
     <largeJob>
-        <flag attr="-clear"/>
-        <flag attr="-pe" val0="single" val1="32"/>
-        <flag attr="-l" val0="mem=2G,h_rt=10:00:00"/>
+        <flag attr="-pe" val0="single" val1="16"/>
+        <flag attr="-l" val0="mem=2G"/>
+        <flag attr="-q" val0="*@@elves"/>
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </largeJob>
     <smallJob>
-        <flag attr="-clear"/>
-        <flag attr="-pe" val0="single" val1="16"/>
-        <flag attr="-l" val0="mem=1G,h_rt=10:00:00"/>
+        <flag attr="-pe" val0="single" val1="$numthreads"/>
+        <flag attr="-l" val0="mem=1G"/>
+        <flag attr="-q" val0="*@@elves"/>
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </smallJob>
     <sampleChar>
@@ -28,6 +28,7 @@
     <splitting>        
         <flag attr="-pe" val0="single" val1="2"/>
         <flag attr="-l" val0="mem=1G"/>
+        <flag attr="-q" val0="*@@elves"/>
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </splitting>
     <pairwise>        

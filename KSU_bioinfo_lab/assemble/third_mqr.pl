@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 ##################################################################################
 #   
 #	USAGE: perl third_mqr.pl [bnx_dir] [reference] [p-value Threshold]
@@ -96,4 +96,5 @@ print "done\n";
 #    print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
 #    print "Warning: value of X has shifted by more than 5\% of it's oringinal value when molecules are mapped without \"-BestRef\" turned on. this may indicate that your p-value threshold \"-T\" is too lax.\n"
 #} # fill in when you find out which metric to test
+
 

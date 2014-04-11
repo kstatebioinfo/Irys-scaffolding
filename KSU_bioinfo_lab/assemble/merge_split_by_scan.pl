@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 ##################################################################################
 #   
 #	USAGE: perl merge_split_by_scan.pl [bnx_dir] [reference] [p-value Threshold]

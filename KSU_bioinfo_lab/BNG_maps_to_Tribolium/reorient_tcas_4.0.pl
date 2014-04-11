@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 ###############################################################################
 #   
 #	USAGE: perl reorient_tcas_4.0.pl [path to tcas4.0 files]
