@@ -9,6 +9,7 @@
 use strict;
 use warnings;
 use File::Basename; # enable maipulating of the full path
+use Statistics::LineFit;
 # use List::Util qw(max);
 # use List::Util qw(sum);
 ##################################################################################
