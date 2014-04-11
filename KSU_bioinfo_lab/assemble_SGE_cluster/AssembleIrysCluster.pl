@@ -17,12 +17,12 @@ use Pod::Usage;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  AssembleIrysCluster.pl                                        #\n";
+print "#  AssembleIrysCluster.pl                                 #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 1/27/14                    #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
-print "#  perl AssembleIrysCluster.pl -help # for usage/options         #\n";
-print "#  perl AssembleIrysCluster.pl -man # for more details           #\n";
+print "#  perl AssembleIrysCluster.pl -help # for usage/options  #\n";
+print "#  perl AssembleIrysCluster.pl -man # for more details    #\n";
 print "###########################################################\n";
 #perl /Users/jennifershelton/Desktop/Perl_course_texts/scripts/Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrysCluster.pl -g 230 -b test_bnx - p Oryz_sati_0027
 
