@@ -32,7 +32,7 @@ sub edit_file
 my @files_to_remove; # list of BNX files to remove after spliting
 unless (opendir(DIR, "${bnx_dir}"))
 {
-	print "can't open ${bnx_dir}\n"; # open directory full of .bnx files
+	print "can't directory open ${bnx_dir}\n"; # open directory full of .bnx files
 	next;
 }
 while (my $file = readdir(DIR))
