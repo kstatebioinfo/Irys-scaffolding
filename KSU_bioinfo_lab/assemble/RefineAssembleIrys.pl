@@ -218,11 +218,11 @@ __END__
  
 =item B<-b, --bnx_dir>
  
- The directory with all BNX's that were assembled. Do not use a trailing / for this directory.
+ The directory with all BNX's that were assembled. Use absolute not relative paths. Do not use a trailing / for this directory.
  
 =item B<-a, --current_assembly_dir>
  
- The directory with the current best assembly that was assembled (e.g. '/home/data/strict_t'). Do not use a trailing / for this directory. 
+ The directory with the current best assembly that was assembled (e.g. '/home/data/strict_t'). Use absolute not relative paths. Do not use a trailing / for this directory. 
  
 =item B<-t, --threshold>
  
