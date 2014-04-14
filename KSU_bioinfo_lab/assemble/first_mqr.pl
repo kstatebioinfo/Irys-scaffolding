@@ -102,7 +102,10 @@ while (my $file = readdir(DIR))
         my $adjusted = edit_file("${bnx_dir}/${filename}/${subfilename}.bnx","${bnx_dir}/${filename}/${subfilename}_adj",$new_bpp);
         print "$adjusted";
         push (@files_to_remove,"${bnx_dir}/${filename}/${subfilename}.bnx");
-        print BNX_LIST "${bnx_dir}/${filename}/${subfilename}_adj.bnx\n"; # print name of adj BNX
+        if (-e "${bnx_dir}/${filename}/${subfilename}_adj.bnx")
+        {
+            print BNX_LIST "${bnx_dir}/${filename}/${subfilename}_adj.bnx\n"; # print name of adj BNX
+        }
     }
     ####################################################################
     ########  do regression, use predicted value of y if exists  #######

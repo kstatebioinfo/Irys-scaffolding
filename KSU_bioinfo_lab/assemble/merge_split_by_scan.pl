@@ -46,7 +46,10 @@ while (my $file = readdir(DIR))
     ####################################################################
     my $run_ref=`~/tools/RefAligner -i ${bnx_dir}/${filename}/${filename}_adj_merged.bnx -o ${bnx_dir}/${filename}/${filename}_adj_merged  -T ${T} -ref ${ref} -bnx -nosplit 2 -BestRef 1 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5 -maxthreads 16 -xmapchim 1`;
     print "$run_ref";
-    print FLOWCELL_BNX_LIST "${bnx_dir}/${filename}/${filename}_adj_merged.bnx\n"; # make final merge list
+    if (-e "${bnx_dir}/${filename}/${filename}_adj_merged.bnx")
+    {
+        print FLOWCELL_BNX_LIST "${bnx_dir}/${filename}/${filename}_adj_merged.bnx\n"; # make final merge list
+    }
     ####################################################################
     ######## summarize flowcell molecule quality report .err values ####
     ####################################################################

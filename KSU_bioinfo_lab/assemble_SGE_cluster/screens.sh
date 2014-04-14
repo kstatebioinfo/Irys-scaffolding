@@ -29,7 +29,7 @@ min
 human 156G 
 each node needs access to 16 threads
 
-need on or more 256G nodes with 16Gmin per thread
+need one or more 256G nodes with 16Gmin per thread
 
 min 64 ?
 
