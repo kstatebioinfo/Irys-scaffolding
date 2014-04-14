@@ -49,7 +49,7 @@ OPTIONS
 
        -b, --bnx_dir
                The directory with all BNX's meant for assembly (any BNX in
-               this directory will be used in assembly. Do not use a trailing
+               this directory will be used in assembly). Use absolute not relative paths. Do not use a trailing
                / for this directory.
 
        -g, --genome
