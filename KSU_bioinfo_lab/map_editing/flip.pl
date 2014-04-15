@@ -64,7 +64,7 @@ for my $linenr (0 .. $#file)
         if ($flips{$cmaps[0]})
         {
             #### rewrite label position ######
-            $cmaps[5]=$cmaps[1] - $cmaps[5] + 20; #(because the BioNano maps start at 20?)
+            $cmaps[5]=$cmaps[1] - $cmaps[5] - 0.1; #(because the BioNano maps start at 20? This no longer matters but now 0.1 seems to be added on in the last place??)
             $line = '';
             #### concatinate altered line ######
             for my $i (0..$#cmaps)
@@ -90,22 +90,43 @@ for my $linenr (0 .. $#file)
                 my $j=1;
                 for my $i (reverse 0..$#reversed)
                 {
-                    #### for the original start of the map ######
-                    if ($i == 0)
+                    my $new_columns;
+                    my ($CMapId,$ContigLength,$NumSites,$SiteID,$LabelChannel,$Position,$StdDev,$Coverage,$Occurrence,$GmeanSNR,$lnSNRsd,$SNR_count);
+                    #                    my @columns = split ("\t",$reversed[$i]);
+                    #### Unless this is the original of the map ######
+                    unless ($i == $#reversed)
                     {
-                        $reversed[$i] =~ s/(.*\t.*\t.*\t)(.*)(\t)(.*)(\t.*\t.*\t.*\t)(.*)(\n)/${1}${j}${3}0${5}${6}${7}/;
+                        ($CMapId,$ContigLength,$NumSites,$SiteID,$LabelChannel,$Position,$StdDev,$Coverage,$Occurrence,$GmeanSNR,$lnSNRsd,$SNR_count) = split ("\t",$reversed[$i]);
                     }
+                    #### for the original start of the map ######
+                    #                    if ($i == 0)
+                    #                    {
+                    
+                    #                    }
                     #### for the original end of the map ######
-                    elsif ($i == $#reversed)
+                    if ($i == $#reversed)
                     {
-                        $reversed[$i] =~ s/(.*\t.*\t.*\t)(.*)(\t)(.*)(\t.*\t.*\t.*\t)(.*)(\n)/${1}${j}${3}1${5}${6}${7}/;
+                        next;
+                    }
+                    #### for the original second to end of the map ######
+                    if ($i == ($#reversed -1))
+                    {
+                        $Position = 20;
+                        #                        print OUT_CMAP "$CMapId\t$ContigLength\t$NumSites\t$j\t$LabelChannel\t20\t$StdDev\t$Coverage\t$Occurrence\t$GmeanSNR\t$lnSNRsd\t$SNR_count";
+                        #                        ++$j;
                     }
                     #### for all other maps ######
-                    else
+                    $new_columns = "$CMapId\t$ContigLength\t$NumSites\t$j\t$LabelChannel\t$Position\t$StdDev\t$Coverage\t$Occurrence\t$GmeanSNR\t$lnSNRsd\t$SNR_count";
+                    print OUT_CMAP "$new_columns";
+                    if ($i == 0)
                     {
-                        $reversed[$i] =~ s/(.*\t.*\t.*\t)(.*)(\t)(.*)(\t.*\t.*\t.*\t)(.*)(\n)/${1}${j}${3}${4}${5}${6}${7}/;
+                        my $final_site = $j + 1;
+                        my $last_columns = "$CMapId\t$ContigLength\t$NumSites\t$final_site\t0\t$ContigLength\t0\.0\t1\t1\n";
+                        print OUT_CMAP "$last_columns";
+                        #                        6	325166.0	50	51	0	325166.0	0.0	1	1
+                        #                        4	500651.5	71	72	0	500651.5	0.0	1	1
+                        #                        1	1264931.4	204	205	0	1264931.4	0.0	1	1
                     }
-                    print OUT_CMAP "$reversed[$i]";
                     ++$j;
                 }
                 undef @reversed; # empty the array for the next map to be flipped
