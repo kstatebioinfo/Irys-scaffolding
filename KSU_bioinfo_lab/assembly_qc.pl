@@ -160,7 +160,8 @@ for my $assembly_dir (@directories)
                     $final = 0;
                 }
             }
-            
+        }
+        
     }
 #    my $report= "$bnx_dir/$assembly_dir/all_flowcells/all_flowcells_adj_merged_bestref.xmap";
 #    if (-e $report)
