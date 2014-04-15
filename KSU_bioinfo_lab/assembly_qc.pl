@@ -66,7 +66,7 @@ for my $assembly_dir (@directories)
         next if ($file !~ m/\_informaticsReport.txt$/); # ignore files not ending with a "_informaticsReport.txt"
         my $report = $file;
         print QC_METRICS "$project: $assembly_dir,";
-        open (BIOINFO_REPORT,'<',"$report");
+        open (BIOINFO_REPORT,'<',"$assembly_dir/$report");
         
         ###################################################################
         #####  pull QC metrics from assembly bioinfo reports   ############
