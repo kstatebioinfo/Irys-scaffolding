@@ -8,6 +8,7 @@
 ###############################################################################
 use strict;
 use warnings;
+use File::Basename; # enable manipulating of the full path
 # use List::Util qw(max);
 # use List::Util qw(sum);
 use Getopt::Long;
@@ -54,9 +55,16 @@ my $final = 0;
 my $single_mol_breadth_of_coverage = 0;
 for my $assembly_dir (@directories)
 {
-    my $report= "$bnx_dir/$assembly_dir/${project}_informaticsReport.txt";
-    if (-e $report)
+    unless (opendir(DIR, "${assembly_dir}"))
     {
+        print "can't directory open ${assembly_dir}\n"; # open directory full of assembly files
+        next;
+    }
+    while (my $file = readdir(DIR))
+    {
+        next if ($file =~ m/^\./); # ignore files beginning with a period
+        next if ($file !~ m/\_informaticsReport.txt$/); # ignore files not ending with a "_informaticsReport.txt"
+        my $report = $file;
         print QC_METRICS "$project: $assembly_dir,";
         open (BIOINFO_REPORT,'<',"$report");
         
@@ -152,14 +160,13 @@ for my $assembly_dir (@directories)
                     $final = 0;
                 }
             }
-                
-        }   
+            
     }
-    my $report= "$bnx_dir/$assembly_dir/all_flowcells/all_flowcells_adj_merged_bestref.xmap";
-    if (-e $report)
-    {
-        # ADD SCRIPT TO CALCULATE SINGLE MOLECULE BREADTH OF COVERAGE FROM XMAP
-    }
+#    my $report= "$bnx_dir/$assembly_dir/all_flowcells/all_flowcells_adj_merged_bestref.xmap";
+#    if (-e $report)
+#    {
+#        # ADD SCRIPT TO CALCULATE SINGLE MOLECULE BREADTH OF COVERAGE FROM XMAP
+#    }
 }
 #            N contigs: 216
 ##            Total Contig Len (Mb):   200.473
