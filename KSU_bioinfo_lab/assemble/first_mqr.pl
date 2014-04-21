@@ -71,10 +71,6 @@ while (my $file = readdir(DIR))
         ####################################################################
         ##############  remove excess files and find new bpp ###############
         ####################################################################
-        `rm ${bnx_dir}/${filename}/${subfilename}_r.cmap`;
-        `rm ${bnx_dir}/${filename}/${subfilename}_q.cmap`;
-        `rm ${bnx_dir}/${filename}/${subfilename}.map`;
-        `rm ${bnx_dir}/${filename}/${subfilename}.xmap`;
         my $split_file="${bnx_dir}/${filename}/${subfilename}.err";
         unless (open (ERR, '<',"$split_file"))
         {
