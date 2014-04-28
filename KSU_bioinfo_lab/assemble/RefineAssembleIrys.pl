@@ -19,7 +19,7 @@ use Data::Dumper;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  RefineAssembleIrys.pl                                  #\n";
+print "#  RefineAssembleIrys.pl Version 1.0                      #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 2/3/14                     #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
