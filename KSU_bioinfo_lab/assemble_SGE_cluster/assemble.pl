@@ -157,7 +157,7 @@ for my $stringency (keys %p_value)
     ##############        Write assembly command    ##################
     ##################################################################
     print OUT_ASSEMBLE "##### FIRST ASSEMBLY: ${stringency} #####\n";
-    print OUT_ASSEMBLE "python2 /homes/bioinfo/bioinfo_software/bionano/scripts/pipelineCL.py -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -d -U -C ${dirname}/clusterArguments.xml\n"; 
+    print OUT_ASSEMBLE "python2 /homes/bioinfo/bioinfo_software/bionano/pipeline/pipelineCL.py -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools/ -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -d -U -C ${dirname}/clusterArguments.xml\n"; 
     ##################################################################
     ##############  Write second round of assembly commands ##########
     ##################################################################
