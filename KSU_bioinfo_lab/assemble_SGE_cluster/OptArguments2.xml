@@ -1,0 +1,421 @@
+<?xml version="1.0"?>
+
+<moduleArgs>
+    <imgDetection>
+        <flag attr="-a" val0="0"/>
+        <flag attr="-w" val0="2"/>
+        <flag attr="-A" val0="3"/>
+        <flag attr="-p" val0="4.8"/>
+        <flag attr="-s" val0="3.0"/>
+    </imgDetection>
+    <sampleChar>
+        <flag attr="-M" val0="3"/>
+        <flag attr="-S" val0="-1"/>
+        <flag attr="-T" val0="1e-5"/>
+        <flag attr="-res" val0="3.1"/>
+        <flag attr="-extend" val0="1"/>
+    </sampleChar>
+    <lambdaFilter>
+        <flag attr="-minlen"    val0="40"/>
+        <flag attr="-maxlen"    val0="60"/>
+        <flag attr="-minsites"  val0="6"/>
+        <flag attr="-maxsites"  val0="10"/>
+        <flag attr="-mincount"  val0="10"/>
+    </lambdaFilter>
+    <bnx_sort>
+        <flag attr="-minlen"      val0="180"/>
+        <flag attr="-minsites"    val0="8"/>
+    </bnx_sort> 
+    <mapLambda>
+        <flag attr="-M" val0="5"/>
+        <flag attr="-S" val0="-1"/>
+        <flag attr="-T" val0="1e-4"/>
+        <flag attr="-res" val0="3.1"/>
+        <flag attr="-extend" val0="1"/>
+    </mapLambda>   
+    <noise0>
+        <flag attr="-FP" val0="1.2"/>
+        <flag attr="-FN" val0="0.16"/>
+        <flag attr="-sd" val0="0.11"/>
+        <flag attr="-sf" val0="0.25"/>
+        <flag attr="-resSD" val0="0.75"/>
+        <flag attr="-res" val0="3.3"/>
+        <flag attr="-mres" val0="1.2"/>
+    </noise0>
+    <pairwise>       
+        <use comment="Use with noise0"/>
+        <flag attr="-T"           val0="1e-10"/>
+        <flag attr="-minlen"      val0="180"/>
+        <flag attr="-minsites"    val0="9"/>
+        <flag attr="-A"           val0="5"/>
+        <flag attr="-S"           val0="1"/>
+        <flag attr="-outlier"     val0="0.0001"/>
+        <flag attr="-endoutlier"  val0="0"/>
+        <flag attr="-RepeatMask"    val0="2" val1="0.01"/>
+	<flag attr="-RepeatRec" />
+        <flag attr="-f" />
+	<flag attr="-hashgen" val00="5" val01="3" val02="2.2" val03="1.2" val04="0.05" val05="3.0" val06="1" val07="1" val08="-hash" val09="-mres" val10="1.2"/>
+    </pairwise>
+    <assembly>
+        <use comment="Use with noise0"/>
+        <flag attr="-T"           val0="1e-10"/>
+        <flag attr="-minlen"          val0="180"/>
+        <flag attr="-minsites"        val0="9"/>
+        <flag attr="-MaxRelCoverage"  val0="100"   val1="200" val2="30"/>
+        <flag attr="-BulgeCoverage"   val0="20"/>
+        <flag attr="-MaxCoverage" val0="10"/>
+        <flag attr="-MinCov"          val0="10"/>
+        <flag attr="-MinAvCov"        val0="5"/>
+        <flag attr="-MinMaps"         val0="5"/>
+        <flag attr="-MinContigLen"    val0="0.0"/>
+        <flag attr="-EndTrim"         val0="2"/>
+        <flag attr="-refine"          val0="0"/>
+        <flag attr="-res"             val0="3.3"/>
+        <flag attr="-resSD"           val0="0.75"/>
+        <flag attr="-outlier"         val0="0.0001"/>
+        <flag attr="-endoutlier"      val0="0.0001"/>
+        <flag attr="-PVchim"          val0="0.001" val1="3"/>
+        <flag attr="-S"               val0="1"/>
+        <flag attr="-FastBulge"       val0="1000"/>
+	<flag attr="-FragilePreserve"	val0="0"/>
+        <flag attr="-draftsize" val0="1"/>
+        <flag attr="-SideBranch" val0="1"/>
+        <flag attr="-SideChain"/>
+	<flag attr="-contigs_format"  val0="1"/>
+        <flag attr="-f" />
+    </assembly>
+    <refineA>
+        <use comment="Use with noise0"/>
+        <flag attr="-minlen"        val0="180"/>
+        <flag attr="-minsites"      val0="9"/>
+        <flag attr="-T"             val0="1e-10"/>
+        <flag attr="-extend"        val0="1"/>
+        <flag attr="-refine"        val0="2"/>
+        <flag attr="-MultiMode"/>
+        <flag attr="-EndTrim"       val0="2"/>
+        <flag attr="-LRbias"        val0="1e2"/>
+        <flag attr="-Mprobeval"/>
+        <flag attr="-deltaX"        val0="4"/>
+        <flag attr="-deltaY"        val0="6"/>
+        <flag attr="-outlier"       val0="1e-5"/>
+        <flag attr="-endoutlier"    val0="0.00001"/>
+	<flag attr="-contigs_format"  val0="1"/>
+        <flag attr="-f" />
+    </refineA>
+    <refineB>
+        <use comment="Use with noise0"/>
+        <flag attr="-minlen"        val0="180"/>
+        <flag attr="-minsites"      val0="9"/>
+        <flag attr="-T"             val0="1e-11"/>
+        <flag attr="-A"             val0="5"/>
+        <flag attr="-M"             val0="1"/>
+        <flag attr="-nosplit"       val0="2"/>       
+        <flag attr="-extend"        val0="1"/>
+        <flag attr="-refine"        val0="2"/>
+        <flag attr="-MaxCov"        val0="100"/>
+        <flag attr="-MultiMode"/>
+        <flag attr="-contigsplit"   val0="0.20" val1="0.35"/>
+        <flag attr="-MinSplitLen"   val0="100.0"/>
+        <flag attr="-nosplit"       val0="2"/>
+        <flag attr="-EndTrim"       val0="6.99"/>
+        <flag attr="-biaswt"        val0="0"/>
+        <flag attr="-LRbias"        val0="1e2"/>
+        <flag attr="-deltaX"        val0="4"/>
+        <flag attr="-deltaY"        val0="6"/>
+        <flag attr="-RepeatMask"    val0="2" val1="0.01"/>
+        <flag attr="-RepeatRec" />
+        <flag attr="-CovTrim"       val0="4" val1="-ReplaceCov"/>
+        <flag attr="-outlier"       val0="1e-5"/>
+        <flag attr="-endoutlier"    val0="1e-4"/>
+        <flag attr="-Mprobeval"/>
+	<flag attr="-splitcnt"/>
+        <flag attr="-f" />       
+    </refineB>
+    <refineB0>
+        <use comment="Use with noise0"/>
+        <flag attr="-minlen"        val0="180"/>
+        <flag attr="-minsites"      val0="9"/>
+        <flag attr="-T"             val0="1e-11"/>
+        <flag attr="-A"             val0="5"/>
+        <flag attr="-M"             val0="1"/>
+        <flag attr="-nosplit"       val0="2"/>
+        <flag attr="-extend"        val0="1"/>
+        <flag attr="-refine"        val0="0"/>
+        <flag attr="-MaxCov"        val0="100"/>
+        <flag attr="-MultiMode"/>
+        <flag attr="-contigsplit"   val0="0.20" val1="0.35"/>
+        <flag attr="-MinSplitLen"   val0="100.0"/>
+        <flag attr="-nosplit"       val0="2"/>
+        <flag attr="-EndTrim"       val0="6.99"/>
+        <flag attr="-biaswt"        val0="0"/>
+        <flag attr="-LRbias"        val0="1e2"/>
+        <flag attr="-deltaX"        val0="4"/>
+        <flag attr="-deltaY"        val0="6"/>
+        <flag attr="-RepeatMask"    val0="2" val1="0.01"/>
+        <flag attr="-RepeatRec" />
+        <flag attr="-CovTrim"       val0="4" val1="-ReplaceCov"/>
+        <flag attr="-outlier"       val0="1e-5"/>
+        <flag attr="-endoutlier"    val0="1e-4"/>
+        <flag attr="-Mprobeval"/>
+	<flag attr="-maxmem" val0="7"/>
+        <flag attr="-splitcnt"/>
+        <flag attr="-f" />
+	<flag attr="-hashgen" val00="5" val01="3" val02="2.4" val03="1.5" val04="0.05" val05="5.0" val06="1" val07="1" val08="-hash" val09="-hashdelta" val10="10" val11="-mres" val12="1.2"/>
+	<flag attr="-insertThreads" val0="4"/>
+    </refineB0>
+    <refineB1>
+        <use comment="Use with noise0"/>
+        <flag attr="-minlen"        val0="180"/>
+        <flag attr="-minsites"      val0="9"/>
+        <flag attr="-T"             val0="1e-11"/>
+        <flag attr="-A"             val0="5"/>
+        <flag attr="-M"             val0="1"/>
+        <flag attr="-nosplit"       val0="2"/>
+        <flag attr="-extend"        val0="1"/>
+        <flag attr="-refine"        val0="2"/>
+        <flag attr="-MaxCov"        val0="100"/>
+        <flag attr="-MultiMode"/>
+        <flag attr="-contigsplit"   val0="0.20" val1="0.35"/>
+        <flag attr="-MinSplitLen"   val0="100.0"/>
+        <flag attr="-nosplit"       val0="2"/>
+        <flag attr="-EndTrim"       val0="6.99"/>
+        <flag attr="-biaswt"        val0="0"/>
+        <flag attr="-LRbias"        val0="1e2"/>
+        <flag attr="-deltaX"        val0="4"/>
+        <flag attr="-deltaY"        val0="6"/>
+        <flag attr="-RepeatMask"    val0="2" val1="0.01"/>
+        <flag attr="-RepeatRec" />
+        <flag attr="-CovTrim"       val0="4" val1="-ReplaceCov"/>
+        <flag attr="-outlier"       val0="1e-5"/>
+        <flag attr="-endoutlier"    val0="1e-4"/>
+        <flag attr="-Mprobeval"/>
+        <flag attr="-splitcnt"/>
+        <flag attr="-f" />
+        <flag attr="-maxmem" val0="4"/>
+    </refineB1>
+    <extension>
+        <use comment="Use with noise1"/>
+        <flag attr="-minlen"          val0="180"/>
+        <flag attr="-minsites"        val0="8"/>
+        <flag attr="-extend"          val0="2"/>
+        <flag attr="-refine"          val0="3"/>
+        <flag attr="-T"               val0="1e-11"/>
+        <flag attr="-TE"               val0="1e-11"/>
+        <flag attr="-A"               val0="5"/>
+        <flag attr="-M"               val0="1"/>       
+        <flag attr="-MaxCov"          val0="100"/>
+        <flag attr="-MinSplitLen"   val0="0.01"/>
+        <flag attr="-MultiMode"/>
+        <flag attr="-nosplit"         val0="2"/>
+        <flag attr="-EndTrim"         val0="6.99"/>
+        <flag attr="-biaswt"          val0="0"/>
+        <flag attr="-LRbias"          val0="1e+2"/>
+        <flag attr="-deltaX"          val0="4"/>
+        <flag attr="-deltaY"          val0="6"/>
+        <flag attr="-resSD"           val0="0.758"/>
+        <flag attr="-endoutlierRef"   val0="1e-16" val1="1e-14" val2="1e-12" val3="1e-10" val4="1e-8" val5="1e-6" val6="1e-4" val7="1e-2" val8="1"/>
+        <flag attr="-Mprobeval"/>      
+        <flag attr="-CovTrim"         val0="4" val1="-ReplaceCov"/>
+        <flag attr="-extonly"         val0="300.0" />
+        <flag attr="-RepeatMask"      val0="2" val1="0.01" />
+        <flag attr="-RepeatRec" />
+        <flag attr="-outlier"         val0="1e-5" />
+        <flag attr="-endoutlier"      val0="1e-4" />
+        <flag attr="-f" />
+    </extension>
+    <extension0>
+        <use comment="Use with noise1"/>
+        <flag attr="-minlen"          val0="180"/>
+        <flag attr="-minsites"        val0="8"/>
+        <flag attr="-extend"          val0="2"/>
+        <flag attr="-refine"          val0="0"/>
+        <flag attr="-T"               val0="1e-11"/>
+        <flag attr="-TE"               val0="1e-11"/>
+        <flag attr="-A"               val0="5"/>
+        <flag attr="-M"               val0="1"/>
+        <flag attr="-MaxCov"          val0="100"/>
+        <flag attr="-MinSplitLen"   val0="0.01"/>
+        <flag attr="-MultiMode"/>
+        <flag attr="-nosplit"         val0="2"/>
+        <flag attr="-EndTrim"         val0="6.99"/>
+        <flag attr="-biaswt"          val0="0"/>
+        <flag attr="-LRbias"          val0="1e+2"/>
+        <flag attr="-deltaX"          val0="4"/>
+        <flag attr="-deltaY"          val0="6"/>
+        <flag attr="-resSD"           val0="0.758"/>
+        <flag attr="-endoutlierRef"   val0="1e-16" val1="1e-14" val2="1e-12" val3="1e-10" val4="1e-8" val5="1e-6" val6="1e-4" val7="1e-2"/>
+        <flag attr="-Mprobeval"/>
+        <flag attr="-CovTrim"         val0="4" val1="-ReplaceCov"/>
+        <flag attr="-extonly"         val0="300.0" />
+        <flag attr="-RepeatMask"      val0="2" val1="0.01" />
+	<flag attr="-RepeatRec" />
+        <flag attr="-outlier"         val0="1e-5" />
+        <flag attr="-endoutlier"      val0="1e-4" />
+        <flag attr="-maxmem" val0="7"/>
+        <flag attr="-f" />
+        <flag attr="-hashgen" val00="5" val01="3" val02="2.4" val03="1.5" val04="0.05" val05="5.0" val06="1" val07="1" val08="-hash" val09="-hashdelta" val10="10" val11="-mres" val12="1.2"/>
+       <flag attr="-insertThreads" val0="4"/>
+     </extension0>
+    <extension1>
+        <use comment="Use with noise0"/>
+        <flag attr="-minlen"          val0="180"/>
+        <flag attr="-minsites"        val0="8"/>
+        <flag attr="-extend"          val0="2"/>
+        <flag attr="-refine"          val0="3"/>
+        <flag attr="-T"               val0="1e-11"/>
+        <flag attr="-TE"               val0="1e-11"/>
+        <flag attr="-A"               val0="5"/>
+        <flag attr="-M"               val0="1"/>
+        <flag attr="-MaxCov"          val0="100"/>
+        <flag attr="-MinSplitLen"   val0="0.01"/>
+        <flag attr="-MultiMode"/>
+        <flag attr="-nosplit"         val0="2"/>
+        <flag attr="-EndTrim"         val0="6.99"/>
+        <flag attr="-biaswt"          val0="0"/>
+        <flag attr="-LRbias"          val0="1e+2"/>
+        <flag attr="-deltaX"          val0="4"/>
+        <flag attr="-deltaY"          val0="6"/>
+        <flag attr="-resSD"           val0="0.758"/>
+        <flag attr="-endoutlierRef"   val0="1e-16" val1="1e-14" val2="1e-12" val3="1e-10" val4="1e-8" val5="1e-6" val6="1e-4" val7="1e-2"/>
+        <flag attr="-Mprobeval"/>
+        <flag attr="-CovTrim"         val0="4" val1="-ReplaceCov"/>
+        <flag attr="-extonly"         val0="300.0" />
+        <flag attr="-RepeatMask"      val0="2" val1="0.01" />
+        <flag attr="-RepeatRec" />
+        <flag attr="-outlier"         val0="1e-5" />
+        <flag attr="-endoutlier"      val0="1e-4" />
+        <flag attr="-f" />
+	<flag attr="-maxmem" val0="4"/>
+    </extension1>
+    <merge>
+        <flag attr="-pairmerge"   val0 ="10" />
+        <flag attr="-T"           val0="1e-15"/>
+        <flag attr="-mres"        val0="2.9"/>
+        <flag attr="-res"         val0="2.9"/>
+        <flag attr="-FP"          val0="0.5"/>
+        <flag attr="-FN"          val0="0.05"/>
+        <flag attr="-sf"          val0="0.20"/>
+        <flag attr="-sd"          val0="0.10"/>       
+        <flag attr="-outlier"     val0="0"/>
+        <flag attr="-endoutlier"  val0="0"/>
+        <flag attr="-RepeatMask"  val0="2" val1="0.01"/>
+        <flag attr="-RepeatRec" />
+        <flag attr="-biaswt"      val0="0"/>
+        <flag attr="-A"           val0="2"/>
+        <flag attr="-f" />
+    </merge>
+    <characterizeDefault>
+        <flag attr="-res"         val0="2.9"/>
+        <flag attr="-FP"          val0="0.6"/>
+        <flag attr="-FN"          val0="0.06"/>
+        <flag attr="-sf"          val0="0.20"/>
+        <flag attr="-sd"          val0="0.10"/> 
+        <flag attr="-extend"      val0="1"/>
+        <flag attr="-outlier"     val0="0.0001"/>
+        <flag attr="-endoutlier"  val0="0.001"/>   
+        <flag attr="-deltaX"        val0="12"/>
+        <flag attr="-deltaY"        val0="12"/>
+        <flag attr="-xmapchim"     val0="14"/>
+        <flag attr="-hashgen" val00="5" val01="3" val02="2.4" val03="1.5" val04="0.05" val05="5.0" val06="1" val07="1" val08="-hash" val09="-hashdelta" val10="10" val11="-mres" val12="1.2"/>
+        <flag attr="-insertThreads" val0="4"/>
+        <flag attr="-nosplit"       val0="2"/>
+        <flag attr="-maxmem"     val0="256"/>
+        <flag attr="-f" />   
+    </characterizeDefault>
+    <characterizeStrict>
+        <flag attr="-res"         val0="2.9"/>
+        <flag attr="-FP"          val0="0.1"/>
+        <flag attr="-FN"          val0="0.06"/>
+        <flag attr="-sf"          val0="0.20"/>
+        <flag attr="-sd"          val0="0.10"/>
+        <flag attr="-extend"      val0="1"/>
+        <flag attr="-outlier"     val0="0.000001"/>
+        <flag attr="-endoutlier"  val0="0.000001"/> 
+        <flag attr="-maxmem"     val0="96"/>
+        <flag attr="-f" />
+    </characterizeStrict> 
+    <refineFinal>
+        <!--<use comment="Use with noise0"/>-->
+        <flag attr="-minlen"        val0="180" display="Molecule Length Threshold" group="Final Refinement" default0="150" />
+        <flag attr="-minsites"      val0="8" display="Min Labels" group="Final Refinement" default0="8"/>
+        <flag attr="-T"             val0="1e-11" display="P Value Cutoff Threshold" group="Final Refinement" default0="1e-9" />
+        <flag attr="-A"             val0="5" display="Aligned Sites Threshold" group="Final Refinement" default0="5"/>
+        <flag attr="-extend"        val0="1" display="Allow Extended Molecule" group="Final Refinement" default0="1" />
+        <flag attr="-refine"        val0="3" display="Refine Map" group="Final Refinement" default0="3" />
+        <flag attr="-MaxCov"        val0="100" display="Max Coverage" group="Final Refinement" default0="100" />
+        <flag attr="-MultiMode"     display="Robust Refinement Mode" group="Final Refinement"/>
+        <flag attr="-nosplit"       val0="2" display="Allow Chimeric Split" group="Final Refinement" default0="2" />
+        <flag attr="-EndTrim"       val0="6.99" display="Min End Trim Coverage" group="Final Refinement" default0="4.99" />
+        <flag attr="-biaswt"        val0="0" display="Bias" group="Final Refinement" default0="0" />
+        <flag attr="-LRbias"        val0="1e2" display="Soft Threshold" group="Final Refinement" default0="1e2"/>
+        <flag attr="-deltaX"        val0="4" display="Molecule Labels Metric" group="Final Refinement" default0="4" />
+        <flag attr="-deltaY"        val0="6" display="Mapped Labels Metric" group="Final Refinement" default0="6" />
+        <flag attr="-RepeatMask"    val0="2" val1="0.01" display="Repeat Mask P-values" group="Final Refinement" default0="2" default1="0.01" />
+        <flag attr="-RepeatRec" />
+        <flag attr="-CovTrim"       val0="2" val1="-ReplaceCov" display="Min Trim Labels" group="Final Refinement" default0="2" default1="-ReplaceCov" />
+        <flag attr="-outlier"       val0="1e-5" display="Min Outliers P-value" group="Final Refinement" default0="1e-5" />
+        <flag attr="-endoutlier"    val0="0.0001" display="Molecule Ends P-value Cutoff" group="Final Refinement" default0="0.0001"/>
+        <flag attr="-Mprobeval"     display="Fast Mode" group="Final Refinement"/>
+        <flag attr="-f"             display="Overwrite Output Files" group="Final Refinement"/>
+    </refineFinal>
+    <refineFinal0>
+        <!--<use comment="Use with noise0"/>-->
+        <flag attr="-minlen"        val0="180" display="Molecule Length Threshold" group="Final Refinement" default0="150" />
+        <flag attr="-minsites"      val0="8" display="Min Labels" group="Final Refinement" default0="8"/>
+        <flag attr="-T"             val0="1e-11" display="P Value Cutoff Threshold" group="Final Refinement" default0="1e-9" />
+        <flag attr="-A"             val0="5" display="Aligned Sites Threshold" group="Final Refinement" default0="5"/>
+        <flag attr="-extend"        val0="1" display="Allow Extended Molecule" group="Final Refinement" default0="1" />
+        <flag attr="-refine"        val0="0" display="Refine Map" group="Final Refinement" default0="3" />
+        <flag attr="-MaxCov"        val0="100" display="Max Coverage" group="Final Refinement" default0="100" />
+        <flag attr="-MultiMode"     display="Robust Refinement Mode" group="Final Refinement"/>
+        <flag attr="-nosplit"       val0="2" display="Allow Chimeric Split" group="Final Refinement" default0="2" />
+        <flag attr="-EndTrim"       val0="6.99" display="Min End Trim Coverage" group="Final Refinement" default0="4.99" />
+        <flag attr="-biaswt"        val0="0" display="Bias" group="Final Refinement" default0="0" />
+        <flag attr="-LRbias"        val0="1e2" display="Soft Threshold" group="Final Refinement" default0="1e2"/>
+        <flag attr="-deltaX"        val0="4" display="Molecule Labels Metric" group="Final Refinement" default0="4" />
+        <flag attr="-deltaY"        val0="6" display="Mapped Labels Metric" group="Final Refinement" default0="6" />
+        <flag attr="-RepeatMask"    val0="2" val1="0.01" display="Repeat Mask P-values" group="Final Refinement" default0="2" default1="0.01" />
+        <flag attr="-RepeatRec" />
+        <flag attr="-CovTrim"       val0="2" val1="-ReplaceCov" display="Min Trim Labels" group="Final Refinement" default0="2" default1="-ReplaceCov" />
+        <flag attr="-outlier"       val0="1e-5" display="Min Outliers P-value" group="Final Refinement" default0="1e-5" />
+        <flag attr="-endoutlier"    val0="0.0001" display="Molecule Ends P-value Cutoff" group="Final Refinement" default0="0.0001"/>
+        <flag attr="-Mprobeval"     display="Fast Mode" group="Final Refinement"/>
+        <flag attr="-maxmem" val0="7"/>
+        <flag attr="-f"             display="Overwrite Output Files" group="Final Refinement"/>
+        <flag attr="-hashgen" val00="5" val01="3" val02="2.4" val03="1.5" val04="0.05" val05="5.0" val06="1" val07="1" val08="-hash" val09="-hashdelta" val10="10" val11="-mres" val12="1.2"/>
+       <flag attr="-insertThreads" val0="4"/>
+     </refineFinal0>
+    <refineFinal1>
+        <!--<use comment="Use with noise0"/>-->
+        <flag attr="-minlen"        val0="180" display="Molecule Length Threshold" group="Final Refinement" default0="150" />
+        <flag attr="-minsites"      val0="8" display="Min Labels" group="Final Refinement" default0="8"/>
+        <flag attr="-T"             val0="1e-11" display="P Value Cutoff Threshold" group="Final Refinement" default0="1e-9" />
+        <flag attr="-A"             val0="5" display="Aligned Sites Threshold" group="Final Refinement" default0="5"/>
+        <flag attr="-extend"        val0="1" display="Allow Extended Molecule" group="Final Refinement" default0="1" />
+        <flag attr="-refine"        val0="3" display="Refine Map" group="Final Refinement" default0="3" />
+        <flag attr="-MaxCov"        val0="100" display="Max Coverage" group="Final Refinement" default0="100" />
+        <flag attr="-MultiMode"     display="Robust Refinement Mode" group="Final Refinement"/>
+        <flag attr="-nosplit"       val0="2" display="Allow Chimeric Split" group="Final Refinement" default0="2" />
+        <flag attr="-EndTrim"       val0="6.99" display="Min End Trim Coverage" group="Final Refinement" default0="4.99" />
+        <flag attr="-biaswt"        val0="0" display="Bias" group="Final Refinement" default0="0" />
+        <flag attr="-LRbias"        val0="1e2" display="Soft Threshold" group="Final Refinement" default0="1e2"/>
+        <flag attr="-deltaX"        val0="4" display="Molecule Labels Metric" group="Final Refinement" default0="4" />
+        <flag attr="-deltaY"        val0="6" display="Mapped Labels Metric" group="Final Refinement" default0="6" />
+        <flag attr="-RepeatMask"    val0="2" val1="0.01" display="Repeat Mask P-values" group="Final Refinement" default0="2" default1="0.01" />
+        <flag attr="-RepeatRec" />
+        <flag attr="-CovTrim"       val0="2" val1="-ReplaceCov" display="Min Trim Labels" group="Final Refinement" default0="2" default1="-ReplaceCov" />
+        <flag attr="-outlier"       val0="1e-5" display="Min Outliers P-value" group="Final Refinement" default0="1e-5" />
+        <flag attr="-endoutlier"    val0="0.0001" display="Molecule Ends P-value Cutoff" group="Final Refinement" default0="0.0001"/>
+        <flag attr="-Mprobeval"     display="Fast Mode" group="Final Refinement"/>
+        <flag attr="-f"             display="Overwrite Output Files" group="Final Refinement"/>
+        <flag attr="-maxmem" val0="4"/>
+    </refineFinal1>
+    <svdetect>
+        <!--<use comment="Do not use with any noise parameters"/>-->
+        <flag attr="-sv"         val0="1"/>      
+        <flag attr="-sf"         val0="0.2"/>      
+        <flag attr="-mres"       val0="2.9"/>
+        <flag attr="-f" />
+        <flag attr="-maxmem" val0="4"/>
+    </svdetect>
+</moduleArgs>

@@ -81,7 +81,7 @@ for my $stringency (keys %p_value)
     ##################################################################
     ##############        Set assembly parameters   ##################
     ##################################################################
-    my $xml_infile = "${dirname}/optArguments.xml";
+    my $xml_infile = "${dirname}/optArguments2.xml";
     my $xml_outfile = "${bnx_dir}/${stringency}/${stringency}_optArguments.xml";
     my $xml = XMLin($xml_infile);
     open (OUT, '>',"${bnx_dir}/${stringency}/dumped.txt");
@@ -110,18 +110,38 @@ for my $stringency (keys %p_value)
     ########################################
     $xml->{refineB}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
     $xml->{refineB}->{flag}->[9]->{val0} = 25; #min split length
+    $xml->{refineB0}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineB0}->{flag}->[9]->{val0} = 25; #min split length
+    $xml->{refineB1}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineB1}->{flag}->[9]->{val0} = 25; #min split length
     ########################################
     ##              RefineFinal           ##
     ########################################
     $xml->{refineFinal}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
     $xml->{refineFinal}->{flag}->[16]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
+    
+    $xml->{refineFinal0}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineFinal0}->{flag}->[16]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinal0}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
+    
+    $xml->{refineFinal1}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineFinal1}->{flag}->[16]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinal1}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
     ##              Extension             ##
     ########################################
     $xml->{extension}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
     $xml->{extension}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{extension}->{flag}->[21]->{val0} = 1e-5; # endoutlier/outlier
+    
+    $xml->{extension0}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
+    $xml->{extension0}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension0}->{flag}->[21]->{val0} = 1e-5; # endoutlier/outlier
+    
+    $xml->{extension1}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
+    $xml->{extension1}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension1}->{flag}->[21]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
     ##               Merge                ##
     ########################################
