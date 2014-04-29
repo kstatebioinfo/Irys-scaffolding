@@ -56,6 +56,7 @@ my %p_value = (
 'default_t' => "$T",
 'relaxed_t' => "$T_relaxed",
 );
+open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
 print OUT_ASSEMBLE "##################################################################\n";
 print OUT_ASSEMBLE "#####             FIRST ASSEMBLY COMMANDS                 #####\n";
 print OUT_ASSEMBLE "##################################################################\n";
@@ -64,7 +65,7 @@ for my $stringency (keys %p_value)
     ##################################################################
     ##############        Write bash scripts        ##################
     ##################################################################
-    open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands_$stringency.sh"); # for assembly commands
+
     print OUT_ASSEMBLE "#!/bin/bash\n";
     print OUT_ASSEMBLE ". /usr/bin/virtualenvwrapper.sh\n";
     print OUT_ASSEMBLE "workon bionano\n";
