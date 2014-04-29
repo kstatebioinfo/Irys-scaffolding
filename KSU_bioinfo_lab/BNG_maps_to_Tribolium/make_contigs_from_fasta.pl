@@ -13,7 +13,7 @@ open AGP, '>', "$ARGV[0]"."_contig.agp" or die "Couldn't create $ARGV[0]_contig.
 
 my $counter=-1;
 my $sum=0;
-my $tcas_id = 7065;
+my $tcas_id = 1;
 $/=">";
 while (<FASTA>)
 {
