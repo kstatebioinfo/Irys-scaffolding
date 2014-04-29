@@ -8,14 +8,12 @@
         <minthreads attr="${maxthreads}"/>
     </reducedMinThreads>
     <largeJob>
-        <flag attr="-clear"/>
         <flag attr="-pe" val0="single" val1="32"/>
         <flag attr="-l" val0="mem=2G,h_rt=7200"/>
         <flag attr="-q" val0="long.q@@elves,batch.q@@elves,long-highmem.q@@elves,highmem.q@@elves,gen-bioinfo.q"/>
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </largeJob>
     <smallJob>
-        <flag attr="-clear"/>
         <flag attr="-pe" val0="single" val1="$numthreads"/>
         <flag attr="-l" val0="mem=1G,h_rt=7200"/>
         <flag attr="-q" val0="long.q@@elves,batch.q@@elves,long-highmem.q@@elves,highmem.q@@elves,gen-bioinfo.q"/>
@@ -28,7 +26,6 @@
         <include val0="largeJob"/>
     </hash>
     <splitting>
-        <flag attr="-clear"/>
         <flag attr="-pe" val0="single" val1="2"/>
         <flag attr="-l" val0="mem=1G,h_rt=7200"/>
         <flag attr="-q" val0="long.q@@elves,batch.q@@elves,long-highmem.q@@elves,highmem.q@@elves,gen-bioinfo.q"/>
