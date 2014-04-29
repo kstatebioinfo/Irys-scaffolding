@@ -54,7 +54,6 @@ while (<FASTA>)
             }
             ++$tcas_id;
             $pos = $stop + 1;
-            ++$tcas_id;
         }
         
     }
