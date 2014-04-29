@@ -52,32 +52,31 @@ while (<ERR>) # get noise parameters
 ##################################################################################
 
 my %p_value = (
-'strict_t' => "$T_strict",
-'default_t' => "$T",
-'relaxed_t' => "$T_relaxed",
+    'default_t' => "$T",
+    'strict_t' => "$T_strict",
+    'relaxed_t' => "$T_relaxed",
 );
 open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
+##################################################################
+##############        Write bash scripts        ##################
+##################################################################
+
+print OUT_ASSEMBLE "#!/bin/bash\n";
+print OUT_ASSEMBLE ". /usr/bin/virtualenvwrapper.sh\n";
+print OUT_ASSEMBLE "workon bionano\n";
+print OUT_ASSEMBLE "export DRMAA_LIBRARY_PATH=/opt/sge/lib/lx3-amd64/libdrmaa.so.1.0\n";
 print OUT_ASSEMBLE "##################################################################\n";
-print OUT_ASSEMBLE "#####             FIRST ASSEMBLY COMMANDS                 #####\n";
+print OUT_ASSEMBLE "#####             FIRST ASSEMBLY COMMANDS                    #####\n";
 print OUT_ASSEMBLE "##################################################################\n";
 for my $stringency (keys %p_value)
 {
-    ##################################################################
-    ##############        Write bash scripts        ##################
-    ##################################################################
-
-    print OUT_ASSEMBLE "#!/bin/bash\n";
-    print OUT_ASSEMBLE ". /usr/bin/virtualenvwrapper.sh\n";
-    print OUT_ASSEMBLE "workon bionano\n";
-    print OUT_ASSEMBLE "export DRMAA_LIBRARY_PATH=/opt/sge/lib/lx3-amd64/libdrmaa.so.1.0\n";
-#    print OUT_ASSEMBLE "python2 bioinfo_software/bionano/scripts/pipelineCL.py\n";
     ##################################################################
     ##############     Create assembly directories  ##################
     ##################################################################
     my $out_dir = "${bnx_dir}/${stringency}";
     unless(mkdir $out_dir)
     {
-		die "Unable to create $out_dir\n";
+		die "Exiting because unable to create $out_dir\n";
 	}
     ##################################################################
     ##############        Set assembly parameters   ##################
