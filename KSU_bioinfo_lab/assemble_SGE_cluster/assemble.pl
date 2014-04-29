@@ -82,7 +82,7 @@ for my $stringency (keys %p_value)
     ##################################################################
     ##############        Set assembly parameters   ##################
     ##################################################################
-    my $xml_infile = "${dirname}/optArguments2.xml";
+    my $xml_infile = "${dirname}/OptArguments2.xml";
     my $xml_outfile = "${bnx_dir}/${stringency}/${stringency}_optArguments.xml";
     my $xml = XMLin($xml_infile);
     open (OUT, '>',"${bnx_dir}/${stringency}/dumped.txt");
