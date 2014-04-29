@@ -25,7 +25,7 @@ while (<FASTA>)
         $seq =~ s/>//g;
         my @contigs= split(/N+/i,$seq);
         my @gaps=split(/[AGCT]+/i,$seq);
-        my $gap_count = scalar (@gaps);
+        my $gap_count = (scalar(@gaps)-1);
         print "GAP COUNT: $gap_count\n";
         for my $gap (@gaps)
         {
