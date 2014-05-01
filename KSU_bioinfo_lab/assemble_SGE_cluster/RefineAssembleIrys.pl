@@ -107,6 +107,10 @@ for my $stringency (keys %min_length)
     open (OUT, '>',"${current_assembly_dir}/${stringency}/dumped.txt");
     print OUT Dumper($xml);
     ########################################
+    ##             BNX filter             ##
+    ########################################
+    $xml->{bnx_sort}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
+    ########################################
     ##             Pairwise               ##
     ########################################
     $xml->{pairwise}->{flag}->[0]->{val0} = $T;
