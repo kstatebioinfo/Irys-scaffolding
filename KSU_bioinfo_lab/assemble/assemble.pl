@@ -79,6 +79,10 @@ for my $stringency (keys %p_value)
     open (OUT, '>',"${bnx_dir}/${stringency}/dumped.txt");
     print OUT Dumper($xml);
     ########################################
+    ##             BNX filter             ##
+    ########################################
+    $xml->{bnx_sort}->{flag}->[0]->{val0} = 150;
+    ########################################
     ##             Pairwise               ##
     ########################################
     $xml->{pairwise}->{flag}->[0]->{val0} = $p_value{$stringency};
