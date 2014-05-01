@@ -2,6 +2,16 @@ SCRIPT
 
 **RefineAssembleIrys.pl** - a package of scripts that creates optArgument.xml files and commands to run a strict and relaxed assembly by altering the minimum length filter on the Beocat SGE cluster.
 
+UPDATES
+
+####AssembleIrysCluster.pl Version 1.2 04/28/14
+
+AssembleIrysCluster.pl Version 1.2 fixed a bug in listing split and adjusted bnx files.
+
+####AssembleIrysCluster.pl Version 1.1 04/21/14
+
+AssembleIrysCluster.pl Version 1.1 were updated to remove an unnecessary file removal step in the first_mqr.pl script
+
 USAGE
 
         perl RefineAssembleIrys.pl [options]

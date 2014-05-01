@@ -107,6 +107,10 @@ for my $stringency (keys %min_length)
     open (OUT, '>',"${current_assembly_dir}/${stringency}/dumped.txt");
     print OUT Dumper($xml);
     ########################################
+    ##             BNX filter             ##
+    ########################################
+    $xml->{bnx_sort}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
+    ########################################
     ##             Pairwise               ##
     ########################################
     $xml->{pairwise}->{flag}->[0]->{val0} = $T;
@@ -183,7 +187,7 @@ for my $stringency (keys %min_length)
     ##############        Write assembly command    ##################
     ##################################################################
     print OUT_ASSEMBLE "##### NEW ASSEMBLY STRINGENCY: ${stringency} #####\n";
-    print OUT_ASSEMBLE "# python2 /homes/bioinfo/bioinfo_software/bionano/scripts/pipelineCL.py -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -d -U -C ${dirname}/clusterArguments.xml\n"; # testing -V 1 for variant calling
+    print OUT_ASSEMBLE "# python2 /homes/bioinfo/bioinfo_software/bionano/pipeline/pipelineCL.py -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools/ -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -d -U -C ${dirname}/clusterArguments.xml\n"; # testing -V 1 for variant calling
 }
 print "done\n";
 

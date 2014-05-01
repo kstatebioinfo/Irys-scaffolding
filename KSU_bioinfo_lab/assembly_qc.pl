@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 ###############################################################################
 #   
 #	USAGE: perl assembly_qc.pl [options]
@@ -47,7 +47,7 @@ pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 ###############################################################################
 my @directories = ( "strict_t", "default_t", "relaxed_t", "strict_t/strict_ml", "strict_t/relaxed_ml", "default_t/strict_ml", "default_t/relaxed_ml", "relaxed_t/strict_ml", "relaxed_t/relaxed_ml");
 open (QC_METRICS,'>>',"$bnx_dir/Assembly_quality_metrics.csv") or die "couldn't open $bnx_dir/Assembly_quality_metrics.csv!";
-print QC_METRICS "Assembly Name,Assembly n50,refineB n50,Extension 1 n50,Merge 1 n50,Extension 2 n50,Merge 2 n50,Extension 3 n50,Merge 3 n50,Extension 4 n50,Merge 4 n50,Extension 5 n50,Merge 5 n50,N contigs,Total Contig Len(Mb),Avg. Contig Len(Mb),Contig n50(Mb),Total Ref Len(Mb),Total Contig Len / Ref Len,N contigs total align,Total Aligned Len(Mb),Total Aligned Len / Ref Len,Total Unique Aligned Len(Mb),Total Unique Len / Ref Len\n";
+print QC_METRICS "Assembly Name,Assembly n50,refineB n50,Extension 1 n50,Merge 0 n50,Merge 1 n50,Extension 2 n50,Merge 2 n50,Extension 3 n50,Merge 3 n50,Extension 4 n50,Merge 4 n50,Extension 5 n50,Merge 5 n50,N contigs,Total Contig Len(Mb),Avg. Contig Len(Mb),Contig n50(Mb),Total Ref Len(Mb),Total Contig Len / Ref Len,N contigs total align,Total Aligned Len(Mb),Total Aligned Len / Ref Len,Total Unique Aligned Len(Mb),Total Unique Len / Ref Len\n";
 ###############################################################################
 ##########            open all assembly directories           #################
 ###############################################################################
@@ -55,9 +55,9 @@ my $final = 0;
 my $single_mol_breadth_of_coverage = 0;
 for my $assembly_dir (@directories)
 {
-    unless (opendir(DIR, "${assembly_dir}"))
+    unless (opendir(DIR, "${bnx_dir}/${assembly_dir}"))
     {
-        print "can't directory open ${assembly_dir}\n"; # open directory full of assembly files
+        print "can't open the directory ${bnx_dir}/${assembly_dir}\n"; # open directory full of assembly files
         next;
     }
     while (my $file = readdir(DIR))
@@ -66,7 +66,7 @@ for my $assembly_dir (@directories)
         next if ($file !~ m/\_informaticsReport.txt$/); # ignore files not ending with a "_informaticsReport.txt"
         my $report = $file;
         print QC_METRICS "$project: $assembly_dir,";
-        open (BIOINFO_REPORT,'<',"$assembly_dir/$report");
+        open (BIOINFO_REPORT,'<',"${bnx_dir}/${assembly_dir}/$report");
         
         ###################################################################
         #####  pull QC metrics from assembly bioinfo reports   ############

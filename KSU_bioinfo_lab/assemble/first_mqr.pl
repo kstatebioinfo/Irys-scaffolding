@@ -62,6 +62,7 @@ while (my $file = readdir(DIR))
     {
         next if ($subfile =~ m/^\./); # ignore files beginning with a period
         next if ($subfile !~ m/\.bnx$/); # ignore files not ending with a period
+        next if ($subfile =~ m/_adj\.bnx$/); # ignore files that have been adjusted
         my (${subfilename}, ${subdirectories}, ${subsuffix}) = fileparse($subfile,'\..*');
         ####################################################################
         ###### run refaligner for flowcell molecule quality report  ########

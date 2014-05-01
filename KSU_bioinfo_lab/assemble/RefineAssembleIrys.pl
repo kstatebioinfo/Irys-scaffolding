@@ -19,7 +19,7 @@ use Data::Dumper;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  RefineAssembleIrys.pl                                  #\n";
+print "#  RefineAssembleIrys.pl Version 1.0                      #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 2/3/14                     #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -99,6 +99,10 @@ for my $stringency (keys %min_length)
     my $xml = XMLin($xml_infile);
     open (OUT, '>',"${current_assembly_dir}/${stringency}/dumped.txt");
     print OUT Dumper($xml);
+    ########################################
+    ##             BNX filter             ##
+    ########################################
+    $xml->{bnx_sort}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
     ########################################
     ##             Pairwise               ##
     ########################################

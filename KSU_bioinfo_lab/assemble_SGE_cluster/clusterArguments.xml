@@ -9,92 +9,92 @@
     </reducedMinThreads>
     <largeJob>
         <flag attr="-pe" val0="single" val1="16"/>
-        <flag attr="-l" val0="mem=2G"/>
-        <flag attr="-q" val0="*@@elves"/>
+        <flag attr="-l" val0="mem=2G,h_rt=7200"/>
+        <flag attr="-q" val0="long.q@@elves,batch.q@@elves,long-highmem.q@@elves,highmem.q@@elves,gen-bioinfo.q"/>
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </largeJob>
     <smallJob>
         <flag attr="-pe" val0="single" val1="$numthreads"/>
-        <flag attr="-l" val0="mem=1G"/>
-        <flag attr="-q" val0="*@@elves"/>
+        <flag attr="-l" val0="mem=1G,h_rt=7200"/>
+        <flag attr="-q" val0="long.q@@elves,batch.q@@elves,long-highmem.q@@elves,highmem.q@@elves,gen-bioinfo.q"/>
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </smallJob>
     <sampleChar>
-      <include val0="largeJob"/>
+        <include val0="largeJob"/>
     </sampleChar>
     <hash>
-      <include val0="largeJob"/>
+        <include val0="largeJob"/>
     </hash>
-    <splitting>        
+    <splitting>
         <flag attr="-pe" val0="single" val1="2"/>
-        <flag attr="-l" val0="mem=1G"/>
-        <flag attr="-q" val0="*@@elves"/>
+        <flag attr="-l" val0="mem=1G,h_rt=7200"/>
+        <flag attr="-q" val0="long.q@@elves,batch.q@@elves,long-highmem.q@@elves,highmem.q@@elves,gen-bioinfo.q"/>
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </splitting>
-    <pairwise>        
-      <include val0="smallJob"/>
+    <pairwise>
+        <include val0="smallJob"/>
     </pairwise>
     <cmapMerge>
-      <include val0="largeJob"/>
+        <include val0="largeJob"/>
     </cmapMerge>
     <assembly>
-      <include val0="largeJob"/>
+        <include val0="largeJob"/>
     </assembly>
     <refineA>
-      <include val0="smallJob"/>
+        <include val0="smallJob"/>
     </refineA>
     <refineAMinThreads>
-       <include val0="reducedMinThreads"/>
+        <include val0="reducedMinThreads"/>
     </refineAMinThreads>
     <refineB>
-      <include val0="smallJob"/>
+        <include val0="smallJob"/>
     </refineB>
     <refineB0>
-      <include val0="smallJob"/>
+        <include val0="smallJob"/>
     </refineB0>
     <refineB1>
-      <include val0="smallJob"/>
+        <include val0="smallJob"/>
     </refineB1>
     <refineB1MinThreads>
-       <include val0="reducedMinThreads"/>
+        <include val0="reducedMinThreads"/>
     </refineB1MinThreads>
     <refineNGS>
-      <include val0="smallJob"/>
+        <include val0="smallJob"/>
     </refineNGS>
     <refineFinal>
-      <include val0="smallJob"/>
+        <include val0="smallJob"/>
     </refineFinal>
     <refineFinal0>
-      <include val0="smallJob"/>
+        <include val0="smallJob"/>
     </refineFinal0>
     <refineFinal1>
-      <include val0="smallJob"/>
+        <include val0="smallJob"/>
     </refineFinal1>
-     <refineFinal1MinThreads>
-       <include val0="reducedMinThreads"/>
+    <refineFinal1MinThreads>
+        <include val0="reducedMinThreads"/>
     </refineFinal1MinThreads>
-   <extension>
-      <include val0="smallJob"/>
+    <extension>
+        <include val0="smallJob"/>
     </extension>
     <extension0>
-      <include val0="smallJob"/>
+        <include val0="smallJob"/>
     </extension0>
     <extension1>
-      <include val0="smallJob"/>
+        <include val0="smallJob"/>
     </extension1>
     <extension1MinThreads>
-       <include val0="reducedMinThreads"/>
+        <include val0="reducedMinThreads"/>
     </extension1MinThreads>
     <merge>
-      <include val0="largeJob"/>
+        <include val0="largeJob"/>
     </merge>
     <characterizeDefault>
-      <include val0="largeJob"/>
+        <include val0="largeJob"/>
     </characterizeDefault>
     <characterizeStrict>
-      <include val0="largeJob"/>
-    </characterizeStrict>  
+        <include val0="largeJob"/>
+    </characterizeStrict>
     <svdetect>
-      <include val0="smallJob"/>
+        <include val0="smallJob"/>
     </svdetect>
 </moduleArgs>

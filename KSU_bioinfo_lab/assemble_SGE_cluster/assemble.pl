@@ -52,40 +52,44 @@ while (<ERR>) # get noise parameters
 ##################################################################################
 
 my %p_value = (
-'strict_t' => "$T_strict",
-'default_t' => "$T",
-'relaxed_t' => "$T_relaxed",
+    'default_t' => "$T",
+    'strict_t' => "$T_strict",
+    'relaxed_t' => "$T_relaxed",
 );
+open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
+##################################################################
+##############        Write bash scripts        ##################
+##################################################################
+
+print OUT_ASSEMBLE "#!/bin/bash\n";
+print OUT_ASSEMBLE ". /usr/bin/virtualenvwrapper.sh\n";
+print OUT_ASSEMBLE "workon bionano\n";
+print OUT_ASSEMBLE "export DRMAA_LIBRARY_PATH=/opt/sge/lib/lx3-amd64/libdrmaa.so.1.0\n";
 print OUT_ASSEMBLE "##################################################################\n";
-print OUT_ASSEMBLE "#####             FIRST ASSEMBLY COMMANDS                 #####\n";
+print OUT_ASSEMBLE "#####             FIRST ASSEMBLY COMMANDS                    #####\n";
 print OUT_ASSEMBLE "##################################################################\n";
 for my $stringency (keys %p_value)
 {
-    ##################################################################
-    ##############        Write bash scripts        ##################
-    ##################################################################
-    open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands_$stringency.sh"); # for assembly commands
-    print OUT_ASSEMBLE "#!/bin/bash\n";
-    print OUT_ASSEMBLE ". /usr/bin/virtualenvwrapper.sh\n";
-    print OUT_ASSEMBLE "workon bionano\n";
-    print OUT_ASSEMBLE "export DRMAA_LIBRARY_PATH=/opt/sge/lib/lx3-amd64/libdrmaa.so.1.0\n";
-#    print OUT_ASSEMBLE "python2 bioinfo_software/bionano/scripts/pipelineCL.py\n";
     ##################################################################
     ##############     Create assembly directories  ##################
     ##################################################################
     my $out_dir = "${bnx_dir}/${stringency}";
     unless(mkdir $out_dir)
     {
-		die "Unable to create $out_dir\n";
+		die "Exiting because unable to create $out_dir\n";
 	}
     ##################################################################
     ##############        Set assembly parameters   ##################
     ##################################################################
-    my $xml_infile = "${dirname}/optArguments.xml";
+    my $xml_infile = "${dirname}/OptArguments2.xml";
     my $xml_outfile = "${bnx_dir}/${stringency}/${stringency}_optArguments.xml";
     my $xml = XMLin($xml_infile);
     open (OUT, '>',"${bnx_dir}/${stringency}/dumped.txt");
     print OUT Dumper($xml);
+    ########################################
+    ##             BNX filter             ##
+    ########################################
+    $xml->{bnx_sort}->{flag}->[0]->{val0} = 150;
     ########################################
     ##             Pairwise               ##
     ########################################
@@ -109,19 +113,39 @@ for my $stringency (keys %p_value)
     ##              RefineB               ##
     ########################################
     $xml->{refineB}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineB}->{flag}->[9]->{val0} = 25; #min split length
+    $xml->{refineB}->{flag}->[11]->{val0} = 25; #min split length
+    $xml->{refineB0}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineB0}->{flag}->[11]->{val0} = 25; #min split length
+    $xml->{refineB1}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineB1}->{flag}->[11]->{val0} = 25; #min split length
     ########################################
     ##              RefineFinal           ##
     ########################################
     $xml->{refineFinal}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineFinal}->{flag}->[16]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinal}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
+    
+    $xml->{refineFinal0}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineFinal0}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinal0}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
+    
+    $xml->{refineFinal1}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineFinal1}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinal1}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
     ##              Extension             ##
     ########################################
     $xml->{extension}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
-    $xml->{extension}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension}->{flag}->[21]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
+    
+    $xml->{extension0}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
+    $xml->{extension0}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension0}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
+    
+    $xml->{extension1}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
+    $xml->{extension1}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension1}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
     ##               Merge                ##
     ########################################
@@ -157,7 +181,7 @@ for my $stringency (keys %p_value)
     ##############        Write assembly command    ##################
     ##################################################################
     print OUT_ASSEMBLE "##### FIRST ASSEMBLY: ${stringency} #####\n";
-    print OUT_ASSEMBLE "python2 /homes/bioinfo/bioinfo_software/bionano/scripts/pipelineCL.py -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -d -U -C ${dirname}/clusterArguments.xml\n"; 
+    print OUT_ASSEMBLE "python2 /homes/bioinfo/bioinfo_software/bionano/pipeline/pipelineCL.py -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools/ -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -d -U -C ${dirname}/clusterArguments.xml\n"; 
     ##################################################################
     ##############  Write second round of assembly commands ##########
     ##################################################################

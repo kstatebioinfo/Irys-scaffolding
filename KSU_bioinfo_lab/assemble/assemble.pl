@@ -51,14 +51,14 @@ while (<ERR>) # get noise parameters
 ##################################################################################
 
 my %p_value = (
-'strict_t' => "$T_strict",
-'default_t' => "$T",
-'relaxed_t' => "$T_relaxed"
+    'default_t' => "$T",
+    'strict_t' => "$T_strict",
+    'relaxed_t' => "$T_relaxed"
 );
 open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
 print OUT_ASSEMBLE "#!/bin/bash\n";
 print OUT_ASSEMBLE "##################################################################\n";
-print OUT_ASSEMBLE "#####             FIRST ASSEMBLY COMMANDS                 #####\n";
+print OUT_ASSEMBLE "#####             FIRST ASSEMBLY COMMANDS                    #####\n";
 print OUT_ASSEMBLE "##################################################################\n";
 for my $stringency (keys %p_value)
 {
@@ -78,6 +78,10 @@ for my $stringency (keys %p_value)
     my $xml = XMLin($xml_infile);
     open (OUT, '>',"${bnx_dir}/${stringency}/dumped.txt");
     print OUT Dumper($xml);
+    ########################################
+    ##             BNX filter             ##
+    ########################################
+    $xml->{bnx_sort}->{flag}->[0]->{val0} = 150;
     ########################################
     ##             Pairwise               ##
     ########################################
