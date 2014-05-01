@@ -1,4 +1,4 @@
-#!/bin/perl
+#!/usr/bin/perl
 ###############################################################################
 #   
 #	USAGE: perl assembly_qc.pl [options]
@@ -55,9 +55,9 @@ my $final = 0;
 my $single_mol_breadth_of_coverage = 0;
 for my $assembly_dir (@directories)
 {
-    unless (opendir(DIR, "${assembly_dir}"))
+    unless (opendir(DIR, "${bnx_dir}/${assembly_dir}"))
     {
-        print "can't directory open ${assembly_dir}\n"; # open directory full of assembly files
+        print "can't open the directory ${bnx_dir}/${assembly_dir}\n"; # open directory full of assembly files
         next;
     }
     while (my $file = readdir(DIR))
@@ -66,7 +66,7 @@ for my $assembly_dir (@directories)
         next if ($file !~ m/\_informaticsReport.txt$/); # ignore files not ending with a "_informaticsReport.txt"
         my $report = $file;
         print QC_METRICS "$project: $assembly_dir,";
-        open (BIOINFO_REPORT,'<',"$assembly_dir/$report");
+        open (BIOINFO_REPORT,'<',"${bnx_dir}/${assembly_dir}/$report");
         
         ###################################################################
         #####  pull QC metrics from assembly bioinfo reports   ############
