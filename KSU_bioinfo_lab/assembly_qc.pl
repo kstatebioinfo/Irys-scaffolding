@@ -45,9 +45,19 @@ pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 ###############################################################################
 ########## create array with all default assembly directories #################
 ###############################################################################
-my @directories = ( "strict_t", "default_t", "relaxed_t", "strict_t/strict_ml", "strict_t/relaxed_ml", "default_t/strict_ml", "default_t/relaxed_ml", "relaxed_t/strict_ml", "relaxed_t/relaxed_ml");
+my @directories = (
+    "strict_t/strict_ml",
+    "strict_t",
+    "strict_t/relaxed_ml",
+    "default_t/strict_ml",
+    "default_t",
+    "default_t/relaxed_ml",
+    "relaxed_t/strict_ml",
+    "relaxed_t",
+    "relaxed_t/relaxed_ml"
+);
 open (QC_METRICS,'>>',"$bnx_dir/Assembly_quality_metrics.csv") or die "couldn't open $bnx_dir/Assembly_quality_metrics.csv!";
-print QC_METRICS "Assembly Name,Assembly n50,refineB n50,Extension 1 n50,Merge 0 n50,Merge 1 n50,Extension 2 n50,Merge 2 n50,Extension 3 n50,Merge 3 n50,Extension 4 n50,Merge 4 n50,Extension 5 n50,Merge 5 n50,N contigs,Total Contig Len(Mb),Avg. Contig Len(Mb),Contig n50(Mb),Total Ref Len(Mb),Total Contig Len / Ref Len,N contigs total align,Total Aligned Len(Mb),Total Aligned Len / Ref Len,Total Unique Aligned Len(Mb),Total Unique Len / Ref Len\n";
+print QC_METRICS "Assembly Name,Assembly N50,refineB N50,Extension 1 N50,Merge 0 N50,Merge 1 N50,Extension 2 N50,Merge 2 N50,Extension 3 N50,Merge 3 N50,Extension 4 N50,Merge 4 N50,Extension 5 N50,Merge 5 N50,N contigs,Total Contig Len(Mb),Avg. Contig Len(Mb),Contig N50(Mb),Total Ref Len(Mb),Total Contig Len / Ref Len,N contigs total align,Total Aligned Len(Mb),Total Aligned Len / Ref Len,Total Unique Aligned Len(Mb),Total Unique Len / Ref Len\n";
 ###############################################################################
 ##########            open all assembly directories           #################
 ###############################################################################
@@ -81,9 +91,9 @@ for my $assembly_dir (@directories)
             #########################################################
             #####  pull N50 from each stage of assembly  ############
             #########################################################
-            if (($final == 0) && (/Contig n50/))
+            if (($final == 0) && (/Contig N50/))
             {
-                s/(Contig n50\s+\(Mb\):\s+)(.*)/$2/;
+                s/(Contig N50\s+\(Mb\):\s+)(.*)/$2/;
                 print QC_METRICS;
                 print QC_METRICS ",";
             }
@@ -110,9 +120,9 @@ for my $assembly_dir (@directories)
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Contig n50       \(Mb\):/)
+                if (/Contig N50       \(Mb\):/)
                 {
-                    s/(Contig n50       \(Mb\):\s+)(.*)/$2/;
+                    s/(Contig N50       \(Mb\):\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
@@ -172,7 +182,7 @@ for my $assembly_dir (@directories)
 #            N contigs: 216
 ##            Total Contig Len (Mb):   200.473
 ##            Avg. Contig Len  (Mb):    0.928
-##            Contig n50       (Mb):    1.350
+##            Contig N50       (Mb):    1.350
 ##            Total Ref Len    (Mb):   157.186
 #            Total Contig Len / Ref Len  : 1.275
 #            N contigs total align       :   147 (0.68)
