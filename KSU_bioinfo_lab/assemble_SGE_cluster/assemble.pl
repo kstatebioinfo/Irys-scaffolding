@@ -53,10 +53,10 @@ while (<ERR>) # get noise parameters
 
 my %p_value = (
     'default_t' => "$T",
-    'strict_t' => "$T_strict",
     'relaxed_t' => "$T_relaxed",
+    'strict_t' => "$T_strict",
 );
-open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
+open (OUT_ASSEMBLE, '>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
 ##################################################################
 ##############        Write bash scripts        ##################
 ##################################################################
@@ -89,11 +89,12 @@ for my $stringency (keys %p_value)
     ########################################
     ##             BNX filter             ##
     ########################################
-    $xml->{bnx_sort}->{flag}->[0]->{val0} = 150;
+    $xml->{bnx_sort}->{flag}->[1]->{val0} = 150; # minlen
     ########################################
     ##             Pairwise               ##
     ########################################
     $xml->{pairwise}->{flag}->[0]->{val0} = $p_value{$stringency};
+    $xml->{pairwise}->{flag}->[1]->{val0} = 150; # minlen
     ########################################
     ##               Noise                ##
     ########################################
@@ -108,44 +109,26 @@ for my $stringency (keys %p_value)
     ########################################
     ##              RefineA               ##
     ########################################
-    $xml->{refineA}->{flag}->[2]->{val0} = $p_value{$stringency};
+    $xml->{refineA}->{flag}->[3]->{val0} = $p_value{$stringency};
     ########################################
     ##              RefineB               ##
     ########################################
-    $xml->{refineB}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineB}->{flag}->[11]->{val0} = 25; #min split length
-    $xml->{refineB0}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineB0}->{flag}->[11]->{val0} = 25; #min split length
-    $xml->{refineB1}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineB1}->{flag}->[11]->{val0} = 25; #min split length
+    $xml->{refineBCommon}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineBCommon}->{flag}->[8]->{val0} = 25; #min split length
     ########################################
     ##              RefineFinal           ##
     ########################################
-    $xml->{refineFinal}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinal}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinalCommon}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineFinalCommon}->{flag}->[15]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinalCommon}->{flag}->[16]->{val0} = 1e-5; # endoutlier/outlier
     
-    $xml->{refineFinal0}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineFinal0}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinal0}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
-    
-    $xml->{refineFinal1}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineFinal1}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinal1}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
     ##              Extension             ##
     ########################################
-    $xml->{extension}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
-    $xml->{extension}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
-    
-    $xml->{extension0}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
-    $xml->{extension0}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension0}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
-    
-    $xml->{extension1}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
-    $xml->{extension1}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension1}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extensionCommon}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
+    $xml->{extensionCommon}->{flag}->[19]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extensionCommon}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
+
     ########################################
     ##               Merge                ##
     ########################################
@@ -180,7 +163,9 @@ for my $stringency (keys %p_value)
     ##################################################################
     ##############        Write assembly command    ##################
     ##################################################################
-    print OUT_ASSEMBLE "##### FIRST ASSEMBLY: ${stringency} #####\n";
+    print OUT_ASSEMBLE "##################################################################\n";
+    print OUT_ASSEMBLE "#####           FIRST ASSEMBLY: ${stringency}                \n";
+    print OUT_ASSEMBLE "##################################################################\n";
     print OUT_ASSEMBLE "python2 /homes/bioinfo/bioinfo_software/bionano/pipeline/pipelineCL.py -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools/ -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -d -U -C ${dirname}/clusterArguments.xml\n"; 
     ##################################################################
     ##############  Write second round of assembly commands ##########

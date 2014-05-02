@@ -73,20 +73,14 @@ while (<ERR>) # get noise parameters
 ##################################################################################
 
 my %min_length = (
-'strict_ml' => 180,
-'relaxed_ml' => 100
+    'relaxed_ml' => 100,
+    'strict_ml' => 180
 );
 open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
-print OUT_ASSEMBLE "#!/bin/bash\n";
 for my $stringency (keys %min_length)
 {
-    open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands_$stringency.sh"); # for assembly commands
-    print OUT_ASSEMBLE "#!/bin/bash\n";
-    print OUT_ASSEMBLE ". /usr/bin/virtualenvwrapper.sh\n";
-    print OUT_ASSEMBLE "workon bionano\n";
-    print OUT_ASSEMBLE "export DRMAA_LIBRARY_PATH=/opt/sge/lib/lx3-amd64/libdrmaa.so.1.0\n";
     print OUT_ASSEMBLE "##################################################################\n";
-    print OUT_ASSEMBLE "##### FIRST ASSEMBLY: ${project}_${current_assembly_dir} \n";
+    print OUT_ASSEMBLE "##### CORRESPONDING FIRST ASSEMBLY WAS: ${project}_${current_assembly_dir} \n";
     print OUT_ASSEMBLE "##### BEFORE RUNNING SECOND ROUND OF ASSEMBLIES, COMMENT THE SECTION MATCHING ALL FIRST ASSEMBLY COMMANDS AND UNCOMMENT THE SECTION MATCHING THE SECOND ASSEMBLY COMMANDS FOR THE BEST, FIRST ASSEMBLY \n";
     print OUT_ASSEMBLE "##################################################################\n";
 
@@ -109,7 +103,7 @@ for my $stringency (keys %min_length)
     ########################################
     ##             BNX filter             ##
     ########################################
-    $xml->{bnx_sort}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
+    $xml->{bnx_sort}->{flag}->[1]->{val0} = $min_length{$stringency}; # min length
     ########################################
     ##             Pairwise               ##
     ########################################
@@ -130,28 +124,28 @@ for my $stringency (keys %min_length)
     ########################################
     ##              RefineA               ##
     ########################################
-    $xml->{refineA}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
-    $xml->{refineA}->{flag}->[2]->{val0} = $T;
+    $xml->{refineA}->{flag}->[1]->{val0} = $min_length{$stringency}; # min length
+    $xml->{refineA}->{flag}->[3]->{val0} = $T;
     ########################################
     ##              RefineB               ##
     ########################################
-    $xml->{refineB}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
-    $xml->{refineB}->{flag}->[2]->{val0} = $T/10;
-    $xml->{refineB}->{flag}->[9]->{val0} = 25; #min split length
+    $xml->{refineBCommon}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
+    $xml->{refineBCommon}->{flag}->[2]->{val0} = $T/10;
+    $xml->{refineBCommon}->{flag}->[8]->{val0} = 25; #min split length
     ########################################
     ##              RefineFinal           ##
     ########################################
-    $xml->{refineFinal}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
-    $xml->{refineFinal}->{flag}->[2]->{val0} = $T/10;
-    $xml->{refineFinal}->{flag}->[16]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinalCommon}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
+    $xml->{refineFinalCommon}->{flag}->[2]->{val0} = $T/10;
+    $xml->{refineFinalCommon}->{flag}->[15]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinalCommon}->{flag}->[16]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
     ##              Extension             ##
     ########################################
-    $xml->{extension}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
-    $xml->{extension}->{flag}->[3]->{val0} = $T/10;
-    $xml->{extension}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension}->{flag}->[21]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extensionCommon}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
+    $xml->{extensionCommon}->{flag}->[3]->{val0} = $T/10;
+    $xml->{extensionCommon}->{flag}->[19]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extensionCommon}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
     ##               Merge                ##
     ########################################
@@ -186,7 +180,9 @@ for my $stringency (keys %min_length)
     ##################################################################
     ##############        Write assembly command    ##################
     ##################################################################
-    print OUT_ASSEMBLE "##### NEW ASSEMBLY STRINGENCY: ${stringency} #####\n";
+    print OUT_ASSEMBLE "##################################################################\n";
+    print OUT_ASSEMBLE "##### NEW ASSEMBLY STRINGENCY: ${stringency} \n";
+    print OUT_ASSEMBLE "##################################################################\n";
     print OUT_ASSEMBLE "# python2 /homes/bioinfo/bioinfo_software/bionano/pipeline/pipelineCL.py -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools/ -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -d -U -C ${dirname}/clusterArguments.xml\n"; # testing -V 1 for variant calling
 }
 print "done\n";
