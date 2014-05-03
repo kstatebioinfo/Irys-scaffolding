@@ -163,15 +163,15 @@ for my $stringency (keys %min_length)
     ########################################
     
     $xml->{extension}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
-    $xml->{extension}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
+    $xml->{extension}->{flag}->[3]->{val0} = $T/10;
     $xml->{extension}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{extension}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{extension0}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
-    $xml->{extension0}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
+    $xml->{extension0}->{flag}->[3]->{val0} = $T/10;
     $xml->{extension0}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{extension0}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{extension1}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
-    $xml->{extension1}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
+    $xml->{extension1}->{flag}->[3]->{val0} = $T/10;
     $xml->{extension1}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{extension1}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
