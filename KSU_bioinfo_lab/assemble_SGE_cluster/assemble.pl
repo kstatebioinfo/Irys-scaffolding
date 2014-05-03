@@ -89,7 +89,7 @@ for my $stringency (keys %p_value)
     ########################################
     ##             BNX filter             ##
     ########################################
-    $xml->{bnx_sort}->{flag}->[1]->{val0} = 150; # minlen
+    $xml->{bnx_sort}->{flag}->[0]->{val0} = 150; # minlen
     ########################################
     ##             Pairwise               ##
     ########################################
@@ -106,28 +106,54 @@ for my $stringency (keys %p_value)
     ##            Assembly                ##
     ########################################
     $xml->{assembly}->{flag}->[0]->{val0} = $p_value{$stringency};
+    $xml->{assembly}->{flag}->[1]->{val0} = 150; # minlen
     ########################################
     ##              RefineA               ##
     ########################################
-    $xml->{refineA}->{flag}->[3]->{val0} = $p_value{$stringency};
+    $xml->{refineA}->{flag}->[0]->{val0} = 150; # minlen
+    $xml->{refineA}->{flag}->[2]->{val0} = $p_value{$stringency};
     ########################################
     ##              RefineB               ##
     ########################################
-    $xml->{refineBCommon}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineBCommon}->{flag}->[8]->{val0} = 25; #min split length
+    $xml->{refineB}->{flag}->[0]->{val0} = 150; # minlen
+    $xml->{refineB}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineB}->{flag}->[11]->{val0} = 25; #min split length
+    $xml->{refineB0}->{flag}->[0]->{val0} = 150; # minlen
+    $xml->{refineB0}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineB0}->{flag}->[11]->{val0} = 25; #min split length
+    $xml->{refineB1}->{flag}->[0]->{val0} = 150; # minlen
+    $xml->{refineB1}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineB1}->{flag}->[11]->{val0} = 25; #min split length
     ########################################
     ##              RefineFinal           ##
     ########################################
-    $xml->{refineFinalCommon}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineFinalCommon}->{flag}->[15]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinalCommon}->{flag}->[16]->{val0} = 1e-5; # endoutlier/outlier
+    
+    $xml->{refineFinal}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinal}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
+    
+    $xml->{refineFinal0}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineFinal0}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinal0}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
+    
+    $xml->{refineFinal1}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
+    $xml->{refineFinal1}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinal1}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
     
     ########################################
     ##              Extension             ##
     ########################################
-    $xml->{extensionCommon}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
-    $xml->{extensionCommon}->{flag}->[19]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extensionCommon}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
+    $xml->{extension}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
+    
+    $xml->{extension0}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
+    $xml->{extension0}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension0}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
+    
+    $xml->{extension1}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
+    $xml->{extension1}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension1}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
 
     ########################################
     ##               Merge                ##

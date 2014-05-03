@@ -120,18 +120,24 @@ for my $stringency (keys %min_length)
     ##            Assembly                ##
     ########################################
     $xml->{assembly}->{flag}->[0]->{val0} = $T;
-    $xml->{assembly}->{flag}->[2]->{val0} = $min_length{$stringency}; # min length
+    $xml->{assembly}->{flag}->[1]->{val0} = $min_length{$stringency}; # min length
     ########################################
     ##              RefineA               ##
     ########################################
-    $xml->{refineA}->{flag}->[1]->{val0} = $min_length{$stringency}; # min length
-    $xml->{refineA}->{flag}->[3]->{val0} = $T;
+    $xml->{refineA}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
+    $xml->{refineA}->{flag}->[2]->{val0} = $T;
     ########################################
     ##              RefineB               ##
     ########################################
-    $xml->{refineBCommon}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
-    $xml->{refineBCommon}->{flag}->[2]->{val0} = $T/10;
-    $xml->{refineBCommon}->{flag}->[8]->{val0} = 25; #min split length
+    $xml->{refineB}->{flag}->[0]->{val0} = $min_length{$stringency}; # min
+    $xml->{refineB}->{flag}->[2]->{val0} = $T/10;
+    $xml->{refineB}->{flag}->[11]->{val0} = 25; #min split length
+    $xml->{refineB0}->{flag}->[0]->{val0} = $min_length{$stringency}; # min
+    $xml->{refineB0}->{flag}->[2]->{val0} = $T/10;
+    $xml->{refineB0}->{flag}->[11]->{val0} = 25; #min split length
+    $xml->{refineB1}->{flag}->[0]->{val0} = $min_length{$stringency}; # min
+    $xml->{refineB1}->{flag}->[2]->{val0} = $T/10;
+    $xml->{refineB1}->{flag}->[11]->{val0} = 25; #min split length
     ########################################
     ##              RefineFinal           ##
     ########################################
@@ -139,13 +145,35 @@ for my $stringency (keys %min_length)
     $xml->{refineFinalCommon}->{flag}->[2]->{val0} = $T/10;
     $xml->{refineFinalCommon}->{flag}->[15]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{refineFinalCommon}->{flag}->[16]->{val0} = 1e-5; # endoutlier/outlier
+    
+    $xml->{refineFinal}->{flag}->[0]->{val0} = $min_length{$stringency};
+    $xml->{refineFinal}->{flag}->[2]->{val0} = $T/10;
+    $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinal}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinal0}->{flag}->[0]->{val0} = $min_length{$stringency};
+    $xml->{refineFinal0}->{flag}->[2]->{val0} = $T/10;
+    $xml->{refineFinal0}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinal0}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinal1}->{flag}->[0]->{val0} = $min_length{$stringency};
+    $xml->{refineFinal1}->{flag}->[2]->{val0} = $T/10;
+    $xml->{refineFinal1}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{refineFinal1}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
     ##              Extension             ##
     ########################################
-    $xml->{extensionCommon}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
-    $xml->{extensionCommon}->{flag}->[3]->{val0} = $T/10;
-    $xml->{extensionCommon}->{flag}->[19]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extensionCommon}->{flag}->[20]->{val0} = 1e-5; # endoutlier/outlier
+    
+    $xml->{extension}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
+    $xml->{extension}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
+    $xml->{extension}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension0}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
+    $xml->{extension0}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
+    $xml->{extension0}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension0}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension1}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
+    $xml->{extension1}->{flag}->[3]->{val0} = $p_value{$stringency}/10;
+    $xml->{extension1}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
+    $xml->{extension1}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
     ##               Merge                ##
     ########################################
