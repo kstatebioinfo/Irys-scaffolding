@@ -95,7 +95,7 @@ for my $stringency (keys %min_length)
     ##################################################################
     ##############        Set assembly parameters   ##################
     ##################################################################
-    my $xml_infile = "${dirname}/optArguments.xml";
+    my $xml_infile = "${dirname}/OptArguments2.xml";
     my $xml_outfile = "${current_assembly_dir}/${stringency}/${stringency}_optArguments.xml";
     my $xml = XMLin($xml_infile);
     open (OUT, '>',"${current_assembly_dir}/${stringency}/dumped.txt");
@@ -103,7 +103,7 @@ for my $stringency (keys %min_length)
     ########################################
     ##             BNX filter             ##
     ########################################
-    $xml->{bnx_sort}->{flag}->[1]->{val0} = $min_length{$stringency}; # min length
+    $xml->{bnx_sort}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
     ########################################
     ##             Pairwise               ##
     ########################################
@@ -141,10 +141,6 @@ for my $stringency (keys %min_length)
     ########################################
     ##              RefineFinal           ##
     ########################################
-    $xml->{refineFinalCommon}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
-    $xml->{refineFinalCommon}->{flag}->[2]->{val0} = $T/10;
-    $xml->{refineFinalCommon}->{flag}->[15]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinalCommon}->{flag}->[16]->{val0} = 1e-5; # endoutlier/outlier
     
     $xml->{refineFinal}->{flag}->[0]->{val0} = $min_length{$stringency};
     $xml->{refineFinal}->{flag}->[2]->{val0} = $T/10;
