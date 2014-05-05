@@ -200,7 +200,6 @@
         <flag attr="-extend"          val0="1"/>
         <flag attr="-refine"          val0="2"/>
         <flag attr="-T"               val0="1e-10"/>
-        <flag attr="-TE"               val0="1e-11"/>
         <flag attr="-A"               val0="5"/>
         <flag attr="-M"               val0="1"/>
         <flag attr="-MaxCov"          val0="100"/>
@@ -230,7 +229,6 @@
         <flag attr="-extend"          val0="1"/>
         <flag attr="-refine"          val0="2"/>
         <flag attr="-T"               val0="1e-10"/>
-        <flag attr="-TE"               val0="1e-11"/>
         <flag attr="-A"               val0="5"/>
         <flag attr="-M"               val0="1"/>
         <flag attr="-MaxCov"          val0="100"/>
@@ -263,7 +261,6 @@
         <flag attr="-extend"          val0="1"/>
         <flag attr="-refine"          val0="2"/>
         <flag attr="-T"               val0="1e-10"/>
-        <flag attr="-TE"               val0="1e-11"/>
         <flag attr="-A"               val0="5"/>
         <flag attr="-M"               val0="1"/>
         <flag attr="-MaxCov"          val0="100"/>
