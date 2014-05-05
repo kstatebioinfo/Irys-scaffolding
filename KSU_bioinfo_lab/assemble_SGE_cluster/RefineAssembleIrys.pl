@@ -169,12 +169,12 @@ for my $stringency (keys %min_length)
     $xml->{extension}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{extension0}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
     $xml->{extension0}->{flag}->[4]->{val0} = $T/10;
-    $xml->{extension}->{flag}->[5]->{val0} = $T; #-TE
+    $xml->{extension0}->{flag}->[5]->{val0} = $T; #-TE
     $xml->{extension0}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{extension0}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{extension1}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
     $xml->{extension1}->{flag}->[4]->{val0} = $T/10;
-    $xml->{extension}->{flag}->[5]->{val0} = $T; #-TE
+    $xml->{extension1}->{flag}->[5]->{val0} = $T; #-TE
     $xml->{extension1}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
     $xml->{extension1}->{flag}->[25]->{val0} = 1e-5; # endoutlier/outlier
     ########################################
