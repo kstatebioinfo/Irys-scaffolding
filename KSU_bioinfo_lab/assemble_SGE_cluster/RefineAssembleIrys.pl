@@ -174,7 +174,7 @@ for my $stringency (keys %min_length)
     ##               Merge                ##
     ########################################
     $xml->{merge}->{flag}->[0]->{val0} = 75; # pairmerge
-    $xml->{merge}->{flag}->[1]->{val0} = $T/1000;
+    $xml->{merge}->{flag}->[1]->{val0} = $T/100000;
     XMLout($xml,OutputFile => $xml_outfile,);
     #########################################
     ## Correct the document head and tail  ##
