@@ -34,7 +34,8 @@ unless(mkdir $directory)
 ##############            Move and rename files              ##################
 ###############################################################################
 #my @dir_array = ('/homes', grep -d, glob "$dataset_directory/*");
-
+my $logfile = "$directory/bnx_log.txt";
+open (LOG, ">>", $logfile) or die "Can't open $logfile\n";
 opendir (DATA, $dataset_directory) or die "Can't open $dataset_directory\n";
 while (my $entry = readdir DATA )
 {
@@ -42,8 +43,16 @@ while (my $entry = readdir DATA )
     {
         unless (($entry eq '..') || ($entry eq '.'))
         {
-            my $link= `ln -s \'${dataset_directory}/${entry}/Detect Molecules/Molecules.bnx\' $directory/Molecules_${i}.bnx`;
-            print "$link";
+            my $link = "$directory/Molecules_${i}.bnx";
+            while (-e $link)
+            {
+                ++$i;
+                $link = "$directory/Molecules_${i}.bnx";
+                
+            }
+            my $linked= `ln -s \'${dataset_directory}/${entry}/Detect Molecules/Molecules.bnx\' $link`;
+            print "$linked";
+            print LOG "Molecules_${i}.bnx\t${entry}\n";
             ++$i;
         }
         
