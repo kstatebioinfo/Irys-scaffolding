@@ -28,7 +28,7 @@ print "###########################################################\n";
 ###############################################################################
 ##############             get arguments                     ##################
 ###############################################################################
-my ($bnx_dir,$project);
+my ($bnx_dir,$project,$sge);
 
 my $man = 0;
 my $help = 0;
@@ -37,6 +37,7 @@ GetOptions (
 			  'man' => \$man,
 			  'b|bnx_dir:s' => \$bnx_dir,
 			  'p|proj:s' => \$project,
+			  's|sge' => \$sge
               )  
 or pod2usage(2);
 pod2usage(1) if $help;
@@ -57,8 +58,8 @@ my @directories = (
     "relaxed_t/relaxed_ml"
 );
 open (QC_METRICS,'>>',"$bnx_dir/Assembly_quality_metrics.csv") or die "couldn't open $bnx_dir/Assembly_quality_metrics.csv!";
-print QC_METRICS "Assembly Name,Assembly N50,refineB N50,Extension 1 N50,Merge 0 N50,Merge 1 N50,Extension 2 N50,Merge 2 N50,Extension 3 N50,Merge 3 N50,Extension 4 N50,Merge 4 N50,Extension 5 N50,Merge 5 N50,N contigs,Total Contig Len(Mb),Avg. Contig Len(Mb),Contig N50(Mb),Total Ref Len(Mb),Total Contig Len / Ref Len,N contigs total align,Total Aligned Len(Mb),Total Aligned Len / Ref Len,Total Unique Aligned Len(Mb),Total Unique Len / Ref Len\n";
-###############################################################################
+print QC_METRICS "Assembly Name,Assembly N50,refineB N50,Merge 0 N50,Extension 1 N50,Merge 1 N50,Extension 2 N50,Merge 2 N50,Extension 3 N50,Merge 3 N50,Extension 4 N50,Merge 4 N50,Extension 5 N50,Merge 5 N50,N contigs,Total Contig Len(Mb),Avg. Contig Len(Mb),Contig N50(Mb),Total Ref Len(Mb),Total Contig Len / Ref Len,N contigs total align,Total Aligned Len(Mb),Total Aligned Len / Ref Len,Total Unique Aligned Len(Mb),Total Unique Len / Ref Len\n";
+
 ##########            open all assembly directories           #################
 ###############################################################################
 my $final = 0;
@@ -84,7 +85,14 @@ for my $assembly_dir (@directories)
         while (<BIOINFO_REPORT>)
         {
             chomp;
-            if (/Stage Complete: refineFinal/)
+            if ($sge)
+            {
+            	if (/Stage Complete: refineFinal1/)
+            	{
+            		$final = 1;
+            	}
+            }
+            elsif (/Stage Complete: refineFinal/)
             {
                 $final = 1;
             }
@@ -201,7 +209,7 @@ for my $assembly_dir (@directories)
 #Stage Complete: Extension 4
 #Stage Complete: Merge 4
 #Stage Complete: Extension 5
-#Stage Complete: Merge 5
+#Stage Comp###############################################################################lete: Merge 5
 #Stage Complete: refineFinal
 
 
