@@ -77,12 +77,14 @@ my %min_length = (
     'strict_ml' => 180
 );
 open (OUT_ASSEMBLE, '>>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
+print OUT_ASSEMBLE "##################################################################\n";
+print OUT_ASSEMBLE "##### CORRESPONDING FIRST ASSEMBLY WAS: ${project}_${current_assembly_dir} \n";
+print OUT_ASSEMBLE "##### BEFORE RUNNING SECOND ROUND OF ASSEMBLIES, COMMENT THE SECTION MATCHING\n"; 
+print OUT_ASSEMBLE "##### ALL FIRST ASSEMBLY COMMANDS AND UNCOMMENT THE SECTION MATCHING THE SECOND\n"; 
+print OUT_ASSEMBLE "##### ASSEMBLY COMMANDS FOR THE BEST, FIRST ASSEMBLY \n";
+print OUT_ASSEMBLE "##################################################################\n";
 for my $stringency (keys %min_length)
 {
-    print OUT_ASSEMBLE "##################################################################\n";
-    print OUT_ASSEMBLE "##### CORRESPONDING FIRST ASSEMBLY WAS: ${project}_${current_assembly_dir} \n";
-    print OUT_ASSEMBLE "##### BEFORE RUNNING SECOND ROUND OF ASSEMBLIES, COMMENT THE SECTION MATCHING ALL FIRST ASSEMBLY COMMANDS AND UNCOMMENT THE SECTION MATCHING THE SECOND ASSEMBLY COMMANDS FOR THE BEST, FIRST ASSEMBLY \n";
-    print OUT_ASSEMBLE "##################################################################\n";
 
     ##################################################################
     ##############     Create assembly directories  ##################
@@ -90,6 +92,7 @@ for my $stringency (keys %min_length)
     my $out_dir = "${current_assembly_dir}/${stringency}";
     unless(mkdir $out_dir)
     {
+    		print "Error: $out_dir already exists exiting\n";
 		die "Unable to create $out_dir\n";
 	}
     ##################################################################
