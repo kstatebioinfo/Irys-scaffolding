@@ -74,12 +74,16 @@ for my $row (@stitchmap_table)## find best and second best alignments and "stitc
         if (($row->[6]-$row->[5]) > ($stitchmap_table[$array_id]->[6] - $stitchmap_table[$array_id]->[5])) # if the current alignment is longer than the previous "best alignment" make it best
         {
             $alignments{$row->[1]}="$main_index";
+            $stitchmap_table[$main_index]->[16] = "best";
             $second_alignments{$row->[1]}="$array_id";
+            $stitchmap_table[$array_id]->[16] = "second";
         }
         elsif ((($row->[6]-$row->[5])==($stitchmap_table[$array_id]->[6] - $stitchmap_table[$array_id]->[5]))&&($row->[8] > $stitchmap_table[$array_id]->[8])) # if the current alignment is as long than the previous "best alignment" with higher confidence make it best
         {
             $alignments{$row->[1]}="$main_index";
+            $stitchmap_table[$main_index]->[16] = "best";
             $second_alignments{$row->[1]}="$array_id";
+            $stitchmap_table[$array_id]->[16] = "second";
         }
         #############################################################################
         ######### find all redundant alignments of a single contig  #################
@@ -92,22 +96,26 @@ for my $row (@stitchmap_table)## find best and second best alignments and "stitc
                 if (($row->[6]-$row->[5]) > ($stitchmap_table[$second_array_id]->[6] - $stitchmap_table[$second_array_id]->[5])) # if the current alignment is longer than the previous "second best alignment" make it best
                 {
                     $second_alignments{$row->[1]}="$main_index";
+                    $stitchmap_table[$main_index]->[16] = "second";
                 }
                 elsif ((($row->[6]-$row->[5])==($stitchmap_table[$second_array_id]->[6] - $stitchmap_table[$second_array_id]->[5])) && ($row->[8]>$stitchmap_table[$second_array_id]->[8])) # if the current alignment is as long than the previous "second best alignment" with higher confidence make it best
                 
                 {
                     $second_alignments{$row->[1]}="$main_index";
+                    $stitchmap_table[$main_index]->[16] = "second";
                 }
             }
         }
         elsif (!$second_alignments{$row->[1]}) ## initialize "second best alignment"
         {
             $second_alignments{$row->[1]}="$main_index";
+            $stitchmap_table[$main_index]->[16] = "second";
         }
     }
     elsif (!$alignments{$row->[1]})
     {
         $alignments{$row->[1]}="$main_index"; ## initialize "best alignment"
+        $stitchmap_table[$main_index]->[16] = "best";
     }
     ++$main_index;
 }
@@ -130,6 +138,26 @@ for my $best (keys %alignments)
     }
 }
 ###############################################################################
+##################      reduce stitchmap to best map     ######################
+###############################################################################
+### Count best alignments per BNG contig
+my %winning_scaffolds;
+for my $main_loop (@stitchmap_table) # for each sequence-based contig feature in the stitchmap
+{
+    if ($main_loop->[16] eq "best")
+    {
+        ++$winning_scaffolds{$main_loop->[2]}; #count "best alignment" scaffolding events for each BNG contig
+    }
+}
+my @bestmap_table;
+for my $main_loop (@stitchmap_table) # for each sequence-based contig feature in the stitchmap
+{
+    if (($main_loop->[16] eq "best")&&($winning_scaffolds{$main_loop->[2]} > 1))
+    {
+        push (@bestmap_table, [@$main_loop]); # push only best alignments with more for BNG maps that scaffold more than one best alignments to bestmap 2D array
+    }
+}
+###############################################################################
 ##################   identify overlapping footprints  #########################
 ##################     add them to an overlap hash    #########################
 ###############################################################################
@@ -137,10 +165,11 @@ for my $best (keys %alignments)
 #######################################################################
 
 $main_index=0;
-for my $main_loop (@stitchmap_table) # for each sequence-based contig feature in the stitchmap
+for my $main_loop (@bestmap_table) # for each sequence-based contig feature in the bestmap
 {
+
     my $nested_index=0;
- 	for my $nested_loop (@stitchmap_table) # compare its footprint to every other contig feature's footprint
+ 	for my $nested_loop (@bestmap_table) # compare its footprint to every other contig feature's footprint
     {
         if (($main_loop->[2] eq $nested_loop->[2]))# check only for footprints on the same molecule map
         {
@@ -164,14 +193,14 @@ for my $main_loop (@stitchmap_table) # for each sequence-based contig feature in
 ##############################################################################
 #########         add confounding overlaps to overlap hash           #########
 ##############################################################################
-my @reversed_stitchmap_table=reverse(@stitchmap_table); ## because if "a" overlaps with "b" and "b" overlaps with "c" then no gap of known size exists between "a" "b" or "c"
+my @reversed_bestmap_table=reverse(@bestmap_table); ## because if "a" overlaps with "b" and "b" overlaps with "c" then no gap of known size exists between "a" "b" or "c"
 
-for my $row (@reversed_stitchmap_table) # for each stitchmap entry
+for my $row (@reversed_bestmap_table) # for each bestmap entry
 {
     --$main_index;
-    for my $overlap_index (keys %{ $stitchmap_table[$main_index]->[17] }) # for each reported ovelaping alignment
+    for my $overlap_index (keys %{ $bestmap_table[$main_index]->[17] }) # for each reported ovelaping alignment
     {
-        for my $confounded (keys %{ $stitchmap_table[$overlap_index]->[17] }) # for its reported overlaps
+        for my $confounded (keys %{ $bestmap_table[$overlap_index]->[17] }) # for its reported overlaps
         {
             if ($confounded != $main_index)
             {
@@ -192,7 +221,7 @@ my %finished; ## we  will use %finished as a list of scaffolds added to super sc
 my $old_mol=-1; ## begins with the last molecule (in generally this should not match the first molecule but must be changed if the first molecule in the stitchmap is also the last e.g. bacterial)
 my $scaffold_id = "Super_scaffold_$n"; ### initialize first superscaffold
 my $new_seq  = ''; ### initialize first superscaffold
-for my $row (@stitchmap_table)
+for my $row (@bestmap_table)
 {
 	unless (exists $finished{$row->[1]})
     {
@@ -216,7 +245,7 @@ for my $row (@stitchmap_table)
         ###################################################################
         if ($old_mol==$new_mol)
         {
-            $new_seq = "$new_seq"."n" x ($row->[10]-($stitchmap_table[$last_fasta]->[11])-1); ## add n's (as many as there are positions from the the footprint start of the current contig to the footprint end of the last contig if the last contig is on the same molecule
+            $new_seq = "$new_seq"."n" x ($row->[10]-($bestmap_table[$last_fasta]->[11])-1); ## add n's (as many as there are positions from the the footprint start of the current contig to the footprint end of the last contig if the last contig is on the same molecule
         }
         ###################################################################
         #### append non-overlapping contigs to the superscaffold ##########
@@ -235,14 +264,14 @@ for my $row (@stitchmap_table)
             {
                 
                 $new_seq = "$new_seq"."n" x 30; ## add "spacer" gaps of 30 x n
-                ($start,$stop) = ($stitchmap_table[$overlap]->[7] eq '+')?(1, $stitchmap_table[$overlap]->[15]):($stitchmap_table[$overlap]->[15], 1); # "?:" operator tests if the sequence is in the forward or reverse direction and reverses start and stop if minus strand
-                $new_seq = "$new_seq".$db->seq("$stitchmap_table[$overlap]->[1]:$start,$stop");
-                $finished{$stitchmap_table[$overlap]->[1]}=1; ## add to the list of superscaffolded sequences
+                ($start,$stop) = ($bestmap_table[$overlap]->[7] eq '+')?(1, $bestmap_table[$overlap]->[15]):($bestmap_table[$overlap]->[15], 1); # "?:" operator tests if the sequence is in the forward or reverse direction and reverses start and stop if minus strand
+                $new_seq = "$new_seq".$db->seq("$bestmap_table[$overlap]->[1]:$start,$stop");
+                $finished{$bestmap_table[$overlap]->[1]}=1; ## add to the list of superscaffolded sequences
                 ++$last_fasta; ## keep track of the array index for the last contig added
             }
         }
 		$old_mol=$new_mol; ## now the current molecule will be listed as the last molecule we have seen
-        if ($last_fasta==$#stitchmap_table) ## if this is the last row in the stitchmap table
+        if ($last_fasta==$#bestmap_table) ## if this is the last row in the stitchmap table
         {
             my $scaffold_obj = Bio::Seq->new( -display_id =>  $scaffold_id, -seq => $new_seq, -alphabet => 'dna');
             $seq_out->write_seq($scaffold_obj); ## Write the final sequence object

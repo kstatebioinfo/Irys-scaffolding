@@ -34,17 +34,18 @@ while (my $file = readdir(DIR))
 {
 	next if ($file =~ m/^\./); # ignore files beginning with a period
 	next if ($file !~ m/\.bnx$/); # open only files ending in .bnx
+    next if ($file =~ m/_adj_merged\.bnx$/); # ignore files that have been adjusted
     my (${filename}, ${directories}, ${suffix}) = fileparse($file,'\..*');
     ####################################################################
     ##############   Run refaligner to merge adjusted BNXs    ##########
     ####################################################################
-    my $merging= `/homes/bioinfo/bioinfo_software/bionano/tools/RefAligner -if ${bnx_dir}/${filename}_adj_bnx_list.txt -o ${bnx_dir}/${filename}/${filename}_adj_merged -merge -bnx -minsites 5 -minlen 150 -maxthreads 16`;
+    my $merging= `/homes/bioinfo/bioinfo_software/bionano/tools/RefAligner -if ${bnx_dir}/${filename}_adj_bnx_list.txt -o ${bnx_dir}/${filename}/${filename}_adj_merged -merge -bnx -minsites 5 -minlen 100 -maxthreads 16`;
     print "$merging";
     ####################################################################
     ######## Second molecule quality report:                      ######
     ######## run refaligner for flowcell molecule quality report  ######
     ####################################################################
-    my $run_ref=`/homes/bioinfo/bioinfo_software/bionano/tools/RefAligner -i ${bnx_dir}/${filename}/${filename}_adj_merged.bnx -o ${bnx_dir}/${filename}/${filename}_adj_merged  -T ${T} -ref ${ref} -bnx -nosplit 2 -BestRef 1 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 150 -minsites 5 -maxthreads 16 -xmapchim 1`;
+    my $run_ref=`/homes/bioinfo/bioinfo_software/bionano/tools/RefAligner -i ${bnx_dir}/${filename}/${filename}_adj_merged.bnx -o ${bnx_dir}/${filename}/${filename}_adj_merged  -T ${T} -ref ${ref} -bnx -nosplit 2 -BestRef 1 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -S -1000 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 100 -minsites 5 -maxthreads 16 -xmapchim 1`;
     print "$run_ref";
     if (-e "${bnx_dir}/${filename}/${filename}_adj_merged.bnx")
     {
