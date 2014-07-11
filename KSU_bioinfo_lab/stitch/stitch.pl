@@ -17,7 +17,7 @@ use Pod::Usage;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  stitch.pl Version 1.2                                  #\n";
+print "#  stitch.pl Version 1.3                                  #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 12/12/13                   #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -76,6 +76,10 @@ print "$out_number";
 ##################################################################################
 print "Making filtered XMAP...\n";
 my $filter=`perl ${dirname}/xmap_filter.pl $r_cmap ${1}_numbered_scaffold.fasta $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${output_basename}_key`;
+if ($filter eq "No_scaffolds")
+{
+    die "No alignments produce superscaffolds\n";
+}
 print "$filter"; # print errors
 ##################################################################################
 #########      create fasta file and report "stitching contigs"         ##########
@@ -141,6 +145,7 @@ __END__
 =head1 NAME
  
  stitch.pl - a package of scripts that analyze IrysView output (i.e. XMAPs). The script filters XMAPs by confidence and the percent of the maximum potential length of the alignment and generates summary stats of the more stringent alignments. The first settings for confidence and the minimum percent of the full potential length of the alignment should be set to include the range that the researcher decides represent high quality alignments after viewing raw XMAPs. Some alignments have lower than optimal confidence scores because of low label density or short sequence-based scaffold length. The second set of filters should have a user-defined lower minimum confidence score, but a much higher percent of the maximum potential length of the alignment in order to capture these alignments. Resultant XMAPs should be examined in IrysView to see that the alignments agree with what the user would manually select.
+ stitch.pl finds the best super-scaffolding alignments each run. It can be run iteratively until all super-scaffolds have been found by creating a new cmap from the output super-scaffold fasta, aligning this cmap as the query with the BNG consensus map as the reference and using the x_map, r_cmap and the super-scaffold fasta as input for another run of stitch.pl.
  
 =head1 USAGE
  
@@ -174,11 +179,11 @@ __END__
  
 =item B<-r, --r_cmap>
  
- The reference CMAP produced by IrysView when you create an XMAP. It can be found in the "Imports" folder within a workspace.
+ The reference CMAP produced by IrysView when you create an XMAP. In this case the reference should have been set to the BNG consensus map. It can be found in the "Imports" folder within a workspace.
  
 =item B<-x, --xmap>
  
- The XMAP produced by IrysView. It can also be found in the "Imports" folder within a workspace.
+ The XMAP produced by IrysView. In this case the reference (also called "Anchor" by BNG) should have been set to the BNG consensus map and the query should be the in silico map. It can also be found in the "Imports" folder within a workspace.
  
 =item B<-f, --fasta>
  
@@ -219,6 +224,9 @@ B<OUTPUT DETAILS:>
  In the same csv file, high quality but overlaping alignments in a csv file are listed. These may be candidates for further assembly using the overlaping contigs and paired end reads.
  
  The script also creates a non-redundant (i.e. no scaffold is used twice) super-scaffold from a user-provided scaffold file and a filtered XMAP. If two scaffolds overlap on the superscaffold then a 30 "n" gap is used as a spacer between them. If adjacent scaffolds do not overlap on the super-scaffold than the distance between the begining and end of each scaffold reported in the XMAP is used as the gap length. If a scaffold has two high quality alignments the longest alignment is selected. If both alignments are equally long the alignment with the highest confidence is selected.
+ 
+ The script also outputs contigs, an agp, and a bed file of contigs within superscaffolds from the final super-scaffold fasta file. 
+ 
  
 B<Test with sample datasets:>
  

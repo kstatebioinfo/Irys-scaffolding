@@ -24,24 +24,24 @@ while (<FASTA>)
         my $seq=join '', @seq;
         $seq =~ s/>//g;
         my @contigs= split(/N+/i,$seq);
-        my @gaps=split(/[AGCT]+/i,$seq);
+        my @gaps=split(/[AGCTRYSWKMBDHV]+/i,$seq);
         my $gap_count = (scalar(@gaps)-1);
-        print "GAP COUNT: $gap_count\n";
-        for my $gap (@gaps)
-        {
-            #            print "Gap: $gap\n\n";
-        }
+#        print "GAP COUNT: $gap_count\n";
+#        for my $gap (@gaps)
+#        {
+#            #            print "Gap: $gap\n\n";
+#        }
         my $gap_counter=1;
         my $pos = 1;
         my $agp_element=1;
         foreach my $broken (@contigs)
         {
-            print CONTIGFA ">tcas_${tcas_id}".'[organism=Triboliumcastaneum][strain=GeorgiaGA2][country=USA:Kansas][collection-date=Apr-2003]'."\n";
+            print CONTIGFA ">Contig_${tcas_id}\n";
             #            >tcas_1000[organism=Triboliumcastaneum][strain=GeorgiaGA2][country=USA:Kansas][collection-date=Apr-2003]
             print CONTIGFA "$broken\n";
             my $contig_length = length($broken);
             my $stop = $pos + $contig_length - 1;
-            print AGP "${header}\t$pos\t$stop\t$agp_element\tW\ttcas_${tcas_id}\t1\t${contig_length}\t+\n";
+            print AGP "${header}\t$pos\t$stop\t$agp_element\tW\tConitig_${tcas_id}\t1\t${contig_length}\t+\n";
             ++$agp_element;
             if ($gaps[$gap_counter])
             {

@@ -32,6 +32,7 @@ while (<FASTAIN>)
     if (/>Super_scaffold_/)
     {
         chomp;
+        print;
         /^>Super_scaffold_(.*)/;
         my $ss = $1;
         while ($super_scaffold_hash{$ss})
@@ -40,6 +41,7 @@ while (<FASTAIN>)
         }
         $super_scaffold_hash{$ss} = 1;
         print FASTAOUT ">Super_scaffold_$ss\n";
+        print " = >Super_scaffold_$ss\n";
     }
     else
     {
