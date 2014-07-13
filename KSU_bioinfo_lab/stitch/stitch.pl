@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ##################################################################################
 #
-#	USAGE: perl
+#	USAGE: perl stitch.pl [options]
 #
 #  Created by jennifer shelton
 #
