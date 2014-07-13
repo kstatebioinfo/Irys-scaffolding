@@ -104,7 +104,7 @@ print "$make_agp";
 ##################################################################################
 #########              create a BNG compatible Bed file                  ##########
 ##################################################################################
-print "Making new AGP and contig file for super-scaffolded fasta file...\n";
+print "Making new BED file for super-scaffolded fasta file...\n";
 my $make_bed=`perl ${dirname}/agp2bed.pl ${output_basename}_superscaffold.fasta ${output_basename}_superscaffold.fasta_contig.agp`;
 print "$make_bed";
 ##################################################################################
