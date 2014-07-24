@@ -29,108 +29,86 @@
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </smallJob>
     <micJob>
-       <flag attr="-pe" val0="openmp" val1="$numthreads"/>
-       <flag attr="-l" val0="mic_count=$numthreads,mic_capable=1"/>
-       <flag attr="-ac" val0="status=$status_log_filename"/>
-     </micJob>
+        <flag attr="-pe" val0="openmp" val1="$numthreads"/>
+        <flag attr="-l" val0="mic_count=$numthreads,mic_capable=1"/>
+        <flag attr="-ac" val0="status=$status_log_filename"/>
+    </micJob>
     <tinyJob>
-      <include val0="micJob"/>
-     </tinyJob>
+        <include val0="micJob"/>
+    </tinyJob>
     <sampleChar>
-      <include val0="largeJob"/>
+        <include val0="largeJob"/>
     </sampleChar>
     <hash>
-      <include val0="largeJob"/>
+        <include val0="largeJob"/>
     </hash>
-    <splitting>        
+    <splitting>
         <flag attr="-pe" val0="single" val1="2"/>
         <flag attr="-l" val0="mem=1G,h_rt=7200"/>
         <flag attr="-q" val0="long.q@@elves,batch.q@@elves,long-highmem.q@@elves,highmem.q@@elves,gen-bioinfo.q"/>
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </splitting>
     <autoNoise0>
-      <include val0="largeJob"/>
+        <include val0="largeJob"/>
     </autoNoise0>
     <autoNoise1>
-      <include val0="largeJob"/>
+        <include val0="largeJob"/>
     </autoNoise1>
-    <pairwise>        
-      <include val0="tinyJob"/>
+    <pairwise>
+        <include val0="tinyJob"/>
     </pairwise>
     <cmapMerge>
-      <include val0="largeJob"/>
+        <include val0="largeJob"/>
     </cmapMerge>
     <assembly>
-      <include val0="largeJob"/>
+        <include val0="largeJob"/>
     </assembly>
     <refineA>
-      <include val0="tinyJob"/>
+        <include val0="tinyJob"/>
     </refineA>
     <refineAMinThreads>
-      <include val0="reducedMinThreads2"/>
+        <include val0="reducedMinThreads2"/>
     </refineAMinThreads>
     <refineB>
-      <include val0="smallJob"/>
+        <include val0="smallJob"/>
     </refineB>
     <refineB0>
-      <include val0="tinyJob"/>
+        <include val0="tinyJob"/>
     </refineB0>
     <refineB1>
-      <include val0="tinyJob"/>
+        <include val0="tinyJob"/>
     </refineB1>
     <refineB1MinThreads>
-       <include val0="reducedMinThreads"/>
+        <include val0="reducedMinThreads"/>
     </refineB1MinThreads>
     <refineNGS>
-      <include val0="smallJob"/>
+        <include val0="smallJob"/>
     </refineNGS>
     <refineFinal>
-      <include val0="smallJob"/>
+        <include val0="smallJob"/>
     </refineFinal>
     <refineFinal0>
-      <include val0="tinyJob"/>
+        <include val0="tinyJob"/>
     </refineFinal0>
     <refineFinal1>
-      <include val0="tinyJob"/>
+        <include val0="tinyJob"/>
     </refineFinal1>
-     <refineFinal1MinThreads>
-       <include val0="reducedMinThreads"/>
+    <refineFinal1MinThreads>
+        <include val0="reducedMinThreads"/>
     </refineFinal1MinThreads>
-   <extension>
-      <include val0="smallJob"/>
+    <extension>
+        <include val0="smallJob"/>
     </extension>
     <extension0>
-      <include val0="tinyJob"/>
+        <include val0="tinyJob"/>
     </extension0>
     <extension1>
-      <include val0="tinyJob"/>
+        <include val0="tinyJob"/>
     </extension1>
     <extension1MinThreads>
-       <include val0="reducedMinThreads"/>
+        <include val0="reducedMinThreads"/>
     </extension1MinThreads>
     <merge>
-      <include val0="largeJob"/>
-    </merge>
-    <characterizeDefault>
-      <include val0="largeJob"/>
-    </characterizeDefault>
-    <characterizeStrict>
-      <include val0="largeJob"/>
-    </characterizeStrict>  
-    <alignmol>
-      <include val0="tinyJob"/>
-    </alignmol>
-    <alignmolvref>
-      <include val0="largeJob"/>
-    </alignmolvref>
-    <svdetect>
-      <include val0="tinyJob"/>
-    </svdetect>
-    <svdetectMinThreads>
-       <include val0="reducedMinThreads3"/>
-    </svdetectMinThreads>
-</moduleArgs>
-
         <include val0="largeJob"/>
     </merge>
     <characterizeDefault>
@@ -139,7 +117,16 @@
     <characterizeStrict>
         <include val0="largeJob"/>
     </characterizeStrict>
+    <alignmol>
+        <include val0="tinyJob"/>
+    </alignmol>
+    <alignmolvref>
+        <include val0="largeJob"/>
+    </alignmolvref>
     <svdetect>
-        <include val0="smallJob"/>
+        <include val0="tinyJob"/>
     </svdetect>
+    <svdetectMinThreads>
+        <include val0="reducedMinThreads3"/>
+    </svdetectMinThreads>
 </moduleArgs>
