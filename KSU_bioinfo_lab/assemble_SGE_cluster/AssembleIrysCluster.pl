@@ -17,7 +17,7 @@ use Pod::Usage;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  AssembleIrysCluster.pl Version 1.3                     #\n";
+print "#  AssembleIrysCluster.pl Version 1.4                     #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 1/27/14                    #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -71,26 +71,24 @@ print "$first_mqr";
 ##############  second molecule quality report on merged file               ######
 ##################################################################################
 print "##################################################################################\n";
-print "Merging split, adjusted BNX files for each flowcell. Generating second Molecule Quality Reports for each flowcell...\n";
+print "Merging split, adjusted BNX files for each flowcell...\n";
 print "##################################################################################\n";
 my $second_mqr=`perl ${dirname}/merge_split_by_scan.pl $bnx_dir $reference $T`;
 print "$second_mqr";
 ##################################################################################
-###########  Merge each BNX foreach flowcell and run third molecule quality ######
-###########     report on merged file with and without BestRef. Use ".err"  ######
-###########     file for noise parameters                                   ######
+########### Merge each BNX foreach flowcell and run second molecule quality ######
+###########     report on merged file with and without BestRef.             ######
 ##################################################################################
 print "##################################################################################\n";
-print "Merging the merged BNX for each flowcell. Generating third Molecule Quality Report for final merged BNX file. Using the .err file to populate the optArguments.xml noise parameters...\n";
+print "Merging the merged BNX for each flowcell. Generating second Molecule Quality Report for final merged BNX file...\n";
 print "##################################################################################\n";
 my $third_mqr=`perl ${dirname}/third_mqr.pl $bnx_dir $reference $T`;
 print "$third_mqr";
 ##################################################################################
-##########  Use "all_flowcells_adj_merged_bestref.err" for noise parameters ######
-##########  and begin assembly with a range of p-value thresholds           ######
+## Write assembly scripts with a range of p-value thresholds and minimum lengths##
 ##################################################################################
 print "##################################################################################\n";
-print "Using \"all_flowcells_adj_merged_bestref.err\" for noise parameters and beginning assembly with a range of p-value thresholds...\n";
+print " Write assembly scripts with a range of p-value thresholds and minimum lengths...\n";
 print "##################################################################################\n";
 my $assemble=`perl ${dirname}/assemble.pl $bnx_dir $reference $T $dirname $project`;
 print "$assemble";

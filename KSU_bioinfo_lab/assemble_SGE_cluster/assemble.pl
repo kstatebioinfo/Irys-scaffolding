@@ -31,21 +31,21 @@ my $err="${bnx_dir}/all_flowcells/all_flowcells_adj_merged_bestref.err";
 ##################################################################################
 my $T_relaxed = $T * 10;
 my $T_strict = $T/10;
-my ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square);
-open (ERR,'<',"$err") or die "can't open $err!\n";
-while (<ERR>) # get noise parameters
-{
-    if (eof)
-    {
-        my @values=split/\t/;
-        for my $value (@values)
-        {
-            s/\s+//g;
-        }
-        my $map_ratio = $values[9]/$values[7];
-        ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square)=($values[1],$values[2],$values[3],$values[4]);
-    }
-}
+#my ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square);
+#open (ERR,'<',"$err") or die "can't open $err!\n";
+#while (<ERR>) # get noise parameters
+#{
+#    if (eof)
+#    {
+#        my @values=split/\t/;
+#        for my $value (@values)
+#        {
+#            s/\s+//g;
+#        }
+#        my $map_ratio = $values[9]/$values[7];
+#        ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square)=($values[1],$values[2],$values[3],$values[4]);
+#    }
+#}
 
 ##################################################################################
 ##############                 parse XML                        ##################
@@ -137,7 +137,7 @@ for my $stringency (keys %p_value)
     print OUT_ASSEMBLE "##################################################################\n";
     print OUT_ASSEMBLE "#####           FIRST ASSEMBLY: ${stringency}                \n";
     print OUT_ASSEMBLE "##################################################################\n";
-    print OUT_ASSEMBLE "python2 /homes/bioinfo/bioinfo_software/bionano/pipeline/pipelineCL.py -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools/ -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -d -U -C ${dirname}/clusterArguments.xml\n"; 
+    print OUT_ASSEMBLE "python2 /homes/bioinfo/bioinfo_software/bionano/pipeline/pipelineCL.py -y -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools/ -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -d -U -C ${dirname}/clusterArguments.xml\n";
     ##################################################################
     ##############  Write second round of assembly commands ##########
     ##################################################################

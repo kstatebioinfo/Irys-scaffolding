@@ -49,25 +49,25 @@ or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 my $dirname = dirname(__FILE__);
-my $err="${bnx_dir}/all_flowcells/all_flowcells_adj_merged_bestref.err";
-##################################################################################
-##############              get parameters for XML              ##################
-##################################################################################
-my ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square);
-open (ERR,'<',"$err") or die "can't open $err!\n";
-while (<ERR>) # get noise parameters
-{
-    if (eof)
-    {
-        my @values=split/\t/;
-        for my $value (@values)
-        {
-            s/\s+//g;
-        }
-        my $map_ratio = $values[9]/$values[7];
-        ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square)=($values[1],$values[2],$values[3],$values[4]);
-    }
-}
+#my $err="${bnx_dir}/all_flowcells/all_flowcells_adj_merged_bestref.err";
+###################################################################################
+###############              get parameters for XML              ##################
+###################################################################################
+#my ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square);
+#open (ERR,'<',"$err") or die "can't open $err!\n";
+#while (<ERR>) # get noise parameters
+#{
+#    if (eof)
+#    {
+#        my @values=split/\t/;
+#        for my $value (@values)
+#        {
+#            s/\s+//g;
+#        }
+#        my $map_ratio = $values[9]/$values[7];
+#        ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square)=($values[1],$values[2],$values[3],$values[4]);
+#    }
+#}
 ##################################################################################
 ##############                 parse XML                        ##################
 ##################################################################################
@@ -144,7 +144,7 @@ for my $stringency (keys %min_length)
     print OUT_ASSEMBLE "##################################################################\n";
     print OUT_ASSEMBLE "##### NEW ASSEMBLY STRINGENCY: ${stringency} \n";
     print OUT_ASSEMBLE "##################################################################\n";
-    print OUT_ASSEMBLE "# python2 /homes/bioinfo/bioinfo_software/bionano/pipeline/pipelineCL.py -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools/ -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -d -U -C ${dirname}/clusterArguments.xml\n"; # testing -V 1 for variant calling
+    print OUT_ASSEMBLE "# python2 /homes/bioinfo/bioinfo_software/bionano/pipeline/pipelineCL.py -y -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools/ -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -d -U -C ${dirname}/clusterArguments.xml\n"; # testing -V 1 for variant calling
 }
 print "done\n";
 
