@@ -91,75 +91,20 @@ for my $stringency (keys %p_value)
     ########################################
     $xml->{bnx_sort}->{flag}->[0]->{val0} = 150; # minlen
     ########################################
-    ##             Pairwise               ##
+    ##        initialAssembly             ##
     ########################################
     $xml->{pairwise}->{flag}->[0]->{val0} = $p_value{$stringency};
-    $xml->{pairwise}->{flag}->[1]->{val0} = 150; # minlen
     ########################################
-    ##               Noise                ##
+    ##          extendRefine              ##
     ########################################
-    $xml->{noise0}->{flag}->[0]->{val0} = $FP;
-    $xml->{noise0}->{flag}->[1]->{val0} = $FN;
-    $xml->{noise0}->{flag}->[2]->{val0} = $ScalingSD_Kb_square;
-    $xml->{noise0}->{flag}->[3]->{val0} = $SiteSD_Kb;
+    $xml->{assembly}->{flag}->[0]->{val0} = $p_value{$stringency}/10;
     ########################################
-    ##            Assembly                ##
+    ##               merge                ##
     ########################################
-    $xml->{assembly}->{flag}->[0]->{val0} = $p_value{$stringency};
-    $xml->{assembly}->{flag}->[1]->{val0} = 150; # minlen
-    ########################################
-    ##              RefineA               ##
-    ########################################
-    $xml->{refineA}->{flag}->[0]->{val0} = 150; # minlen
-    $xml->{refineA}->{flag}->[2]->{val0} = $p_value{$stringency};
-    ########################################
-    ##              RefineB               ##
-    ########################################
-    $xml->{refineB}->{flag}->[0]->{val0} = 150; # minlen
-    $xml->{refineB}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineB}->{flag}->[11]->{val0} = 25; #min split length
-    $xml->{refineB0}->{flag}->[0]->{val0} = 150; # minlen
-    $xml->{refineB0}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineB0}->{flag}->[11]->{val0} = 25; #min split length
-    $xml->{refineB1}->{flag}->[0]->{val0} = 150; # minlen
-    $xml->{refineB1}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineB1}->{flag}->[11]->{val0} = 25; #min split length
-    ########################################
-    ##              RefineFinal           ##
-    ########################################
-    
-    $xml->{refineFinal}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinal}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
-    
-    $xml->{refineFinal0}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineFinal0}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinal0}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
-    
-    $xml->{refineFinal1}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineFinal1}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinal1}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
-    
-    ########################################
-    ##              Extension             ##
-    ########################################
-    $xml->{extension}->{flag}->[4]->{val0} = $p_value{$stringency}/10;
-    $xml->{extension}->{flag}->[23]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
-    
-    $xml->{extension0}->{flag}->[4]->{val0} = $p_value{$stringency}/10;
-    $xml->{extension0}->{flag}->[23]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension0}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
-    
-    $xml->{extension1}->{flag}->[4]->{val0} = $p_value{$stringency}/10;
-    $xml->{extension1}->{flag}->[23]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension1}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
-
-    ########################################
-    ##               Merge                ##
-    ########################################
-    $xml->{merge}->{flag}->[0]->{val0} = 75; # pairmerge
-    $xml->{merge}->{flag}->[1]->{val0} = $p_value{$stringency}/100000;
+    $xml->{refineA}->{flag}->[1]->{val0} = $p_value{$stringency}/10000;
+    #########################################
+    ##         Write out XML               ##
+    #########################################
     XMLout($xml,OutputFile => $xml_outfile,);
     #########################################
     ## Correct the document head and tail  ##
