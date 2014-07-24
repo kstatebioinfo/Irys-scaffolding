@@ -107,77 +107,11 @@ for my $stringency (keys %min_length)
     ##             BNX filter             ##
     ########################################
     $xml->{bnx_sort}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
-    ########################################
-    ##             Pairwise               ##
-    ########################################
-    $xml->{pairwise}->{flag}->[0]->{val0} = $T;
-    $xml->{pairwise}->{flag}->[1]->{val0} = $min_length{$stringency}; # min length
-    ########################################
-    ##               Noise                ##
-    ########################################
-    $xml->{noise0}->{flag}->[0]->{val0} = $FP;
-    $xml->{noise0}->{flag}->[1]->{val0} = $FN;
-    $xml->{noise0}->{flag}->[2]->{val0} = $ScalingSD_Kb_square;
-    $xml->{noise0}->{flag}->[3]->{val0} = $SiteSD_Kb;
-    ########################################
-    ##            Assembly                ##
-    ########################################
-    $xml->{assembly}->{flag}->[0]->{val0} = $T;
-    $xml->{assembly}->{flag}->[1]->{val0} = $min_length{$stringency}; # min length
-    ########################################
-    ##              RefineA               ##
-    ########################################
-    $xml->{refineA}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
-    $xml->{refineA}->{flag}->[2]->{val0} = $T;
-    ########################################
-    ##              RefineB               ##
-    ########################################
-    $xml->{refineB}->{flag}->[0]->{val0} = $min_length{$stringency}; # min
-    $xml->{refineB}->{flag}->[2]->{val0} = $T/10;
-    $xml->{refineB}->{flag}->[11]->{val0} = 25; #min split length
-    $xml->{refineB0}->{flag}->[0]->{val0} = $min_length{$stringency}; # min
-    $xml->{refineB0}->{flag}->[2]->{val0} = $T/10;
-    $xml->{refineB0}->{flag}->[11]->{val0} = 25; #min split length
-    $xml->{refineB1}->{flag}->[0]->{val0} = $min_length{$stringency}; # min
-    $xml->{refineB1}->{flag}->[2]->{val0} = $T/10;
-    $xml->{refineB1}->{flag}->[11]->{val0} = 25; #min split length
-    ########################################
-    ##              RefineFinal           ##
-    ########################################
-    
-    $xml->{refineFinal}->{flag}->[0]->{val0} = $min_length{$stringency};
-    $xml->{refineFinal}->{flag}->[2]->{val0} = $T/10;
-    $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinal}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinal0}->{flag}->[0]->{val0} = $min_length{$stringency};
-    $xml->{refineFinal0}->{flag}->[2]->{val0} = $T/10;
-    $xml->{refineFinal0}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinal0}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinal1}->{flag}->[0]->{val0} = $min_length{$stringency};
-    $xml->{refineFinal1}->{flag}->[2]->{val0} = $T/10;
-    $xml->{refineFinal1}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinal1}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
-    ########################################
-    ##              Extension             ##
-    ########################################
-    
-    $xml->{extension}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
-    $xml->{extension}->{flag}->[4]->{val0} = $T/10;
-    $xml->{extension}->{flag}->[23]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension0}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
-    $xml->{extension0}->{flag}->[4]->{val0} = $T/10;
-    $xml->{extension0}->{flag}->[23]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension0}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension1}->{flag}->[0]->{val0} = $min_length{$stringency}; # min length
-    $xml->{extension1}->{flag}->[4]->{val0} = $T/10;
-    $xml->{extension1}->{flag}->[23]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension1}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
-    ########################################
-    ##               Merge                ##
-    ########################################
-    $xml->{merge}->{flag}->[0]->{val0} = 75; # pairmerge
-    $xml->{merge}->{flag}->[1]->{val0} = $T/100000;
+
+    #########################################
+    ##         Write out XML               ##
+    #########################################
+
     XMLout($xml,OutputFile => $xml_outfile,);
     #########################################
     ## Correct the document head and tail  ##
