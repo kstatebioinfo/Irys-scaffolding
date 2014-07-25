@@ -93,11 +93,11 @@ for my $stringency (keys %p_value)
     ########################################
     ##        initialAssembly             ##
     ########################################
-    $xml->{initialAssembly}->{flag}->[0]->{val0} = $p_value{$stringency};
+    $xml->{initialAssembly}->{flag}->{val0} = $p_value{$stringency};
     ########################################
     ##          extendRefine              ##
     ########################################
-    $xml->{extendRefine}->{flag}->[0]->{val0} = $p_value{$stringency}/10;
+    $xml->{extendRefine}->{flag}->{val0} = $p_value{$stringency}/10;
     ########################################
     ##               merge                ##
     ########################################
