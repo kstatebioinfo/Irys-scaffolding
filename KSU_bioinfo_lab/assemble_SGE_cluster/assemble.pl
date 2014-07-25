@@ -11,8 +11,8 @@ use warnings;
 # use List::Util qw(max);
 # use List::Util qw(sum);
 use lib '/homes/bioinfo/bioinfo_software/perl_modules/lib/perl5/';
-use XML::Simple;
-use Data::Dumper;
+#use XML::Simple;
+#use Data::Dumper;
 ##################################################################################
 ##############                     get arguments                ##################
 ##################################################################################
@@ -82,57 +82,86 @@ for my $stringency (keys %p_value)
     ##############        Set assembly parameters   ##################
     ##################################################################
     my $xml_infile = "${dirname}/OptArguments2.xml";
-    my $xml_outfile = "${bnx_dir}/${stringency}/${stringency}_optArguments.xml";
-    my $xml = XMLin($xml_infile);
-    open (OUT, '>',"${bnx_dir}/${stringency}/dumped.txt");
-    print OUT Dumper($xml);
-    ########################################
-    ##             BNX filter             ##
-    ########################################
-    $xml->{bnx_sort}->{flag}->[0]->{val0} = 150; # minlen
-    ########################################
-    ##        initialAssembly             ##
-    ########################################
-    #$xml->{initialAssembly}->{flag}->{val0} = $p_value{$stringency};
-    $xml->{initialAssembly}->{flag}->{val0}=>$p_value{$stringency};
-    ########################################
-    ##          extendRefine              ##
-    ########################################
-    #$xml->{extendRefine}->{flag}->{val0} = $p_value{$stringency}/10;
-    $xml->{extendRefine}->{flag}->{val0}=>$p_value{$stringency}/10;
-    ########################################
-    ##               merge                ##
-    ########################################
-    $xml->{merge}->{flag}->[1]->{val0} = $p_value{$stringency}/10000;
-    #########################################
-    ##         Write out XML               ##
-    #########################################
-    XMLout($xml,OutputFile => $xml_outfile,);
-    #########################################
-    ## Correct the document head and tail  ##
-    #########################################
     my $xml_final = "${bnx_dir}/${stringency}/${stringency}_final_optArguments.xml";
     open (OPTARGFINAL, '>', $xml_final) or die "can't open $xml_final\n";
-    open (OPTARG, '<', $xml_outfile) or die "can't open $xml_outfile\n";
+    open (OPTARG, '<', $xml_infile ) or die "can't open $xml_infile \n";
+    
     while (<OPTARG>)
     {
-        if (/<opt>/)
+
+        if (/<flag attr=.*val0=\"1e-9\".*group=\"Initial Assembly\".*/)
         {
-            print OPTARGFINAL '<?xml version="1.0"?>';
-            
-            print OPTARGFINAL "\n\n<moduleArgs>\n";
+            s/(<flag attr=.*)(val0=\"1e-9\")(.*group=\"Initial Assembly\".*)/$1val0=\"$p_value{$stringency}\"$3/;
+            print OPTARGFINAL;
         }
-        elsif (/<\/opt>/)
+        elsif (/<flag attr=\"-T\".*val0=\"1e-10\".*group=\"Extension and Refinement\".*/)
         {
-            print OPTARGFINAL "\n</moduleArgs>\n";
+            my $new_p=$p_value{$stringency}/10;
+            s/(<flag attr=\"-T\".*)(val0=\"1e-10\")(.*group=\"Extension and Refinement\".*)/$1${new_p}$3/;
+            print OPTARGFINAL;
+        }
+        elsif (/<flag attr=\"-T\".*val0=\"1e-15\".*group=\"Merge\".*/)
+        {
+            my $final_p=$p_value{$stringency}/10000;
+            s/(<flag attr=\"-T\".*)(val0=\"1e-15\")(.*group=\"Merge\".*)/$1${final_p}$3/;
+            print OPTARGFINAL;
         }
         else
         {
             print OPTARGFINAL;
         }
-
     }
-    `rm $xml_outfile`; # remove the intermediate xml file
+#    my $xml_outfile = "${bnx_dir}/${stringency}/${stringency}_optArguments.xml";
+#    my $xml = XMLin($xml_infile);
+#    open (OUT, '>',"${bnx_dir}/${stringency}/dumped.txt");
+#    print OUT Dumper($xml);
+#    ########################################
+#    ##             BNX filter             ##
+#    ########################################
+#    $xml->{bnx_sort}->{flag}->[0]->{val0} = 150; # minlen
+#    ########################################
+#    ##        initialAssembly             ##
+#    ########################################
+#    #$xml->{initialAssembly}->{flag}->{val0} = $p_value{$stringency};
+#    $xml->{initialAssembly}->{flag}->{val0}=>$p_value{$stringency};
+#    ########################################
+#    ##          extendRefine              ##
+#    ########################################
+#    #$xml->{extendRefine}->{flag}->{val0} = $p_value{$stringency}/10;
+#    $xml->{extendRefine}->{flag}->{val0}=>$p_value{$stringency}/10;
+#    ########################################
+#    ##               merge                ##
+#    ########################################
+#    $xml->{merge}->{flag}->[1]->{val0} = $p_value{$stringency}/10000;
+#    #########################################
+#    ##         Write out XML               ##
+#    #########################################
+#    XMLout($xml,OutputFile => $xml_outfile,);
+#    #########################################
+#    ## Correct the document head and tail  ##
+#    #########################################
+#    my $xml_final = "${bnx_dir}/${stringency}/${stringency}_final_optArguments.xml";
+#    open (OPTARGFINAL, '>', $xml_final) or die "can't open $xml_final\n";
+#    open (OPTARG, '<', $xml_outfile) or die "can't open $xml_outfile\n";
+#    while (<OPTARG>)
+#    {
+#        if (/<opt>/)
+#        {
+#            print OPTARGFINAL '<?xml version="1.0"?>';
+#            
+#            print OPTARGFINAL "\n\n<moduleArgs>\n";
+#        }
+#        elsif (/<\/opt>/)
+#        {
+#            print OPTARGFINAL "\n</moduleArgs>\n";
+#        }
+#        else
+#        {
+#            print OPTARGFINAL;
+#        }
+#
+#    }
+#    `rm $xml_outfile`; # remove the intermediate xml file
     ##################################################################
     ##############        Write assembly command    ##################
     ##################################################################
