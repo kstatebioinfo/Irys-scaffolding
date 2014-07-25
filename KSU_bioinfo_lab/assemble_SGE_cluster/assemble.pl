@@ -91,19 +91,19 @@ for my $stringency (keys %p_value)
 
         if (/<flag attr=.*val0=\"1e-9\".*group=\"Initial Assembly\".*/)
         {
-            s/(<flag attr=.*)(val0=\"1e-9\")(.*group=\"Initial Assembly\".*)/$1val0=\"$p_value{$stringency}\"$3/;
+            s/(<flag attr=.*val0=\")(1e-9)(\".*group=\"Initial Assembly\".*)/$1val0=\"$p_value{$stringency}\"$3/;
             print OPTARGFINAL;
         }
         elsif (/<flag attr=\"-T\".*val0=\"1e-10\".*group=\"Extension and Refinement\".*/)
         {
             my $new_p=$p_value{$stringency}/10;
-            s/(<flag attr=\"-T\".*)(val0=\"1e-10\")(.*group=\"Extension and Refinement\".*)/$1${new_p}$3/;
+            s/(<flag attr=\"-T\".*val0=\")(1e-10)(\".*group=\"Extension and Refinement\".*)/$1${new_p}$3/;
             print OPTARGFINAL;
         }
         elsif (/<flag attr=\"-T\".*val0=\"1e-15\".*group=\"Merge\".*/)
         {
             my $final_p=$p_value{$stringency}/10000;
-            s/(<flag attr=\"-T\".*)(val0=\"1e-15\")(.*group=\"Merge\".*)/$1${final_p}$3/;
+            s/(<flag attr=\"-T\".*val0=\")(1e-15)(\".*group=\"Merge\".*)/$1${final_p}$3/;
             print OPTARGFINAL;
         }
         else
