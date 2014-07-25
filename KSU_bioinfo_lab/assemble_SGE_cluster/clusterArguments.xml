@@ -29,8 +29,9 @@
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </smallJob>
     <micJob>
-        <flag attr="-pe" val0="openmp" val1="$numthreads"/>
-        <flag attr="-l" val0="mic_count=$numthreads,mic_capable=1"/>
+       <flag attr="-pe" val0="single" val1="2"/>
+        <flag attr="-l" val0="mem=1G,h_rt=7200"/>
+        <flag attr="-q" val0="long.q@@elves,batch.q@@elves,long-highmem.q@@elves,highmem.q@@elves,gen-bioinfo.q"/>
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </micJob>
     <tinyJob>
