@@ -91,7 +91,7 @@ for my $stringency (keys %p_value)
 
         if (/<flag attr=.*val0=\"1e-9\".*group=\"Initial Assembly\".*/)
         {
-            s/(<flag attr=.*val0=\")(1e-9)(\".*group=\"Initial Assembly\".*)/$1val0=\"$p_value{$stringency}\"$3/;
+            s/(<flag attr=.*val0=\")(1e-9)(\".*group=\"Initial Assembly\".*)/$1$p_value{$stringency}$3/;
             print OPTARGFINAL;
         }
         elsif (/<flag attr=\"-T\".*val0=\"1e-10\".*group=\"Extension and Refinement\".*/)
