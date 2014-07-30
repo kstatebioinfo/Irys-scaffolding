@@ -88,16 +88,28 @@ for my $stringency (keys %p_value)
     
     while (<OPTARG>)
     {
- #   	<flag attr="-usecolor"    val0="1" default0="1" display="Color Channel" group="DeNovo Assembly Noise" />
- #       <flag attr="-FP" val0="1.5" display="False Positive Density (/100Kb)" group="DeNovo Assembly Noise" default0="1.5" description="Expected rate of false positive (# of labels present in molecules but not in the reference per 100kb). **Value ignored when using autoNoise." />
- #       <flag attr="-FN" val0="0.15" display="False Negative Rate (%)" group="DeNovo Assembly Noise" default0="0.15" description="Expected rate  of false negative (% of reference labels absent in the molecules). **Value ignored when using autoNoise." />
- #       <flag attr="-sd" val0="0.2" display="ScalingSD (Kb^1/2)" group="DeNovo Assembly Noise" default0="0.2" description="Scaled stretch noise parameter in root-kb.  In combination with SiteSD,  ScalingSD indicates the variance of distance between 2 labels in the molecules. **Value ignored when using autoNoise." />
- #       <flag attr="-sf" val0="0.2" display="SiteSD (Kb)" group="DeNovo Assembly Noise" default0="0.2" description="Fixed stretch noise parameter in kb.  Sf is also named as SiteSD. In combination with ScalingSD,  SiteSD indicates the variance of distance between 2 labels in the molecules. **Value ignored when using autoNoise." />
-	# <flag attr="-sr" val0="0.03" display="RelativeSD" group="DeNovo Assembly Noise" default0="0.1" description="Quadratic stretch noise parameter. In combination with ScalingSD and SiteSD, RelativeSD indicates the variance of distance between 2 labels in the molecules. Value ignored when using autoNoise." />
- #       <flag attr="-res" val0="3.3" display="res" group="DeNovo Assembly Noise" default0="3.3" />
 
-
-        elsif (/<flag attr=.*val0=\"1e-9\".*group=\"Initial Assembly\".*/)
+        if (/<flag attr=\"-FP\".*group=\"DeNovo Assembly Noise\"/)
+        {
+            s/(<flag attr=\"-FP\" val0=\")(1.5)(.*)/$1$FP$3/;
+            print OPTARGFINAL;
+        }
+        elsif (/<flag attr=\"-FN\".*group=\"DeNovo Assembly Noise\"/)
+        {
+            s/(<flag attr=\"-FN\" val0=\")(0.15)(\.*)/$1$FN$3/;
+            print OPTARGFINAL;
+        }
+        elsif (/<flag attr=\"-sd\".*group=\"DeNovo Assembly Noise\"/)
+        {
+            s/(val0=\")(0.2)(\".*)/$1${ScalingSD_Kb_square}$3/;
+            print OPTARGFINAL;
+        }
+        elsif (/<flag attr=\"-sf\".*group=\"DeNovo Assembly Noise\"/)
+        {
+            s/(val0=\")(0.2)(\".*)/$1${SiteSD_Kb}$3/;
+            print OPTARGFINAL;
+        }
+        elsif (/<flag attr=\"-T\".*group=\"Initial Assembly\"/)
         {
             s/(<flag attr=.*val0=\")(1e-9)(\".*group=\"Initial Assembly\".*)/$1$p_value{$stringency}$3/;
             print OPTARGFINAL;
