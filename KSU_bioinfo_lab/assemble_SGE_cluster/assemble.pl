@@ -42,7 +42,6 @@ while (<ERR>) # get noise parameters
         {
            s/\s+//g;
         }
-        my $map_ratio = $values[9]/$values[7];
         ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square)=($values[1],$values[2],$values[3],$values[4]);
    }
 }
@@ -54,7 +53,7 @@ while (<ERR>) # get noise parameters
 my %p_value = (
     'default_t' => "$T",
     'relaxed_t' => "$T_relaxed",
-    'strict_t' => "$T_strict",
+    'strict_t' => "$T_strict"
 );
 open (OUT_ASSEMBLE, '>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
 ##################################################################
@@ -111,19 +110,19 @@ for my $stringency (keys %p_value)
         }
         elsif (/<flag attr=\"-T\".*group=\"Initial Assembly\"/)
         {
-            s/(<flag attr=.*val0=\")(1e-9)(\".*group=\"Initial Assembly\".*)/$1$p_value{$stringency}$3/;
+            s/(val0=\")(1e-9)(\".*group=\"Initial Assembly\".*)/$1$p_value{$stringency}$3/;
             print OPTARGFINAL;
         }
-        elsif (/<flag attr=\"-T\".*val0=\"1e-10\".*group=\"Extension and Refinement\".*/)
+        elsif (/<flag attr=\"-T\".*group=\"Extension and Refinement\"/)
         {
             my $new_p=$p_value{$stringency}/10;
-            s/(<flag attr=\"-T\".*val0=\")(1e-10)(\".*group=\"Extension and Refinement\".*)/$1${new_p}$3/;
+            s/(val0=\")(1e-10)(\".*group=\"Extension and Refinement\".*)/$1${new_p}$3/;
             print OPTARGFINAL;
         }
-        elsif (/<flag attr=\"-T\".*val0=\"1e-15\".*group=\"Merge\".*/)
+        elsif (/<flag attr=\"-T\".*group=\"Merge\"/)
         {
             my $final_p=$p_value{$stringency}/10000;
-            s/(<flag attr=\"-T\".*val0=\")(1e-15)(\".*group=\"Merge\".*)/$1${final_p}$3/;
+            s/(val0=\")(1e-15)(\".*group=\"Merge\".*)/$1${final_p}$3/;
             print OPTARGFINAL;
         }
         else
@@ -131,57 +130,6 @@ for my $stringency (keys %p_value)
             print OPTARGFINAL;
         }
     }
-#    my $xml_outfile = "${bnx_dir}/${stringency}/${stringency}_optArguments.xml";
-#    my $xml = XMLin($xml_infile);
-#    open (OUT, '>',"${bnx_dir}/${stringency}/dumped.txt");
-#    print OUT Dumper($xml);
-#    ########################################
-#    ##             BNX filter             ##
-#    ########################################
-#    $xml->{bnx_sort}->{flag}->[0]->{val0} = 150; # minlen
-#    ########################################
-#    ##        initialAssembly             ##
-#    ########################################
-#    #$xml->{initialAssembly}->{flag}->{val0} = $p_value{$stringency};
-#    $xml->{initialAssembly}->{flag}->{val0}=>$p_value{$stringency};
-#    ########################################
-#    ##          extendRefine              ##
-#    ########################################
-#    #$xml->{extendRefine}->{flag}->{val0} = $p_value{$stringency}/10;
-#    $xml->{extendRefine}->{flag}->{val0}=>$p_value{$stringency}/10;
-#    ########################################
-#    ##               merge                ##
-#    ########################################
-#    $xml->{merge}->{flag}->[1]->{val0} = $p_value{$stringency}/10000;
-#    #########################################
-#    ##         Write out XML               ##
-#    #########################################
-#    XMLout($xml,OutputFile => $xml_outfile,);
-#    #########################################
-#    ## Correct the document head and tail  ##
-#    #########################################
-#    my $xml_final = "${bnx_dir}/${stringency}/${stringency}_final_optArguments.xml";
-#    open (OPTARGFINAL, '>', $xml_final) or die "can't open $xml_final\n";
-#    open (OPTARG, '<', $xml_outfile) or die "can't open $xml_outfile\n";
-#    while (<OPTARG>)
-#    {
-#        if (/<opt>/)
-#        {
-#            print OPTARGFINAL '<?xml version="1.0"?>';
-#            
-#            print OPTARGFINAL "\n\n<moduleArgs>\n";
-#        }
-#        elsif (/<\/opt>/)
-#        {
-#            print OPTARGFINAL "\n</moduleArgs>\n";
-#        }
-#        else
-#        {
-#            print OPTARGFINAL;
-#        }
-#
-#    }
-#    `rm $xml_outfile`; # remove the intermediate xml file
     ##################################################################
     ##############        Write assembly command    ##################
     ##################################################################
@@ -192,10 +140,8 @@ for my $stringency (keys %p_value)
     ##################################################################
     ##############  Write second round of assembly commands ##########
     ##################################################################
-    {
-        my $second_commands= `perl ${dirname}/RefineAssembleIrys.pl -a ${out_dir} -b ${bnx_dir} -r $ref -p ${project}_${stringency} -t $p_value{$stringency}`;
-        print "$second_commands";
-    }
+    my $second_commands= `perl ${dirname}/RefineAssembleIrys.pl -a ${out_dir} -b ${bnx_dir} -r $ref -p ${project}_${stringency} -t $p_value{$stringency}`;
+    print "$second_commands";
 }
 #########################################
 ##       Clean some excess files       ##

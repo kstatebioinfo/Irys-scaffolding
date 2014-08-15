@@ -17,7 +17,7 @@ use Pod::Usage;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  AssembleIrysCluster.pl Version 1.5                     #\n";
+print "#  AssembleIrysCluster.pl Version 1.5.1                   #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 1/27/14                    #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";

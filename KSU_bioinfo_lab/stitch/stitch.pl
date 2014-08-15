@@ -76,7 +76,7 @@ print "$out_number";
 ##################################################################################
 print "Making filtered XMAP...\n";
 my $filter=`perl ${dirname}/xmap_filter.pl $r_cmap ${1}_numbered_scaffold.fasta $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${output_basename}_key`;
-if ($filter eq "No_scaffolds")
+if ($filter =~ "No_scaffolds")
 {
     die "No alignments produce superscaffolds\n";
 }
@@ -105,7 +105,7 @@ print "$make_agp";
 #########              create a BNG compatible Bed file                  ##########
 ##################################################################################
 print "Making new BED file for super-scaffolded fasta file...\n";
-my $make_bed=`perl ${dirname}/agp2bed.pl ${output_basename}_superscaffold.fasta ${output_basename}_superscaffold.fasta_contig.agp`;
+my $make_bed=`perl ${dirname}/agp2bed.pl ${output_basename}_superscaffold.fasta_contig.agp`;
 print "$make_bed";
 ##################################################################################
 ##############  compress summary files and delete temp files    ##################

@@ -28,7 +28,7 @@ print "###########################################################\n";
 ###############################################################################
 ##############             get arguments                     ##################
 ###############################################################################
-my ($bnx_dir,$project,$sge);
+my ($bnx_dir,$project);
 
 my $man = 0;
 my $help = 0;
@@ -36,8 +36,7 @@ GetOptions (
 			  'help|?' => \$help, 
 			  'man' => \$man,
 			  'b|bnx_dir:s' => \$bnx_dir,
-			  'p|proj:s' => \$project,
-			  's|sge' => \$sge
+			  'p|proj:s' => \$project
               )  
 or pod2usage(2);
 pod2usage(1) if $help;
@@ -57,15 +56,19 @@ my @directories = (
     "relaxed_t",
     "relaxed_t/relaxed_ml"
 );
-open (QC_METRICS,'>>',"$bnx_dir/Assembly_quality_metrics.csv") or die "couldn't open $bnx_dir/Assembly_quality_metrics.csv!";
-print QC_METRICS "Assembly Name,Assembly N50,refineB N50,Merge 0 N50,Extension 1 N50,Merge 1 N50,Extension 2 N50,Merge 2 N50,Extension 3 N50,Merge 3 N50,Extension 4 N50,Merge 4 N50,Extension 5 N50,Merge 5 N50,N contigs,Total Contig Len(Mb),Avg. Contig Len(Mb),Contig N50(Mb),Total Ref Len(Mb),Total Contig Len / Ref Len,N contigs total align,Total Aligned Len(Mb),Total Aligned Len / Ref Len,Total Unique Aligned Len(Mb),Total Unique Len / Ref Len\n";
+open (QC_METRICS,'>',"$bnx_dir/Assembly_quality_metrics.csv") or die "couldn't open $bnx_dir/Assembly_quality_metrics.csv!";
+print QC_METRICS "Assembly Name,Assembly N50,refineB1 N50,Merge 0 N50,Extension 1 N50,Merge 1 N50,Extension 2 N50,Merge 2 N50,Extension 3 N50,Merge 3 N50,Extension 4 N50,Merge 4 N50,Extension 5 N50,Merge 5 N50,N contigs,Total Contig Len(Mb),Avg. Contig Len(Mb),Contig N50(Mb),Total Ref Len(Mb),Total Contig Len / Ref Len,N contigs total align I,Total Aligned Len(Mb) I,Total Aligned Len / Ref Len I,Total Unique Aligned Len(Mb) I,Total Unique Len / Ref Len I,N contigs total align II,Total Aligned Len(Mb) II,Total Aligned Len / Ref Len II,Total Unique Aligned Len(Mb) Final,Total Unique Len / Ref Len II\n";
 
+
+###############################################################################
 ##########            open all assembly directories           #################
 ###############################################################################
 my $final = 0;
+
 my $single_mol_breadth_of_coverage = 0;
 for my $assembly_dir (@directories)
 {
+    my $final = 0;
     unless (opendir(DIR, "${bnx_dir}/${assembly_dir}"))
     {
         print "can't open the directory ${bnx_dir}/${assembly_dir}\n"; # open directory full of assembly files
@@ -85,23 +88,20 @@ for my $assembly_dir (@directories)
         while (<BIOINFO_REPORT>)
         {
             chomp;
-            if ($sge)
+            if (/SV detect:/)
             {
-            	if (/Stage Complete: refineFinal1/)
-            	{
-            		$final = 1;
-            	}
+                next;
             }
-            elsif (/Stage Complete: refineFinal/)
+            if (/Stage\s+Summary:\s+Characterize.*\s+refineFinal1/i)
             {
-                $final = 1;
+                ++$final;
             }
             #########################################################
             #####  pull N50 from each stage of assembly  ############
             #########################################################
-            if (($final == 0) && (/Contig N50/))
+            if (($final == 0) && (/Contig N50/i))
             {
-                s/(Contig N50\s+\(Mb\):\s+)(.*)/$2/;
+                s/(.*:\s+)(.*)/$2/;
                 print QC_METRICS;
                 print QC_METRICS ",";
             }
@@ -110,109 +110,89 @@ for my $assembly_dir (@directories)
             #########################################################
             if ($final == 1)
             {
-                if (/N contigs:/)
+                if (/N contigs:/i)
                 {
-                    s/(N contigs:\s+)(.*)/$2/;
+                    s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Total Contig Len \(Mb\):/)
+                elsif (/Total Contig Len \(Mb\):/)
                 {
-                    s/(Total Contig Len \(Mb\):\s+)(.*)/$2/;
+                    s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Avg. Contig Len  \(Mb\):/)
+                elsif (/Avg. Contig Len\s+\(Mb\):/)
                 {
-                    s/(Avg. Contig Len  \(Mb\):\s+)(.*)/$2/;
+                    s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Contig N50       \(Mb\):/)
+                elsif (/Contig n50.*:/i)
                 {
-                    s/(Contig N50       \(Mb\):\s+)(.*)/$2/;
+                    s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Total Ref Len    \(Mb\):/)
+                elsif (/Total Ref Len\s+\(Mb\):/)
                 {
-                    s/(Total Ref Len    \(Mb\):\s+)(.*)/$2/;
+                    s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Total Contig Len \/ Ref Len  :/)
+                elsif (/Total Contig Len \/ Ref Len/)
                 {
-                    s/(Total Contig Len \/ Ref Len  :\s+)(.*)/$2/;
+                    s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/N contigs total align       :/)
+            }
+            if (($final == 1)||($final ==2))
+            {
+                if (/N contigs total align/)
                 {
-                    s/(N contigs total align       :\s+)(.*)/$2/;
+                    s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Total Aligned Len             \(Mb\) :/)
+                elsif (/Total Aligned Len\s+\(Mb\)/)
                 {
-                    s/(Total Aligned Len             \(Mb\) :\s+)(.*)/$2/;
+                    s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Total Aligned Len \/ Ref Len        :/)
+                elsif (/Total Aligned Len.*Ref Len/)
                 {
-                    s/(Total Aligned Len \/ Ref Len        :\s+)(.*)/$2/;
+                    s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Total Unique Aligned Len      \(Mb\) :/)
+                elsif (/Total Unique Aligned Len/)
                 {
-                    s/(Total Unique Aligned Len      \(Mb\) :\s+)(.*)/$2/;
+                    s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                if (/Total Unique Len \/ Ref Len         :/)
+                elsif (/Total Unique Len.*Ref Len/)
                 {
-                    s/(Total Unique Len \/ Ref Len         :\s+)(.*)/$2/;
+                    s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
-                    print QC_METRICS "\n";
-                    $final = 0;
+                    print QC_METRICS ",";
+
                 }
             }
         }
-        
+        print QC_METRICS "\n";
     }
+#    print QC_METRICS "\n";
 #    my $report= "$bnx_dir/$assembly_dir/all_flowcells/all_flowcells_adj_merged_bestref.xmap";
 #    if (-e $report)
 #    {
 #        # ADD SCRIPT TO CALCULATE SINGLE MOLECULE BREADTH OF COVERAGE FROM XMAP
 #    }
 }
-#            N contigs: 216
-##            Total Contig Len (Mb):   200.473
-##            Avg. Contig Len  (Mb):    0.928
-##            Contig N50       (Mb):    1.350
-##            Total Ref Len    (Mb):   157.186
-#            Total Contig Len / Ref Len  : 1.275
-#            N contigs total align       :   147 (0.68)
-##            Total Aligned Len             (Mb) : 114.090
-#            Total Aligned Len / Ref Len        :  0.726
-##            Total Unique Aligned Len      (Mb) : 110.120
-#            Total Unique Len / Ref Len         :  0.701
-#Stage Complete: Assembly
-#Stage Complete: refineB
-#Stage Complete: Extension 1
-#Stage Complete: Merge 1
-#Stage Complete: Extension 2
-#Stage Complete: Merge 2
-#Stage Complete: Extension 3
-#Stage Complete: Merge 3
-#Stage Complete: Extension 4
-#Stage Complete: Merge 4
-#Stage Complete: Extension 5
-#Stage Comp###############################################################################lete: Merge 5
-#Stage Complete: refineFinal
-
-
+###############################################################################
+print "Done\n";
 
 ###############################################################################
 ##############                  Documentation                ##################

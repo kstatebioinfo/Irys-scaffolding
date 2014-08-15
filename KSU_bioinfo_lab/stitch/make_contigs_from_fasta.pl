@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 
-# this script breaks scaffolds at Ns and outputs a new multi fasta file with one entry per contig and creates an agp for this
-# USAGE: perl make_contigs_from_fasta.pl [fasta]
+# DESCRIPTION: this script breaks scaffolds at gaps of Ns longer than 10 bases and outputs a new multi fasta file with one entry per contig and creates an agp for this
+# USAGE: perl make_contigs_from_fasta.pl FASTA
 
 open FASTA, '<', $ARGV[0] or die "Couldn't open $ARGV[0]: $!";
 open CONTIGFA, '>', "$ARGV[0]"."_contig.fasta" or die "Couldn't create $ARGV[0]_contig.fasta: $!";
@@ -23,8 +23,10 @@ while (<FASTA>)
         my ($header,@seq)=split/\n/;
         my $seq=join '', @seq;
         $seq =~ s/>//g;
-        my @contigs= split(/N+/i,$seq);
-        my @gaps=split(/[AGCTRYSWKMBDHV]+/i,$seq);
+        my @contigs= split(/[Nn]{11,}/);
+        my @gaps=$_ =~ /[Nn]{11,}/g;
+#        my @contigs= split(/N+/i,$seq);
+#        my @gaps=split(/[AGCTRYSWKMBDHV]+/i,$seq);
         my $gap_count = (scalar(@gaps)-1);
 #        print "GAP COUNT: $gap_count\n";
 #        for my $gap (@gaps)
@@ -41,7 +43,7 @@ while (<FASTA>)
             print CONTIGFA "$broken\n";
             my $contig_length = length($broken);
             my $stop = $pos + $contig_length - 1;
-            print AGP "${header}\t$pos\t$stop\t$agp_element\tW\tConitig_${tcas_id}\t1\t${contig_length}\t+\n";
+            print AGP "${header}\t$pos\t$stop\t$agp_element\tW\tContig_${tcas_id}\t1\t${contig_length}\t+\n";
             ++$agp_element;
             if ($gaps[$gap_counter])
             {
