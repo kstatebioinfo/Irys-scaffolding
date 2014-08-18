@@ -8,13 +8,13 @@
         <minthreads attr="${maxthreads}"/>
     </defaultMinThreads>
     <reducedMinThreads>
-        <minthreads attr="20"/>
+        <minthreads attr="4"/>
     </reducedMinThreads>
     <reducedMinThreads2>
-        <minthreads attr="40"/>
+        <minthreads attr="8"/>
     </reducedMinThreads2>
     <reducedMinThreads3>
-        <minthreads attr="60"/>
+        <minthreads attr="16"/>
     </reducedMinThreads3>
     <largeJob>
         <flag attr="-pe" val0="single" val1="16"/>
