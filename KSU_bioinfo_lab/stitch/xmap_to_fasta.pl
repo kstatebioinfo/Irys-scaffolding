@@ -212,6 +212,23 @@ for my $row (@reversed_bestmap_table) # for each bestmap entry
     }
 }
 ########################################################################
+######################## Make hash of fasta   ##########################
+######################## headers and BNG ids  ##########################
+########################################################################
+my $key_file=$ARGV[2];
+open (KEY,"<",$key_file) or die "couldn't open $key_file $!";
+my %key_hash;
+while (<KEY>)
+{
+    unless (/^#/)
+    {
+        chomp;
+        my @row=split ("\t");
+        s/\s+//g foreach @row;
+        $key_hash{$row[4]}=$row[2];
+    }
+}
+########################################################################
 ########################     print to new    ###########################
 ######################## fasta scaffold file ###########################
 ########################################################################
@@ -239,6 +256,7 @@ for my $row (@bestmap_table)
             $scaffold_id = "Super_scaffold_$n"; ## initialize new superscaffold
             $new_seq = '';
             ++$n;
+            print "Scaffolding molecule = $row->[2]\n";
         }
         ###################################################################
         #### Continue building superscaffolds: append known gaps ##########
@@ -254,6 +272,7 @@ for my $row (@bestmap_table)
         $new_seq = "$new_seq".$db->seq("$row->[1]:$start,$stop"); ## add the new sequence to the growing superscaffold
         $finished{$row->[1]}=1; ## add to the list of superscaffolded sequences
         ++$last_fasta; ## keep track of the array index for the last contig added
+        print "\t in silico = $row->[1], $key_hash{$row->[1]}\n";
         
         ###################################################################
         ######  append overlapping contigs to the superscaffold ###########
@@ -268,6 +287,8 @@ for my $row (@bestmap_table)
                 $new_seq = "$new_seq".$db->seq("$bestmap_table[$overlap]->[1]:$start,$stop");
                 $finished{$bestmap_table[$overlap]->[1]}=1; ## add to the list of superscaffolded sequences
                 ++$last_fasta; ## keep track of the array index for the last contig added
+#                print "\t in silico = $row->[1], $key_hash{$row->[1]}\n";
+                print "\t in silico = $bestmap_table[$overlap]->[1], $key_hash{$bestmap_table[$overlap]->[1]}\n";
             }
         }
 		$old_mol=$new_mol; ## now the current molecule will be listed as the last molecule we have seen
@@ -283,28 +304,23 @@ for my $row (@bestmap_table)
 ####### not used to create super-scaffolds to the fasta         ###############
 ####### this process uses a 1 base coordinate system            ###############
 ###############################################################################
-my $key_file=$ARGV[2];
-open (KEY,"<",$key_file) or die "couldn't open $key_file $!";
-my %key_hash;
-while (<KEY>)
-{
-    unless (/^#/)
-    {
-        chomp;
-        my @row=split ("\t");
-        s/\s+//g foreach @row;
-        $key_hash{$row[4]}=$row[2];
-    }
-}
 
-my $stream  = $db->get_PrimarySeq_stream;
-while (my $seq = $stream->next_seq)
+###############################################################################
+##############           Open input fasta                    ##################
+###############################################################################
+my $seq_in = Bio::SeqIO->new(-file => "<$infile_fasta", -format => 'fasta');
+###############################################################################
+##############             Add unchanged scaffolds           ##################
+###############################################################################
+while (my $seq = $seq_in->next_seq)
 {
-    my $final_seq = $seq->seq;
-    unless ($finished{$seq})
+    my $id = $seq->id;
+    unless ($finished{$id})
     {
-        $scaffold_id=$key_hash{$seq};
+        my $scaffold_id=$key_hash{$id};
+        my $final_seq = $seq->seq;
         my $scaffold_obj = Bio::Seq->new( -display_id =>  $scaffold_id, -seq => $final_seq, -alphabet => 'dna');
-        $seq_out->write_seq($scaffold_obj); ## Write the unsuperscaffolded sequence object
+        $seq_out->write_seq($scaffold_obj);
     }
+
 }

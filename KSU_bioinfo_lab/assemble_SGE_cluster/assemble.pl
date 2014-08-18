@@ -11,8 +11,8 @@ use warnings;
 # use List::Util qw(max);
 # use List::Util qw(sum);
 use lib '/homes/bioinfo/bioinfo_software/perl_modules/lib/perl5/';
-use XML::Simple;
-use Data::Dumper;
+#use XML::Simple;
+#use Data::Dumper;
 ##################################################################################
 ##############                     get arguments                ##################
 ##################################################################################
@@ -35,16 +35,15 @@ my ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square);
 open (ERR,'<',"$err") or die "can't open $err!\n";
 while (<ERR>) # get noise parameters
 {
-    if (eof)
-    {
+   if (eof)
+   {
         my @values=split/\t/;
         for my $value (@values)
         {
-            s/\s+//g;
+           s/\s+//g;
         }
-        my $map_ratio = $values[9]/$values[7];
         ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square)=($values[1],$values[2],$values[3],$values[4]);
-    }
+   }
 }
 
 ##################################################################################
@@ -54,7 +53,7 @@ while (<ERR>) # get noise parameters
 my %p_value = (
     'default_t' => "$T",
     'relaxed_t' => "$T_relaxed",
-    'strict_t' => "$T_strict",
+    'strict_t' => "$T_strict"
 );
 open (OUT_ASSEMBLE, '>',"${bnx_dir}/assembly_commands.sh"); # for assembly commands
 ##################################################################
@@ -82,124 +81,67 @@ for my $stringency (keys %p_value)
     ##############        Set assembly parameters   ##################
     ##################################################################
     my $xml_infile = "${dirname}/OptArguments2.xml";
-    my $xml_outfile = "${bnx_dir}/${stringency}/${stringency}_optArguments.xml";
-    my $xml = XMLin($xml_infile);
-    open (OUT, '>',"${bnx_dir}/${stringency}/dumped.txt");
-    print OUT Dumper($xml);
-    ########################################
-    ##             BNX filter             ##
-    ########################################
-    $xml->{bnx_sort}->{flag}->[0]->{val0} = 150; # minlen
-    ########################################
-    ##             Pairwise               ##
-    ########################################
-    $xml->{pairwise}->{flag}->[0]->{val0} = $p_value{$stringency};
-    $xml->{pairwise}->{flag}->[1]->{val0} = 150; # minlen
-    ########################################
-    ##               Noise                ##
-    ########################################
-    $xml->{noise0}->{flag}->[0]->{val0} = $FP;
-    $xml->{noise0}->{flag}->[1]->{val0} = $FN;
-    $xml->{noise0}->{flag}->[2]->{val0} = $ScalingSD_Kb_square;
-    $xml->{noise0}->{flag}->[3]->{val0} = $SiteSD_Kb;
-    ########################################
-    ##            Assembly                ##
-    ########################################
-    $xml->{assembly}->{flag}->[0]->{val0} = $p_value{$stringency};
-    $xml->{assembly}->{flag}->[1]->{val0} = 150; # minlen
-    ########################################
-    ##              RefineA               ##
-    ########################################
-    $xml->{refineA}->{flag}->[0]->{val0} = 150; # minlen
-    $xml->{refineA}->{flag}->[2]->{val0} = $p_value{$stringency};
-    ########################################
-    ##              RefineB               ##
-    ########################################
-    $xml->{refineB}->{flag}->[0]->{val0} = 150; # minlen
-    $xml->{refineB}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineB}->{flag}->[11]->{val0} = 25; #min split length
-    $xml->{refineB0}->{flag}->[0]->{val0} = 150; # minlen
-    $xml->{refineB0}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineB0}->{flag}->[11]->{val0} = 25; #min split length
-    $xml->{refineB1}->{flag}->[0]->{val0} = 150; # minlen
-    $xml->{refineB1}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineB1}->{flag}->[11]->{val0} = 25; #min split length
-    ########################################
-    ##              RefineFinal           ##
-    ########################################
-    
-    $xml->{refineFinal}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineFinal}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinal}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
-    
-    $xml->{refineFinal0}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineFinal0}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinal0}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
-    
-    $xml->{refineFinal1}->{flag}->[2]->{val0} = $p_value{$stringency}/10;
-    $xml->{refineFinal1}->{flag}->[17]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{refineFinal1}->{flag}->[18]->{val0} = 1e-5; # endoutlier/outlier
-    
-    ########################################
-    ##              Extension             ##
-    ########################################
-    $xml->{extension}->{flag}->[4]->{val0} = $p_value{$stringency}/10;
-    $xml->{extension}->{flag}->[23]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
-    
-    $xml->{extension0}->{flag}->[4]->{val0} = $p_value{$stringency}/10;
-    $xml->{extension0}->{flag}->[23]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension0}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
-    
-    $xml->{extension1}->{flag}->[4]->{val0} = $p_value{$stringency}/10;
-    $xml->{extension1}->{flag}->[23]->{val0} = 1e-5; # endoutlier/outlier
-    $xml->{extension1}->{flag}->[24]->{val0} = 1e-5; # endoutlier/outlier
-
-    ########################################
-    ##               Merge                ##
-    ########################################
-    $xml->{merge}->{flag}->[0]->{val0} = 75; # pairmerge
-    $xml->{merge}->{flag}->[1]->{val0} = $p_value{$stringency}/100000;
-    XMLout($xml,OutputFile => $xml_outfile,);
-    #########################################
-    ## Correct the document head and tail  ##
-    #########################################
     my $xml_final = "${bnx_dir}/${stringency}/${stringency}_final_optArguments.xml";
     open (OPTARGFINAL, '>', $xml_final) or die "can't open $xml_final\n";
-    open (OPTARG, '<', $xml_outfile) or die "can't open $xml_outfile\n";
+    open (OPTARG, '<', $xml_infile ) or die "can't open $xml_infile \n";
+    
     while (<OPTARG>)
     {
-        if (/<opt>/)
+
+        if (/<flag attr=\"-FP\".*group=\"DeNovo Assembly Noise\"/)
         {
-            print OPTARGFINAL '<?xml version="1.0"?>';
-            
-            print OPTARGFINAL "\n\n<moduleArgs>\n";
+            s/(<flag attr=\"-FP\" val0=\")(1.5)(.*)/$1$FP$3/;
+            print OPTARGFINAL;
         }
-        elsif (/<\/opt>/)
+        elsif (/<flag attr=\"-FN\".*group=\"DeNovo Assembly Noise\"/)
         {
-            print OPTARGFINAL "\n</moduleArgs>\n";
+            s/(<flag attr=\"-FN\" val0=\")(0.15)(\.*)/$1$FN$3/;
+            print OPTARGFINAL;
+        }
+        elsif (/<flag attr=\"-sd\".*group=\"DeNovo Assembly Noise\"/)
+        {
+            s/(val0=\")(0.2)(\".*)/$1${ScalingSD_Kb_square}$3/;
+            print OPTARGFINAL;
+        }
+        elsif (/<flag attr=\"-sf\".*group=\"DeNovo Assembly Noise\"/)
+        {
+            s/(val0=\")(0.2)(\".*)/$1${SiteSD_Kb}$3/;
+            print OPTARGFINAL;
+        }
+        elsif (/<flag attr=\"-T\".*group=\"Initial Assembly\"/)
+        {
+            s/(val0=\")(1e-9)(\".*group=\"Initial Assembly\".*)/$1$p_value{$stringency}$3/;
+            print OPTARGFINAL;
+        }
+        elsif (/<flag attr=\"-T\".*group=\"Extension and Refinement\"/)
+        {
+            my $new_p=$p_value{$stringency}/10;
+            s/(val0=\")(1e-10)(\".*group=\"Extension and Refinement\".*)/$1${new_p}$3/;
+            print OPTARGFINAL;
+        }
+        elsif (/<flag attr=\"-T\".*group=\"Merge\"/)
+        {
+            my $final_p=$p_value{$stringency}/10000;
+            s/(val0=\")(1e-15)(\".*group=\"Merge\".*)/$1${final_p}$3/;
+            print OPTARGFINAL;
         }
         else
         {
             print OPTARGFINAL;
         }
-
     }
-    `rm $xml_outfile`; # remove the intermediate xml file
     ##################################################################
     ##############        Write assembly command    ##################
     ##################################################################
     print OUT_ASSEMBLE "##################################################################\n";
     print OUT_ASSEMBLE "#####           FIRST ASSEMBLY: ${stringency}                \n";
     print OUT_ASSEMBLE "##################################################################\n";
-    print OUT_ASSEMBLE "python2 /homes/bioinfo/bioinfo_software/bionano/pipeline/pipelineCL.py -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools/ -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -d -U -C ${dirname}/clusterArguments.xml\n"; 
+    print OUT_ASSEMBLE "python2 /homes/bioinfo/bioinfo_software/bionano/scripts/pipelineCL.py -y -T 32 -j 8 -N 2 -i 5 -a $xml_final -w -t /homes/bioinfo/bioinfo_software/bionano/tools/ -l $out_dir -b ${bnx_dir}/all_flowcells/all_flowcells_adj_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -U -C ${dirname}/clusterArguments.xml\n";
     ##################################################################
     ##############  Write second round of assembly commands ##########
     ##################################################################
-    {
-        my $second_commands= `perl ${dirname}/RefineAssembleIrys.pl -a ${out_dir} -b ${bnx_dir} -r $ref -p ${project}_${stringency} -t $p_value{$stringency}`;
-        print "$second_commands";
-    }
+    my $second_commands= `perl ${dirname}/RefineAssembleIrys.pl -a ${out_dir} -b ${bnx_dir} -r $ref -p ${project}_${stringency} -t $p_value{$stringency}`;
+    print "$second_commands";
 }
 #########################################
 ##       Clean some excess files       ##

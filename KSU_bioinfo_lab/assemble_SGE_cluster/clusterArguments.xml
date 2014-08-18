@@ -1,12 +1,21 @@
 <?xml version="1.0"?>
 
 <moduleArgs>
+    <version>
+	    <flag attr="$Id: clusterArguments.xml 2811 2014-06-03 17:16:28Z wandrews $"/>
+    </version>
     <defaultMinThreads>
         <minthreads attr="${maxthreads}"/>
     </defaultMinThreads>
     <reducedMinThreads>
-        <minthreads attr="${maxthreads}"/>
+        <minthreads attr="20"/>
     </reducedMinThreads>
+    <reducedMinThreads2>
+        <minthreads attr="40"/>
+    </reducedMinThreads2>
+    <reducedMinThreads3>
+        <minthreads attr="60"/>
+    </reducedMinThreads3>
     <largeJob>
         <flag attr="-pe" val0="single" val1="16"/>
         <flag attr="-l" val0="mem=2G,h_rt=7200"/>
@@ -19,6 +28,15 @@
         <flag attr="-q" val0="long.q@@elves,batch.q@@elves,long-highmem.q@@elves,highmem.q@@elves,gen-bioinfo.q"/>
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </smallJob>
+    <micJob>
+       <flag attr="-pe" val0="single" val1="2"/>
+        <flag attr="-l" val0="mem=1G,h_rt=7200"/>
+        <flag attr="-q" val0="long.q@@elves,batch.q@@elves,long-highmem.q@@elves,highmem.q@@elves,gen-bioinfo.q"/>
+        <flag attr="-ac" val0="status=$status_log_filename"/>
+    </micJob>
+    <tinyJob>
+        <include val0="micJob"/>
+    </tinyJob>
     <sampleChar>
         <include val0="largeJob"/>
     </sampleChar>
@@ -31,8 +49,14 @@
         <flag attr="-q" val0="long.q@@elves,batch.q@@elves,long-highmem.q@@elves,highmem.q@@elves,gen-bioinfo.q"/>
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </splitting>
+    <autoNoise0>
+        <include val0="largeJob"/>
+    </autoNoise0>
+    <autoNoise1>
+        <include val0="largeJob"/>
+    </autoNoise1>
     <pairwise>
-        <include val0="smallJob"/>
+        <include val0="tinyJob"/>
     </pairwise>
     <cmapMerge>
         <include val0="largeJob"/>
@@ -41,19 +65,19 @@
         <include val0="largeJob"/>
     </assembly>
     <refineA>
-        <include val0="smallJob"/>
+        <include val0="tinyJob"/>
     </refineA>
     <refineAMinThreads>
-        <include val0="reducedMinThreads"/>
+        <include val0="reducedMinThreads2"/>
     </refineAMinThreads>
     <refineB>
         <include val0="smallJob"/>
     </refineB>
     <refineB0>
-        <include val0="smallJob"/>
+        <include val0="tinyJob"/>
     </refineB0>
     <refineB1>
-        <include val0="smallJob"/>
+        <include val0="tinyJob"/>
     </refineB1>
     <refineB1MinThreads>
         <include val0="reducedMinThreads"/>
@@ -65,10 +89,10 @@
         <include val0="smallJob"/>
     </refineFinal>
     <refineFinal0>
-        <include val0="smallJob"/>
+        <include val0="tinyJob"/>
     </refineFinal0>
     <refineFinal1>
-        <include val0="smallJob"/>
+        <include val0="tinyJob"/>
     </refineFinal1>
     <refineFinal1MinThreads>
         <include val0="reducedMinThreads"/>
@@ -77,10 +101,10 @@
         <include val0="smallJob"/>
     </extension>
     <extension0>
-        <include val0="smallJob"/>
+        <include val0="tinyJob"/>
     </extension0>
     <extension1>
-        <include val0="smallJob"/>
+        <include val0="tinyJob"/>
     </extension1>
     <extension1MinThreads>
         <include val0="reducedMinThreads"/>
@@ -94,7 +118,16 @@
     <characterizeStrict>
         <include val0="largeJob"/>
     </characterizeStrict>
+    <alignmol>
+        <include val0="tinyJob"/>
+    </alignmol>
+    <alignmolvref>
+        <include val0="largeJob"/>
+    </alignmolvref>
     <svdetect>
-        <include val0="smallJob"/>
+        <include val0="tinyJob"/>
     </svdetect>
+    <svdetectMinThreads>
+        <include val0="reducedMinThreads3"/>
+    </svdetectMinThreads>
 </moduleArgs>
