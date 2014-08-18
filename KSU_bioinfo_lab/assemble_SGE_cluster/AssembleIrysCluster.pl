@@ -17,7 +17,7 @@ use Pod::Usage;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  AssembleIrysCluster.pl Version 1.5.1                   #\n";
+print "#  AssembleIrysCluster.pl Version 1.6                     #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 1/27/14                    #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -67,8 +67,7 @@ print "#########################################################################
 my $first_mqr=`perl ${dirname}/first_mqr.pl $bnx_dir $reference $T`;
 print "$first_mqr";
 ##################################################################################
-##############  Merge each split adjusted flowcells BNXs and run            ######
-##############  second molecule quality report on merged file               ######
+##############  Merge each split adjusted flowcells BNXs                    ######
 ##################################################################################
 print "##################################################################################\n";
 print "Merging split, adjusted BNX files for each flowcell...\n";
