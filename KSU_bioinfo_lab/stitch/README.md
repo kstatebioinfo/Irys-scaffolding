@@ -15,6 +15,12 @@ SCRIPT
        alignment in order to capture these alignments. Resultant XMAPs should
        be examined in IrysView to see that the alignments agree with what the
        user would manually select. 
+       
+       It can be run iteratively until all super-scaffolds have been found by 
+       creating a new cmap from the output super-scaffold fasta, aligning
+       this cmap as the query with the BNG consensus map as the reference and 
+       using the x_map, r_cmap and the super-scaffold fasta as input for another 
+       run of stitch.pl.
 
 ![Alt text](https://raw.github.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/scaffolding.png)
 
