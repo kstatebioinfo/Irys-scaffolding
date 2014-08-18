@@ -5,9 +5,14 @@ scripts to parse IrysView output
 
 KSU_bioinfo_lab
 ---------------
+
+### assembly_qc.pl 
+
+**assembly_qc.pl -** a script that compiles assembly metrics for assemblies in all of the possible directories:'strict_t', 'default_t', 'relaxed_t', 'strict_t/strict_ml', 'strict_t/relaxed_ml', 'default_t/strict_ml', 'default_t/relaxed_ml', 'relaxed_t/strict_ml', and 'relaxed_t/relaxed_ml'. The assemblies are created using assemble_SGE_cluster/AssembleIrysCluster.pl from https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab. The parameter -b should be the same as the -b parameter used for the assembly script. It is the directory with the BNX files used for assembly.
+        
 ### map_editing/flip.pl 
 
-**flip.pl -** This utility script reads from a list of maps to flip from a txt file (one CMmap id per line) and creates a CMap with the requested flips.
+**flip.pl -** This utility script reads from a list of maps to flip from a txt file (one CMAP id per line) and creates a CMAP with the requested flips.
 
 ###assemble/AssembleIrys.pl
 
