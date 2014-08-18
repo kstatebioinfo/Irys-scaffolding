@@ -65,10 +65,8 @@ SUMMARY
        stitch.pl finds the best super-scaffolding alignments each run. It can be run iteratively until all
        super-scaffolds have been found by creating a new cmap from the output super-scaffold fasta, aligning
        this cmap as the query with the BNG consensus map as the reference and using the x_map, r_cmap and
-       the super-scaffold fasta as input for another run of stitch.pl. See (KSU_bioinfo_lab/stitch)[https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab/stitch] for more details.
+       the super-scaffold fasta as input for another run of stitch.pl. See [KSU_bioinfo_lab/stitch](https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab/stitch) for more details.
 
-
- :          https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab/analyze_irys_output.
        
 ![Alt text](https://raw.github.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/scaffolding.png)
 
