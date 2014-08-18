@@ -202,11 +202,11 @@ __END__
 
 =head1 NAME
 
- assembly_qc.pl - a package of scripts that compile assembly metrics for assemblies in all of the possible directories:'strict_t', 'default_t', 'relaxed_t', 'strict_t/strict_ml', 'strict_t/relaxed_ml', 'default_t/strict_ml', 'default_t/relaxed_ml', 'relaxed_t/strict_ml', and 'relaxed_t/relaxed_ml'.
- 
- The assemblies are created using either of the following scripts assemble/AssembleIrys.pl or assemble_SGE_cluster/AssembleIrysCluster.pl from https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab. 
- 
- The parameter -b should be the same as the -b parameter used for the assembly script. It is the directory with the BNX files used for assembly.
+assembly_qc.pl - a package of scripts that compile assembly metrics for assemblies in all of the possible directories:'strict_t', 'default_t', 'relaxed_t', 'strict_t/strict_ml', 'strict_t/relaxed_ml', 'default_t/strict_ml', 'default_t/relaxed_ml', 'relaxed_t/strict_ml', and 'relaxed_t/relaxed_ml'.
+
+The assemblies are created using either of the following scripts assemble/AssembleIrys.pl or assemble_SGE_cluster/AssembleIrysCluster.pl from https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab. 
+
+The parameter -b should be the same as the -b parameter used for the assembly script. It is the directory with the BNX files used for assembly.
  
  
 
@@ -221,7 +221,7 @@ perl assembly_qc.pl [options]
    -b	     bnx directory
    -p	     project name for all assemblies
   
-   
+ 
 =head1 OPTIONS
 
 =over 8
