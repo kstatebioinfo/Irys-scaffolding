@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 ##################################################################################
-#   
+#
 #	USAGE: perl first_mqr.pl [bnx directory] [reference] [p-value Threshold]
 #
 #  Created by jennifer shelton
@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use lib '/homes/bioinfo/bioinfo_software/perl_modules/lib/perl5/';
 use File::Basename; # enable maipulating of the full path
-use Statistics::LineFit;
+#use Statistics::LineFit;
 # use List::Util qw(max);
 # use List::Util qw(sum);
 ##################################################################################
@@ -36,22 +36,19 @@ unless (opendir(DIR, "${bnx_dir}"))
 	print "can't open ${bnx_dir}\n"; # open directory full of .bnx files
 	next;
 }
+my $bpp = "${bnx_dir}/bpp_list.txt";
+open (BPP, ">", $bpp) or die "Can't open $bpp!\n";
 while (my $file = readdir(DIR))
 {
 	next if ($file =~ m/^\./); # ignore files beginning with a period
 	next if ($file !~ m/\.bnx$/); # ignore files not ending with a period
     my (${filename}, ${directories}, ${suffix}) = fileparse($file,'\..*');
-#    opendir(SUBDIR, "${bnx_dir}/${filename}") or die "can't open ${bnx_dir}/${filename}!\n"; # open subdirectory full of .bnx files
+    opendir(SUBDIR, "${bnx_dir}/${filename}") or die "can't open ${bnx_dir}/${filename}!\n"; # open subdirectory full of .bnx files
     unless (opendir(SUBDIR, "${bnx_dir}/${filename}"))
     {
         print "can't open ${bnx_dir}/${filename}!\n"; # open subdirectory full of .bnx files
         next;
     }
-    my (@x,@y);
-    ####################################################################
-    ##############        create regression log       ##################
-    ####################################################################
-    open (REGRESSION_LOG, '>', "${bnx_dir}/${filename}_regressionlog.txt") or die "can't open ${bnx_dir}/${filename}_regressionlog.txt \n"; #create log for regression
     ####################################################################
     ##############  create list of adjusted BNX files ##################
     ####################################################################
@@ -64,6 +61,7 @@ while (my $file = readdir(DIR))
         next if ($subfile =~ m/^\./); # ignore files beginning with a period
         next if ($subfile !~ m/\.bnx$/); # ignore files not ending with .bnx
         next if ($subfile =~ m/_adj\.bnx$/); # ignore files that have been adjusted
+        next if ($subfile =~ m/_q\.bnx$/); # ignore files that have been adjusted
         my (${subfilename}, ${subdirectories}, ${subsuffix}) = fileparse($subfile,'\..*');
         ####################################################################
         ###### run refaligner for flowcell molecule quality report  ########
@@ -79,9 +77,7 @@ while (my $file = readdir(DIR))
             print "can't open $split_file!\n";
             next;
         }
-        $split_file =~ "(${bnx_dir}/${filename}/${filename}_)(.*)(.err)";
-        push (@x,$2);
-        print REGRESSION_LOG "$2,";
+        
         my $new_bpp;
         while (<ERR>)
         {
@@ -90,59 +86,32 @@ while (my $file = readdir(DIR))
                 my @values=split/\t/;
                 $values[5] =~ s/\s+//g;
                 $new_bpp=$values[5];
-                push (@y,$new_bpp);
-                print REGRESSION_LOG "$new_bpp\n";
+                print BPP "${bnx_dir}/${filename}/${subfilename}.err\t$new_bpp\n";
+                
             }
         }
         ###########################################################################
-        ## (rewrite bpp) these default values will be used if regression fails ####
+        ##     (rewrite bpp) these default values will be used for stretch     ####
         ###########################################################################
         my $adjusted = edit_file("${bnx_dir}/${filename}/${subfilename}.bnx","${bnx_dir}/${filename}/${subfilename}_adj",$new_bpp);
         print "$adjusted";
-        push (@files_to_remove,"${bnx_dir}/${filename}/${subfilename}.bnx");
         if (-e "${bnx_dir}/${filename}/${subfilename}_adj.bnx")
         {
             print BNX_LIST "${bnx_dir}/${filename}/${subfilename}_adj.bnx\n"; # print name of adj BNX
         }
-    }
-    ####################################################################
-    ########  do regression, use predicted value of y if exists  #######
-    ####################################################################
-    next if ((scalar(@x))<3);
-    my $threshold=.2;
-    my $validate=1;
-    my $lineFit = Statistics::LineFit->new($validate); # $validate = 1 -> Verify input data is numeric (slower execution)
-    unless ($lineFit->setData(\@x, \@y))
-    {
-        print "Invalid regression data for ${bnx_dir}/${filename}\n";
-        next;
-    }
-    my $rsquare=$lineFit->rSquared();
-    print REGRESSION_LOG "Rsquare: $rsquare \n";
-    if (defined $lineFit->rSquared()
-        and $lineFit->rSquared() > $threshold) # if rSquared is defined and above the threshold rewrite the bpp using predicted Y-values
-    {
-        my ($intercept, $slope) = $lineFit->coefficients();
-        print REGRESSION_LOG "Slope: $slope  Y-intercept: $intercept\n";
-        for (my $i = 0; $i <= $#x; $i++)
+        ####################################################################
+        ########          Remove unadjusted BNX files                #######
+        ####################################################################
+        my @extensions = qw ( .err .errbin .map .maprate .xmap _intervals.txt _q.bnx _r.cmap .bnx );
+        for my $ext (@extensions)
         {
-            ####################################################################
-            ##############    rewrite bpp if regression fits    ################
-            ####################################################################
-            my $predicted_y = ($x[$i] * $slope)+$intercept;
-            my $adjusted = edit_file("${bnx_dir}/${filename}/${filename}_$x[$i].bnx","${bnx_dir}/${filename}/${filename}_$x[$i]_adj","$predicted_y");
-            print "$adjusted";
+        	`rm ${bnx_dir}/${filename}/${subfilename}${ext}`;
         }
+        
     }
+    
+}
 
-}
-####################################################################
-########          Remove unadjusted BNX files                #######
-####################################################################
-for my $remove (@files_to_remove)
-{
-    `rm $remove`;
-}
 print "done\n";
 
 
