@@ -103,7 +103,7 @@ xmap_stats.pl - Script outputs breadth of alignment coverage and total aligned l
  
 "Total alignment length is the total length of the alignment. This is equivalent to "Total Aligned Len(Mb)".
  
-Occasionally "Total Unique Aligned Len(Mb)" and "Total Aligned Len(Mb)" are slightly lower than values reported by xmap_stats.pl. This is because the length of an alignment is the end position minus the start position plus one base. For example is a map aligns from position 4 to position 5 the length of the alignment is 2 bases (5-4+1) rather than 1 (5-4). This value is off slightly when reported as "Total Unique Aligned Len(Mb)" or "Total Aligned Len(Mb)".
+Occasionally "Total Unique Aligned Len(Mb)" and "Total Aligned Len(Mb)" are slightly lower than values reported by xmap_stats.pl. This is because the length of an alignment is the end position minus the start position plus one base. For example if a map aligns from position 4 to position 5 the length of the alignment is 2 bases (5-4+1) rather than 1 (5-4). This value is off slightly when reported as "Total Unique Aligned Len(Mb)" or "Total Aligned Len(Mb)".
 
 =head1 USAGE
 
