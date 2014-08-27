@@ -29,13 +29,15 @@ print "###########################################################\n";
 ###############################################################################
 ##############                get arguments                  ##################
 ###############################################################################
-my $input_xmap;
+my ($input_xmap);
+my $con = 0;
 my $man = 0;
 my $help = 0;
 GetOptions (
-'help|?' => \$help,
-'man' => \$man,
-'x|input_xmap:s' => \$input_xmap,
+    'help|?' => \$help,
+    'man' => \$man,
+    'x|input_xmap:s' => \$input_xmap,
+    'c|con:i' => \$con
 
 )
 or pod2usage(2);
@@ -59,23 +61,26 @@ while (<$xmap>)
         unless (/^\s+$/) # unless the line is blank
         {
             my ($RefContigID, $start, $end, $Confidence) = (split(/\t/))[2,5,6,8];
-            $total_length += $end - $start +1;
-            unless ($refs{$RefContigID})#if (new contig)
+            if ($Confidence >= $con)
             {
-                $refs{$RefContigID} = 1;
-                $breadth += $end_cov - $start_cov +1;
-                $start_cov = $start;
-                $end_cov = $end;
-            }
-            elsif ((($start >= $start_cov) && ($start <= $end_cov)) && ($end > $end_cov))# if alignment overlaps and extends coverage
-            {
-                $end_cov = $end;
-            }
-            elsif ($start > $end_cov) # if next alignment on same reference but not overlapping
-            {
-                $breadth += $end_cov - $start_cov +1;
-                $start_cov = $start;
-                $end_cov = $end;
+                $total_length += $end - $start +1;
+                unless ($refs{$RefContigID})#if (new contig)
+                {
+                    $refs{$RefContigID} = 1;
+                    $breadth += $end_cov - $start_cov +1;
+                    $start_cov = $start;
+                    $end_cov = $end;
+                }
+                elsif ((($start >= $start_cov) && ($start <= $end_cov)) && ($end > $end_cov))# if alignment overlaps and extends coverage
+                {
+                    $end_cov = $end;
+                }
+                elsif ($start > $end_cov) # if next alignment on same reference but not overlapping
+                {
+                    $breadth += $end_cov - $start_cov +1;
+                    $start_cov = $start;
+                    $end_cov = $end;
+                }
             }
         }
         if (eof)
@@ -117,6 +122,11 @@ Documentation options:
 Required parameters:
  
     -x	    xmap to summarize
+ 
+Filtering parameters:
+
+    -c	    minimum confidence score
+
 
 
 =head1 OPTIONS
@@ -134,6 +144,10 @@ Prints the more detailed manual page with output details and examples and exits.
 =item B<-x, --input_xmap>
 
 The fullpath for the xmap file. This will be summarized.
+ 
+=item B<-c, --con>
+
+The minimum alignment confidence score (default = 0).
 
 
 =back
