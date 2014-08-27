@@ -152,16 +152,19 @@ stitch.pl finds the best super-scaffolding alignments each run. It can be run it
 perl stitch.pl [options]
 
 Documentation options:
+ 
     -help    brief help message
     -man	    full documentation
  
 Required options:
+ 
     -r	     reference CMAP
     -x	     comparison XMAP
     -f	     scaffold FASTA
     -o	     base name for the output files
  
 Filtering options:
+ 
     --f_con	 first minimum confidence score
     --f_algn	 first minimum % of possible alignment
     --s_con	 second minimum confidence score
