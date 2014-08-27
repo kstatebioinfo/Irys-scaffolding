@@ -63,11 +63,11 @@ while (<$xmap>)
             my ($RefContigID, $start, $end, $Confidence) = (split(/\t/))[2,5,6,8];
             if ($Confidence >= $con)
             {
-                $total_length += $end - $start +1;
+                $total_length += $end - $start;
                 unless ($refs{$RefContigID})#if (new contig)
                 {
                     $refs{$RefContigID} = 1;
-                    $breadth += $end_cov - $start_cov +1;
+                    $breadth += $end_cov - $start_cov;
                     $start_cov = $start;
                     $end_cov = $end;
                 }
@@ -77,7 +77,7 @@ while (<$xmap>)
                 }
                 elsif ($start > $end_cov) # if next alignment on same reference but not overlapping
                 {
-                    $breadth += $end_cov - $start_cov +1;
+                    $breadth += $end_cov - $start_cov;
                     $start_cov = $start;
                     $end_cov = $end;
                 }
@@ -85,7 +85,7 @@ while (<$xmap>)
         }
         if (eof)
         {
-            $breadth += $end_cov - $start_cov +1;
+            $breadth += $end_cov - $start_cov;
         }
     }
 }
@@ -108,7 +108,7 @@ xmap_stats.pl - Script outputs breadth of alignment coverage and total aligned l
  
 "Total alignment length is the total length of the alignment. This is equivalent to "Total Aligned Len(Mb)".
  
-Occasionally "Total Unique Aligned Len(Mb)" and "Total Aligned Len(Mb)" are slightly lower than values reported by xmap_stats.pl. This is because the length of an alignment is the end position minus the start position plus one base. For example if a map aligns from position 4 to position 5 the length of the alignment is 2 bases (5-4+1) rather than 1 (5-4). This value is off slightly when reported as "Total Unique Aligned Len(Mb)" or "Total Aligned Len(Mb)".
+"Total Unique Aligned Len(Mb)","Breadth of alignment coverage", "Total alignment length" and "Total Aligned Len(Mb)" are slightly lower than values expected. This is because the length of an alignment is the end position minus the start position plus one base actually. For example if a map aligns from position 4 to position 5 the length of the alignment is technically 2 bases (5-4+1) rather than 1 (5-4). This value is slightly low when reported by xmap_stats.pl and Irys assembly pipelines because length is reported as a float in maps and maps are known to have a lower resolution than a single base. Therefore it was not considered meaningful to adjust the aligned length by adding one base.
 
 =head1 USAGE
 
