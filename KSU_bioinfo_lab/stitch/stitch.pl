@@ -17,7 +17,7 @@ use Pod::Usage;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  stitch.pl Version 1.4                                  #\n";
+print "#  stitch.pl Version 1.4.1                                #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 12/12/13                   #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -88,13 +88,13 @@ print "Making super-scaffold fasta file with new super-scaffolds. Unused sequenc
 my $out_x_to_fasta=`perl ${dirname}/xmap_to_fasta.pl ${output_basename}_scaffolds.stitchmap ${1}_numbered_scaffold.fasta ${output_basename}_key`;
 print "$out_x_to_fasta";
 if (-e "${output_basename}_data_summary.csv") {print "${output_basename}_data_summary.csv file Exists$!\n"; exit;}
-##################################################################################
-#########    check fasta file for redundant super-scaffold names        ##########
-#########         this step only effects iterative assemblies           ##########
-##################################################################################
-print "Checking super-scaffold fasta file for redundant super-scaffold headers. Unused sequences are still printed with original fasta headers...\n";
-my $check_fasta=`perl ${dirname}/CheckHeaders.pl ${output_basename}_superscaffold.fasta`;
-print "$check_fasta";
+###################################################################################
+##########    check fasta file for redundant super-scaffold names        ##########
+##########         this step only effects iterative assemblies           ##########
+###################################################################################
+#print "Checking super-scaffold fasta file for redundant super-scaffold headers. Unused sequences are still printed with original fasta headers...\n";
+#my $check_fasta=`perl ${dirname}/CheckHeaders.pl ${output_basename}_superscaffold.fasta`;
+#print "$check_fasta";
 ##################################################################################
 #########                     create new AGP                            ##########
 ##################################################################################
