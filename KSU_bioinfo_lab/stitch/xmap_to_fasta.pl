@@ -279,7 +279,7 @@ for my $row (@bestmap_table)
         ###################################################################
         if ($old_mol==$new_mol)
         {
-            my $gap_length = ($row->[10]-($bestmap_table[$last_fasta]->[11])-1);
+            my $gap_length = int(($row->[10]-($bestmap_table[$last_fasta]->[11])-1));
             $new_seq = "$new_seq"."n" x $gap_length; ## add n's (as many as there are positions from the the footprint start of the current contig to the footprint end of the last contig if the last contig is on the same molecule
             ##### AGP addition:
             my $stop_agp = $pos + $gap_length - 1;
