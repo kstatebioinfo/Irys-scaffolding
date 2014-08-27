@@ -133,7 +133,7 @@ DESCRIPTION
        if the first and second best alignment for an in silico map align to the 
        ends of two molecule maps that each super-scaffold > 1 in silico map than 
        these alignments are listed and can be used to "stitch" together the final 
-       super-scaffold.
+       super-scaffold in a subsequent iteration.
 
 
 **Test with sample datasets**

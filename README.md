@@ -12,20 +12,23 @@ KSU_bioinfo_lab
         
 ### map_editing/flip.pl 
 
+**cmap_stats.pl -** Script outputs count of cmaps, cummulative lengths of cmaps and N50 of cmaps. Tested on CMAP File Version: 0.1.
+
+**xmap_stats.pl -** Script outputs breadth of alignment coverage and total aligned length from an xmap. Tested on XMAP File Version: 0.1.
+ 
+"Breadth of alignment coverage" is the number of bases covered by aligned maps. This is equivalent to "Total Unique Aligned Len(Mb)". 
+ 
+"Total alignment length is the total length of the alignment. This is equivalent to "Total Aligned Len(Mb)".
+ 
+"Total Unique Aligned Len(Mb)","Breadth of alignment coverage", "Total alignment length" and "Total Aligned Len(Mb)" are slightly lower than values expected. This is because the length of an alignment is the end position minus the start position plus one base actually. For example if a map aligns from position 4 to position 5 the length of the alignment is technically 2 bases (5-4+1) rather than 1 (5-4). This value is slightly low when reported by xmap_stats.pl and Irys assembly pipelines because length is reported as a float in maps and maps are known to have a lower resolution than a single base. Therefore it was not considered meaningful to adjust the aligned length by adding one base.
+
 **flip.pl -** This utility script reads from a list of maps to flip from a txt file (one CMAP id per line) and creates a CMAP with the requested flips.
-
-###assemble/AssembleIrys.pl
-
-SUMMARY
-
-**AssembleIrys.pl -** Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters. This script uses the same workflow as AssembleIrysCluster.pl but it runs on local Linux machines. This script has not been updated to account for frequent changes in Bionano output format. See **AssembleIrysCluster.pl** for fequently updated scripts.
 
 ### assemble_SGE_cluster/AssembleIrysCluster.pl 
 
 SUMMARY
 
-**AssembleIrysCluster.pl -** Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters. This script uses the same workflow as AssembleIrys.pl but it runs on the Beocat SGE cluster.
-
+**AssembleIrysCluster.pl -** Adjusts stretch by scan. Merges BNXs and writes scripts for assemblies with a range of parameters. This script uses the same workflow as AssembleIrys.pl but it runs on the Beocat SGE cluster.
 
 Workflow diagram
 ![Alt text](https://raw.github.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble/bionano%20assembly%20workflow.png)
@@ -44,15 +47,10 @@ USAGE
     
 DEPENDENCIES
 
-    Perl module Statistics::LineFit. This can be installed using CPAN http://search.cpan.org/dist/Statistics-LineFit/lib/Statistics/LineFit.pm.
+
     Perl module XML::Simple. This can be installed using CPAN http://search.cpan.org/~grantm/XML-Simple-2.20/lib/XML/Simple.pm;
     Perl module Data::Dumper. This can be installed using CPAN http://search.cpan.org/~smueller/Data-Dumper-2.145/Dumper.pm;
     
-### analyze_irys_output/analyze_irys_output.pl
-
-SUMMARY
-
-**analyze_irys_output.pl - This script was replaced by stitch.pl**
     
 ### stitch/stitch.pl
 
@@ -111,5 +109,18 @@ mkdir results
 perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
 ```
 
+### CURRENTLY UNSUPPORTED PROGRAMS:
+
+###assemble/AssembleIrys.pl
+
+SUMMARY
+
+**AssembleIrys.pl -** Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters. This script uses the same workflow as AssembleIrysCluster.pl but it runs on local Linux machines. This script has not been updated to account for frequent changes in Bionano output format. See **AssembleIrysCluster.pl** for fequently updated scripts.
+
+### analyze_irys_output/analyze_irys_output.pl
+
+SUMMARY
+
+**analyze_irys_output.pl - This script was replaced by stitch.pl**
 
 
