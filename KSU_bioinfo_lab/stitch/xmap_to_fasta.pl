@@ -215,10 +215,10 @@ for my $row (@reversed_bestmap_table) # for each bestmap entry
 ######################## Make hash of fasta   ##########################
 ######################## headers and BNG ids  ##########################
 ########################################################################
-my $n=1; #inititialize super scaffold number
 my $key_file=$ARGV[2];
 open (KEY,"<",$key_file) or die "couldn't open $key_file $!";
 my %key_hash;
+my @supers;
 while (<KEY>)
 {
     unless (/^#/)
@@ -229,10 +229,14 @@ while (<KEY>)
         $key_hash{$row[4]}=$row[2];
         if ($row[2] =~ /(Super_scaffold_)(.*)/)
         {
-            $n = $2 +1 ; #prevent super scaffolds with duplicate names
+            push (@supers, $2);
         }
     }
 }
+push (@supers, 1);
+@supers = sort { $a <=> $b } @supers;
+my $max = $supers[$#supers];
+my $n = $max + 1; #prevent super scaffolds with duplicate names
 ########################################################################
 ########################     print to new    ###########################
 ######################## fasta scaffold file ###########################
@@ -267,12 +271,12 @@ for my $row (@bestmap_table)
                 $seq_out->write_seq($scaffold_obj); ## write the finished superscaffold
             }
             $scaffold_id = "Super_scaffold_$n"; ## initialize new superscaffold
+            print "$scaffold_id: Scaffolding molecule = $row->[2]\n";
             $new_seq = '';
             $agp_element=1;
             $pos = 1;
             ++$n;
             $first=0;
-            print "Scaffolding molecule = $row->[2]\n";
         }
         ###################################################################
         #### Continue building superscaffolds: append known gaps ##########
