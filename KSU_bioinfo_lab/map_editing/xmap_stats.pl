@@ -91,8 +91,8 @@ while (<$xmap>)
 }
 $breadth = $breadth/1000000;
 $total_length = $total_length/1000000;
-print "Breadth of alignment coverage = $breadth (Mp)\n";
-print "Total alignment length = $total_length (Mp)\n";
+print "Breadth of alignment coverage = $breadth (Mb)\n";
+print "Total alignment length = $total_length (Mb)\n";
 print "done\n";
 ###############################################################################
 ##############                  Documentation                ##################
