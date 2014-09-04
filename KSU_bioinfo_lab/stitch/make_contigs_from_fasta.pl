@@ -23,8 +23,8 @@ while (<FASTA>)
         my ($header,@seq)=split/\n/;
         my $seq=join '', @seq;
         $seq =~ s/>//g;
-        my @contigs= split(/[Nn]{11,}/);
-        my @gaps=$_ =~ /[Nn]{11,}/g;
+        my @contigs= split(/[Nn]{11,}/,$seq);
+        my @gaps= $seq =~ /[Nn]{11,}/g;
 #        my @contigs= split(/N+/i,$seq);
 #        my @gaps=split(/[AGCTRYSWKMBDHV]+/i,$seq);
         my $gap_count = (scalar(@gaps)-1);
@@ -33,7 +33,7 @@ while (<FASTA>)
 #        {
 #            #            print "Gap: $gap\n\n";
 #        }
-        my $gap_counter=1;
+        my $gap_counter=0;
         my $pos = 1;
         my $agp_element=1;
         foreach my $broken (@contigs)

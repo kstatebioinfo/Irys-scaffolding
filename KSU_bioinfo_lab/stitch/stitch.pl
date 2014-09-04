@@ -17,7 +17,7 @@ use Pod::Usage;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  stitch.pl Version 1.4.1                                #\n";
+print "#  stitch.pl Version 1.4.2                                #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 12/12/13                   #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
