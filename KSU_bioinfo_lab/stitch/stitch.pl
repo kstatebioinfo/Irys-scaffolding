@@ -17,7 +17,7 @@ use Pod::Usage;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  stitch.pl Version 1.4.2                                #\n";
+print "#  stitch.pl Version 1.4.3                                #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 12/12/13                   #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -120,7 +120,7 @@ while (<REPORT>)
 }
 close (REPORT);
 open (OVERLAPS,'<',"${output_basename}_overlaps.csv") or die "couldn't open ${output_basename}_overlaps.csv $!";
-print SUMMARY "List of scaffolds that overlap on the super-scaffold. These are separated by 30 \"n\" gaps.\n";
+print SUMMARY "List of scaffolds that overlap on the super-scaffold. These are separated by 100 \"n\" gaps.\n";
 while (<OVERLAPS>)
 {
     print SUMMARY;
@@ -228,7 +228,7 @@ In the same csv file, scaffolds that have alignments passing the user-defined le
 
 In the same csv file, high quality but overlaping alignments in a csv file are listed. These may be candidates for further assembly using the overlaping contigs and paired end reads.
 
-The script also creates a non-redundant (i.e. no scaffold is used twice) super-scaffold from a user-provided scaffold file and a filtered XMAP. If two scaffolds overlap on the superscaffold then a 30 "n" gap is used as a spacer between them. If adjacent scaffolds do not overlap on the super-scaffold than the distance between the begining and end of each scaffold reported in the XMAP is used as the gap length. If a scaffold has two high quality alignments the longest alignment is selected. If both alignments are equally long the alignment with the highest confidence is selected.
+The script also creates a non-redundant (i.e. no scaffold is used twice) super-scaffold from a user-provided scaffold file and a filtered XMAP. If two scaffolds overlap on the superscaffold then a 100 "n" gap is used as a spacer between them. If adjacent scaffolds do not overlap on the super-scaffold than the distance between the begining and end of each scaffold reported in the XMAP is used as the gap length. If a scaffold has two high quality alignments the longest alignment is selected. If both alignments are equally long the alignment with the highest confidence is selected.
 
 The script also outputs contigs, an agp, and a bed file of contigs within superscaffolds from the final super-scaffold fasta file. 
 

@@ -43,9 +43,12 @@ while (<STITCHMAP>) #make array of the stitchmap
 	if (($_ !~ /^#/) && ($_ ne ''))
 	{
         chomp;
-        my @stitchmap=split ("\t");
-        s/\s+//g foreach @stitchmap;
-        push (@stitchmap_table, [@stitchmap]);
+        unless (/^\s*$/)
+        {
+            my @stitchmap=split ("\t");
+            s/\s+//g foreach @stitchmap;
+            push (@stitchmap_table, [@stitchmap]);
+        }
 	}
 }
 
@@ -144,7 +147,8 @@ for my $best (keys %alignments)
 my %winning_scaffolds;
 for my $main_loop (@stitchmap_table) # for each sequence-based contig feature in the stitchmap
 {
-    if ($main_loop->[16] eq "best")
+#    if ($main_loop->[16] eq "best")
+    if ($alignments{$main_loop->[1]})
     {
         ++$winning_scaffolds{$main_loop->[2]}; #count "best alignment" scaffolding events for each BNG contig
     }
@@ -152,7 +156,8 @@ for my $main_loop (@stitchmap_table) # for each sequence-based contig feature in
 my @bestmap_table;
 for my $main_loop (@stitchmap_table) # for each sequence-based contig feature in the stitchmap
 {
-    if (($main_loop->[16] eq "best")&&($winning_scaffolds{$main_loop->[2]} > 1))
+#    if (($main_loop->[16] eq "best")&&($winning_scaffolds{$main_loop->[2]} > 1))
+    if (($alignments{$main_loop->[1]})&&($winning_scaffolds{$main_loop->[2]} > 1))
     {
         push (@bestmap_table, [@$main_loop]); # push only best alignments with more for BNG maps that scaffold more than one best alignments to bestmap 2D array
     }
@@ -233,7 +238,7 @@ while (<KEY>)
         }
     }
 }
-push (@supers, 1);
+push (@supers, 0);
 @supers = sort { $a <=> $b } @supers;
 my $max = $supers[$#supers];
 my $n = $max + 1; #prevent super scaffolds with duplicate names
@@ -315,11 +320,11 @@ for my $row (@bestmap_table)
             for my $overlap (sort keys %{ $row->[17] } ) ## for all overlaping alignments
             {
                 
-                $new_seq = "$new_seq"."n" x 30; ## add "spacer" gaps of 30 x n
+                $new_seq = "$new_seq"."n" x 100; ## add "spacer" gaps of 30 x n
                 
                 ##### AGP addition:
-                my $stop_overlap_gap = $pos + 30 - 1;
-                print AGP "$scaffold_id\t$pos\t$stop_overlap_gap\t$agp_element\tN\t30\tscaffold\tyes\tmap\n";
+                my $stop_overlap_gap = $pos + 100 - 1;
+                print AGP "$scaffold_id\t$pos\t$stop_overlap_gap\t$agp_element\tU\t100\tscaffold\tyes\tmap\n";
                 $pos = $stop_overlap_gap +1;
                 ++$agp_element;
                 
