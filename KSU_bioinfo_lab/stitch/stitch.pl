@@ -17,7 +17,7 @@ use Pod::Usage;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  stitch.pl Version 1.4.3                                #\n";
+print "#  stitch.pl Version 1.4.4                                #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 12/12/13                   #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -55,9 +55,43 @@ $first_min_per_aligned=$first_min_per_aligned/100;
 $second_min_per_aligned=$second_min_per_aligned/100;
 my $dirname = dirname(__FILE__);
 ##################################################################################
-##############       call programs and report if files exist    ##################
+##############                correct xmap order                ##################
 ##################################################################################
+print "Correcting xmap order ...\n";
+open (XMAP, "<", $xmap) or die "Can't open $xmap: $!";
+my $sort_xmap = "${output_basename}_sort.xmap";
+open (SORT_XMAP,">", $sort_xmap) or die "Can't open $sort_xmap: $!";
+my @xmap_table;
+while (<XMAP>) #make array of contigs from the customer and a hash of their lengths
+{
+	if ($_ =~ /^#/)
+	{
+		print SORT_XMAP;
+	}
+    elsif ($_ !~ /^#/)
+	{
+        chomp;
+        unless ($_ eq '')
+        {
+            my @xmap=split ("\t");
+            s/\s+//g foreach @xmap;
+            push (@xmap_table, [@xmap]);
+        }
+        
+	}
+}
+###################
+my @a = ([1,2], [3,4]);
+my @xmap_table_sorted = sort {
+    
+    $a->[2] <=> $b->[2] || # the result is -1,0,1 ...
+    $a->[5] <=> $b->[5]    # so [1] when [0] is same
+    
+} @xmap_table;
 
+print SORT_XMAP (join("\t", @$_), "\n") for @xmap_table_sorted;
+close (SORT_XMAP);
+$xmap = $sort_xmap;
 ##################################################################################
 ##############    make key (original headers to bionano cmap id)    ##############
 ##################################################################################

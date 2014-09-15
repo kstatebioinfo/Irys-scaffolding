@@ -76,9 +76,12 @@ while (<CMAP_MOL>) #make array of molecule contigs and a hash of their lengths
     if ($_ !~ /^#/)
 	{
         chomp;
-        my @cmap_mol=split ("\t");
-        s/\s+//g foreach @cmap_mol;
-        $mol_length{$cmap_mol[0]} = $cmap_mol[1]; ## hash with id as key and molecule contig length as value
+        unless ($_ eq '')
+        {
+            my @cmap_mol=split ("\t");
+            s/\s+//g foreach @cmap_mol;
+            $mol_length{$cmap_mol[0]} = $cmap_mol[1]; ## hash with id as key and molecule contig length as value
+        }
 	}
 }
 ###############################################################################
@@ -106,9 +109,13 @@ while (<XMAP>) #make array of contigs from the customer and a hash of their leng
     elsif ($_ !~ /^#/)
 	{
         chomp;
-        my @xmap=split ("\t");
-        s/\s+//g foreach @xmap;
-        push (@xmap_table, [@xmap]);
+        unless ($_ eq '')
+        {
+            my @xmap=split ("\t");
+            s/\s+//g foreach @xmap;
+            push (@xmap_table, [@xmap]);
+        }
+
 	}
 }
 ###############################################################################
@@ -122,9 +129,12 @@ while (<KEY>)
     unless (/^#/)
     {
         chomp;
-        my @row=split ("\t");
-        s/\s+//g foreach @row;
-        $key_hash{$row[4]}=$row[2];
+        unless ($_ eq '')
+        {
+            my @row=split ("\t");
+            s/\s+//g foreach @row;
+            $key_hash{$row[4]}=$row[2];
+        }
     }
 }
 ###############################################################################
@@ -140,6 +150,7 @@ for my $row (@xmap_table)## calculate sequence generated contig's footprint on t
     ## end of alignment = 3 or 4 xmap
     ## begining of alignment = 3 or 4 xmap
     $row->[15]=$contig_length{$row->[1]};
+#    print "$contig_length{$row->[1]} = contig_length for \'$row->[1]\'\n";
     if ($row->[3] < $row->[4]) #if contig aligns in the '+' orientation
     {
         $contig_start_pos=$row->[3];
