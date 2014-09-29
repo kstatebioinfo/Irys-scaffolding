@@ -256,6 +256,6 @@ B<Test with sample datasets:>
 
 get clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
 
-perl Irys-scaffolding/KSU_bioinfo_lab/assembly_qc.pl -b [bnx_dir]
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/assembly_qc.pl -b [bnx_dir]
 
 =cut
