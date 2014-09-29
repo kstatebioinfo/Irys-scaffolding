@@ -234,7 +234,7 @@ while (<$new_input>)
 }
 close($new_input);
 
-#unlink $input_agp;
+unlink $input_agp;
 
 ###############################################################################
 ##############                  Documentation                ##################
