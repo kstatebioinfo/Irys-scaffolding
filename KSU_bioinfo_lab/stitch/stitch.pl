@@ -110,9 +110,11 @@ print "$out_number";
 ##################################################################################
 print "Making filtered XMAP...\n";
 my $filter=`perl ${dirname}/xmap_filter.pl $r_cmap ${1}_numbered_scaffold.fasta $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${output_basename}_key`;
-if ($filter =~ "No_scaffolds")
+if ($filter =~ /No_scaffolds/)
 {
-    die "No alignments produce superscaffolds\n";
+    print "Removing temp files...\n";
+    unlink "${1}_numbered_scaffold.fasta.index","${1}_numbered_scaffold.fasta";
+    die "No alignments produced superscaffolds therefore no super scaffold fasta was created\n";
 }
 print "$filter"; # print errors
 ##################################################################################

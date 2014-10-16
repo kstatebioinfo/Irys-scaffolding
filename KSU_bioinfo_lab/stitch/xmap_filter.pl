@@ -342,7 +342,8 @@ $length_scaffolded_contigs=($length_scaffolded_contigs/1000000);
 print REPORT "Total number of scaffolds used in super-scaffolds,Total number of super-scaffolds created,Total number of unknowns super-scaffolded to known scaffolds,Cummulative length of the super-scaffolded scaffolds (Mb),minimum percent aligned, minimum confidence,second min percent aligned,second min confidence, Number of overlaps\n";
 if (!$contig_count)
 {
-    die "No_scaffolds";
+    print "No_scaffolds";
+    die "Exiting because stitch iteration did not produce scaffolds: ";
 }
 print REPORT "$contig_count,$total_scaffolds,$total_unknown_scaffolds,$length_scaffolded_contigs,$min_precent_aligned,$min_confidence,$second_min_precent_aligned,$second_min_confidence,";
 
