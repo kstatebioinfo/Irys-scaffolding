@@ -270,6 +270,63 @@ for my $row (@xmap_table)## calculate sequence generated contig's footprint on t
         $row->[13] = "NA";
     }
 }
+if (-e "$outfile_overlaps") {print "$outfile_overlaps file Exists!\n"; exit;}
+open (OVERLAPS, ">$outfile_overlaps")or die "can't open $outfile_overlaps !";
+
+######################################################################################
+####################### 3rd pass over xmap                    ########################
+####################### identify overlaps in filtered outfile ########################
+####################### find best and second best alignment   ########################
+######################################################################################
+
+print OVERLAPS "Original fasta header sequence-based scaffold 1,overlapping sequence-based scaffold 1,Original fasta header sequence-based scaffold 2,overlapping sequence-based scaffold 2,overlap length (bp)\n";
+for my $main_loop (@xmap_table) # for each sequence-based contig feature in the xmap
+{
+    if ($main_loop->[12] eq "passed")
+    {
+        for my $nested_loop (@xmap_table) # compare its footprint to every other contig feature's footprint
+        {
+            if ($nested_loop->[12] eq "passed")
+            {
+                if (($main_loop->[2] eq $nested_loop->[2]))# check only for footprints on the same molecule contig
+                {
+                    
+                    if ($nested_loop->[10] <= $main_loop->[10] && $main_loop->[10] <= $nested_loop->[11]) # run if the sequenced-based contig in the main loop has start coordinates within any the footprints of any other sequenced-based contig
+                    {
+                        if ("$main_loop->[1]" ne "$nested_loop->[1]")# don't calculate overlaps of the same sequence-based contig
+                        {
+                            if ($nested_loop->[11] < $main_loop->[11]) # if the end main loop's footprint is before the end of the nested loop footprint use the end of the main loop's footprint
+                            {
+                                $overlap=$nested_loop->[11]-$main_loop->[10]+1;
+                                print OVERLAPS "$key_hash{$main_loop->[1]},$main_loop->[1],$key_hash{$nested_loop->[1]},$nested_loop->[1],$overlap";
+                                ++$overlap_count;
+                            }
+                            else # else use the end of the nested loop's footprint
+                            {
+                                $overlap=$main_loop->[11]-$main_loop->[10]+1;
+                                print OVERLAPS "$key_hash{$main_loop->[1]},$main_loop->[1],$key_hash{$nested_loop->[1]},$nested_loop->[1],$overlap";
+                                ++$overlap_count;
+                            }
+                            if ($overlap > 20000) # Fail overlaps greater the 20,000 (bp)
+                            {
+                                $nested_loop->[12] = "failed";
+                                $main_loop->[12] = "failed";
+                                print OVERLAPS ",FAILED\n";
+                            }
+                            else
+                            {
+                                print OVERLAPS ",PASSED\n";
+                            }
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
+}
+#print REPORT "$overlap_count\n";
+
 ############################################################################################
 ############# Second pass over xmap                                         ################
 ############# print only scaffolding molecule maps                          ################
@@ -347,51 +404,6 @@ if (!$contig_count)
 }
 print REPORT "$contig_count,$total_scaffolds,$total_unknown_scaffolds,$length_scaffolded_contigs,$min_precent_aligned,$min_confidence,$second_min_precent_aligned,$second_min_confidence,";
 
-open (NEWXMAP, "<${outfile_base}_all_filtered".".xmap")or die "can't open ${outfile_base}_all_filtered.xmap !";
-if (-e "$outfile_overlaps") {print "$outfile_overlaps file Exists!\n"; exit;}
-open (OVERLAPS, ">$outfile_overlaps")or die "can't open $outfile_overlaps !";
-
-######################################################################################
-####################### 3rd pass over xmap                    ########################
-####################### identify overlaps in filtered outfile ########################
-####################### find best and second best alignment   ########################
-######################################################################################
-
-print OVERLAPS "Original fasta header sequence-based scaffold 1,overlapping sequence-based scaffold 1,Original fasta header sequence-based scaffold 2,overlapping sequence-based scaffold 2,overlap length (bp)\n";
-for my $main_loop (@xmap_table) # for each sequence-based contig feature in the xmap
-{
- 	if ($main_loop->[12] eq "passed")
- 	{
- 		for my $nested_loop (@xmap_table) # compare its footprint to every other contig feature's footprint
- 		{
-         	if ($nested_loop->[12] eq "passed")
-         	{
-                if (($main_loop->[2] eq $nested_loop->[2]))# check only for footprints on the same molecule contig
-                {
-                    
-                    if ($nested_loop->[10] <= $main_loop->[10] && $main_loop->[10] <= $nested_loop->[11]) # run if the sequenced-based contig in the main loop has start coordinates within any the footprints of any other sequenced-based contig
-                    {
-                        if ("$main_loop->[1]" ne "$nested_loop->[1]")# don't calculate overlaps of the same sequence-based contig
-                        {
-                            if ($nested_loop->[11] < $main_loop->[11]) # if the end main loop's footprint is before the end of the nested loop footprint use the end of the main loop's footprint
-                            {
-                                $overlap=$nested_loop->[11]-$main_loop->[10]+1;
-                                print OVERLAPS "$key_hash{$main_loop->[1]},$main_loop->[1],$key_hash{$nested_loop->[1]},$nested_loop->[1],$overlap\n";
-                                ++$overlap_count;
-                            }
-                            else # else use the end of the nested loop's footprint
-                            {
-                                $overlap=$main_loop->[11]-$main_loop->[10]+1;
-                                print OVERLAPS "$key_hash{$main_loop->[1]},$main_loop->[1],$key_hash{$nested_loop->[1]},$nested_loop->[1],$overlap\n";
-                                ++$overlap_count;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-print REPORT "$overlap_count\n";
+#open (NEWXMAP, "<${outfile_base}_all_filtered".".xmap")or die "can't open ${outfile_base}_all_filtered.xmap !";
 close REPORT;
 close OVERLAPS;
