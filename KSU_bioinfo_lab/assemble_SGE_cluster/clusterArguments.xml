@@ -13,13 +13,13 @@
     <largeJob>
         <flag attr="-pe" val0="single" val1="16"/>
         <flag attr="-l" val0="mem=2G,h_rt=7200"/>
-        <flag attr="-q" val0="long.q@@elves,batch.q@@elves,long-highmem.q@@elves,highmem.q@@elves,gen-bioinfo.q"/>
+        <flag attr="-q" val0="batch.q@@elves,gen-bioinfo.q"/>
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </largeJob>
     <smallJob>
         <flag attr="-pe" val0="single" val1="8"/>
         <flag attr="-l" val0="mem=1G,h_rt=7200"/>
-        <flag attr="-q" val0="long.q@@elves,batch.q@@elves,long-highmem.q@@elves,highmem.q@@elves,gen-bioinfo.q"/>
+        <flag attr="-q" val0="batch.q@@elves,gen-bioinfo.q"/>
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </smallJob>
     <micJob>
@@ -37,7 +37,7 @@
     <splitting>
         <flag attr="-pe" val0="single" val1="8"/>
         <flag attr="-l" val0="mem=1G,h_rt=7200"/>
-        <flag attr="-q" val0="long.q@@elves,batch.q@@elves,long-highmem.q@@elves,highmem.q@@elves,gen-bioinfo.q"/>
+        <flag attr="-q" val0="batch.q@@elves,gen-bioinfo.q"/>
         <flag attr="-ac" val0="status=$status_log_filename"/>
     </splitting>
     <autoNoise0>
