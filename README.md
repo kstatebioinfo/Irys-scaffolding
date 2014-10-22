@@ -30,7 +30,7 @@ SUMMARY
 **AssembleIrysCluster.pl -** Adjusts stretch by scan. Merges BNXs and writes scripts for assemblies with a range of parameters. This script uses the same workflow as AssembleIrys.pl but it runs on the Beocat SGE cluster.
 
 Workflow diagram
-![Alt text](https://raw.github.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble/bionano%20assembly%20workflow.png)
+![Alt text](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_SGE_cluster/bionano%20assembly%20workflow.png)
 
 1) The Irys produces tiff files that are converted into BNX text files.
 2) Each chip produces one BNX file for each of two flowcells.
