@@ -24,6 +24,37 @@ DEPENDENCIES
     
 UPDATES
 
+####AssembleIrysCluster.pl Version 1.6.1. 
+
+Removed regression for adjust stretch. Deletes new alignment output files from Molecules_X directories. Removes auto-noise until further testing. Add -T and -j back to pipeline call because they are required on top of values in the cluster xml file for threads.
+
+####AssembleIrysCluster.pl Version 1.6. 
+
+Version is faster especially for larger datasets because each molecule quality report is generated from max 10,000 sub-sampled molecules.
+
+####AssembleIrysCluster.pl Version 1.5.1. 
+
+Modified KSU_bioinfo_lab/assemble_SGE_cluster/assemble.pl for new optArguments.xml. Changed KSU_bioinfo_lab/assembly_qc.pl for new informatics reports. Speed up stitch/agp2bed.pl. Modified KSU_bioinfo_lab/stitch/make_contigs_from_fasta.pl to only split at gaps longer than ten bases.
+
+####AssembleIrysCluster.pl Version 1.5
+
+Sets noise parameters based on molecule quality reports (MQR) so that
+is auto-noise fails the -y flag can be removed from
+assembly_commands.sh and the assemblies can be run with MQR parameters.
+
+####AssembleIrysCluster.pl v. 1.4
+
+Updated for new Assembler with auto noise
+
+####AssembleIrysCluster.pl v.1.3
+
+Fixed bug in lowering minimum lengths. Returned optArguments.xml to
+default parameters.
+
+####AssembleIrysCluster.pl Version 1.2
+
+AssembleIrysCluster.pl Version 1.2 fixed a bug in listing split and adjusted bnx files
+
 ####AssembleIrys.pl AssembleIrysCluster.pl Version 1.1 04/21/2014
 
 AssembleIrys.pl and AssembleIrysCluster.pl Version 1.1 were updated to
