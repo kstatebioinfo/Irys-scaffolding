@@ -5,13 +5,13 @@ SUMMARY
 Workflow diagram
 ![Alt text](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_SGE_cluster/bionano%20assembly%20workflow.png)
 
-1) The Irys produces tiff files that are converted into BNX text files.
-2) Each chip produces one BNX file for each of two flowcells.
-3) BNX files are split by scan and aligned to the sequence reference. Stretch (bases per pixel) is recalculated from the alignment.
-4) Quality metrics are reported in a CSV file for each adjusted flowcell BNX.
-5) Adjusted flowcell BNXs are merged and aligned to the reference with and without “-BestRef”. If alignment quality changes dramatically your p-value threshold may be lax.
-6) The first assemblies are run with a variety of p-value thresholds.
-7) The best of the first assemblies (red oval) is chosen and a version of this assembly is produced with a variety of minimum molecule length filters.
+ 1) The Irys produces tiff files that are converted into BNX text files.
+ 2) Each chip produces one BNX file for each of two flowcells.
+ 3) BNX files are split by scan and aligned to the sequence reference. Stretch (bases per pixel) is recalculated from the alignment.
+ 4) Quality check graphs are created for each pre-adjusted flowcell BNX.
+ 5) Adjusted flowcell BNXs are merged.
+ 6) The first assemblies are run with a variety of p-value thresholds.
+ 7) The best of the first assemblies (red oval) is chosen and a version of this assembly is produced with a variety of minimum molecule length filters.
     
 USAGE
     
