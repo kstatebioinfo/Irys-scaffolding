@@ -38,7 +38,7 @@ while (<AGP>)
         }
         if (($rows[4] eq "N")||($rows[4] eq "U"))
         {
-            print BED "$scaffold\t$rows[1]\t$rows[2]\tgap_$i\n";
+            print BED "$scaffold\t$rows[1]\t$rows[2]\tgap_$i\t-1\t+\t$rows[1]\t$rows[2]\t72,61,139\n";
             ++$i;
         }
     }
