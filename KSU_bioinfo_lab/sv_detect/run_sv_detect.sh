@@ -4,7 +4,7 @@ workon bionano
 export DRMAA_LIBRARY_PATH=/opt/sge/lib/lx3-amd64/libdrmaa.so.1.0
 
 # Run first: qrsh -P KSU-GEN-BIOINFO -l avx=true -pe single 16
-
+# Run first: qrsh -P KSU-GEN-BIOINFO -l avx=true -pe single 4
 # cp /homes/bioinfo/bioinfo_software/bionano/test_3265_release/scripts/optArguments_human.xml and adjust sv detect section
 
 # Strict alignments
@@ -22,4 +22,5 @@ export DRMAA_LIBRARY_PATH=/opt/sge/lib/lx3-amd64/libdrmaa.so.1.0
 #[-j MAXTHREADS] [-b BEDFILE]
 
 
-python2 /homes/bioinfo/bioinfo_software/bionano/test_3265_release/scripts/runSV.py -r in_silico_CMAP.cmap -q path_to_BNG_assembly/contigs/ -p /homes/bioinfo/bioinfo_software/bionano/test_3265_release/scripts/ -t /homes/bioinfo/bioinfo_software/bionano/test_3265_release/tools/RefAligner -a path_to_customized/optArguments_human.xml -T 16 -j 8
+#python2 /homes/bioinfo/bioinfo_software/bionano/test_3265_release/scripts/runSV.py -r in_silico_CMAP.cmap -q path_to_BNG_assembly/contigs/ -p /homes/bioinfo/bioinfo_software/bionano/test_3265_release/scripts/ -t /homes/bioinfo/bioinfo_software/bionano/test_3265_release/tools/RefAligner -a path_to_customized/optArguments_human.xml -T 16 -j 8
+python2 /homes/bioinfo/bioinfo_software/bionano/test_3265_release/scripts/runSV.py -r in_silico_CMAP.cmap -q path_to_BNG_assembly/contigs/ -p /homes/bioinfo/bioinfo_software/bionano/test_3265_release/scripts/ -t /homes/bioinfo/bioinfo_software/bionano/test_3265_release/tools/RefAligner -a path_to_customized/optArguments_human.xml -T 4 -j 4

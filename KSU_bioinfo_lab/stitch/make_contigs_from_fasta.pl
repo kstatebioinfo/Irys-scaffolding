@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use Text::Wrap;
 
 # DESCRIPTION: this script breaks scaffolds at gaps of Ns longer than 10 bases and outputs a new multi fasta file with one entry per contig and creates an agp for this
 # USAGE: perl make_contigs_from_fasta.pl FASTA
@@ -40,7 +41,8 @@ while (<FASTA>)
         {
             print CONTIGFA ">Contig_${tcas_id}\n";
             #            >tcas_1000[organism=Triboliumcastaneum][strain=GeorgiaGA2][country=USA:Kansas][collection-date=Apr-2003]
-            print CONTIGFA "$broken\n";
+            $Text::Wrap::columns = 60;
+            print CONTIGFA wrap('', '', $broken) . "\n";
             my $contig_length = length($broken);
             my $stop = $pos + $contig_length - 1;
             print AGP "${header}\t$pos\t$stop\t$agp_element\tW\tContig_${tcas_id}\t1\t${contig_length}\t+\n";

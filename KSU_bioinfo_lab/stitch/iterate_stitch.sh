@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Before running: qrsh -P KSU-GEN-BIOINFO -l avx=true -pe single 16
-
+# Before running: qrsh -P KSU-GEN-BIOINFO -l avx=true -pe single 4
 # replace project_directory with the name of the working directory update other variables for project in "Project variables" section. Stitch number begins with 2
 # USAGE: bash iterate_stitch.sh <stitch number>
 
@@ -43,7 +43,8 @@ perl /homes/bioinfo/bioinfo_software/bionano/fa2cmap_multi.pl -v -i ${old_out_di
 #Align scripts
 
 mkdir ${out_dir}
-/homes/bioinfo/bioinfo_software/bionano/tools/RefAligner -i ${DIR}${bng_assembly}.cmap -ref ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold*.cmap -o ${out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${bng_assembly} -res 2.9 ${align_para} -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -mres 1.2 -insertThreads 4 -nosplit 2 -f -T 1e-8 -maxthreads 16 >> ${DIR}log.txt
+#/homes/bioinfo/bioinfo_software/bionano/tools/RefAligner -i ${DIR}${bng_assembly}.cmap -ref ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold*.cmap -o ${out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${bng_assembly} -res 2.9 ${align_para} -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -mres 1.2 -insertThreads 4 -nosplit 2 -f -T 1e-8 -maxthreads 16 >> ${DIR}log.txt
+/homes/bioinfo/bioinfo_software/bionano/tools/RefAligner -i ${DIR}${bng_assembly}.cmap -ref ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold*.cmap -o ${out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${bng_assembly} -res 2.9 ${align_para} -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -mres 1.2 -insertThreads 4 -nosplit 2 -f -T 1e-8 -maxthreads 4 >> ${DIR}log.txt
 
 #Flip xmap
 perl /homes/bioinfo/bioinfo_software/bionano/Irys-scaffolding/KSU_bioinfo_lab/stitch/flip_xmap.pl ${out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${bng_assembly}.xmap ${out_dir}${bng_assembly}_to_${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}

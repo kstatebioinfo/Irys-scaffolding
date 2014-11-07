@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Before running: qrsh -P KSU-GEN-BIOINFO -l avx=true -pe single 16
+# Before running: qrsh -P KSU-GEN-BIOINFO -l avx=true -pe single 4
 # replace project_directory with the name of the working directory update other variables for project in "Project variables" section
 # USAGE : bash run_compare.sh
 
@@ -28,10 +29,11 @@ project="project_name"
 ########################  End project variables  ########################
 
 #Align scripts
-/homes/bioinfo/bioinfo_software/bionano/tools/RefAligner -i ${DIR}${bng_assembly}.cmap -ref ${DIR}${FASTA}_${ENZYME}.cmap -o ${DIR}${FASTA}_to_${bng_assembly} -res 2.9 ${align_para} -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -mres 1.2 -insertThreads 4 -nosplit 2 -f -T 1e-8 -maxthreads 16
+#/homes/bioinfo/bioinfo_software/bionano/tools/RefAligner -i ${DIR}${bng_assembly}.cmap -ref ${DIR}${FASTA}_${ENZYME}.cmap -o ${DIR}${FASTA}_to_${bng_assembly} -res 2.9 ${align_para} -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -mres 1.2 -insertThreads 4 -nosplit 2 -f -T 1e-8 -maxthreads 16
+/homes/bioinfo/bioinfo_software/bionano/tools/RefAligner -i ${DIR}${bng_assembly}.cmap -ref ${DIR}${FASTA}.${FASTA_EXT}_${ENZYME}.cmap -o ${DIR}${FASTA}_to_${bng_assembly} -res 2.9 ${align_para} -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -mres 1.2 -insertThreads 4 -nosplit 2 -f -T 1e-8 -maxthreads 4
 
 #Get most metrics
-/homes/bioinfo/bioinfo_software/bionano/BNGCompare/BNGCompare.pl -f ${DIR}${FASTA}.${FASTA_EXT} -r ${DIR}${FASTA}_${ENZYME}.cmap -q ${DIR}${bng_assembly}.cmap -x ${DIR}${FASTA}_to_${bng_assembly}.xmap
+/homes/bioinfo/bioinfo_software/bionano/BNGCompare/BNGCompare.pl -f ${DIR}${FASTA}.${FASTA_EXT} -r ${DIR}${FASTA}.${FASTA_EXT}_${ENZYME}.cmap -q ${DIR}${bng_assembly}.cmap -x ${DIR}${FASTA}_to_${bng_assembly}.xmap
 
 
 #Flip xmap
