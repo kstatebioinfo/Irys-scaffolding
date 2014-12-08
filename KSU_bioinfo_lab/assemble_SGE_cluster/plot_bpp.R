@@ -4,8 +4,8 @@
 
 args=(commandArgs(TRUE))
 
-pdf("/homes/bioinfo/bionano/Medi_trun_HM340_2014_033/bnx/bpp_graph.pdf", bg='white', width=15, height=5)
-bpp_table <- read.table("/homes/bioinfo/bionano/Medi_trun_HM340_2014_033/bnx/bpp_list.txt_sorted.tab", header=TRUE)
+pdf("/homes/bioinfo/bionano/Corv_coro_2014_051/bnx/bpp_graph.pdf", bg='white', width=15, height=5)
+bpp_table <- read.table("/homes/bioinfo/bionano/Corv_coro_2014_051/bnx/bpp_list.txt_sorted.tab", header=TRUE)
 
 pdf("args[2]", bg='white', width=15, height=5)
 
