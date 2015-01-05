@@ -6,11 +6,21 @@ scripts to parse IrysView output
 KSU_bioinfo_lab
 ---------------
 
+###intro_material
+
+Examples of how work with BioNano software from the KSU Bioinformatics Core.
+
+**Windows_in_silico_labeling.md -** How to install software on a Windows machine and videos of how to in silico label sequence data for alignment or to determine which enzymes to use for a BioNano project.
+
+**code_examples.sh -** these are usage notes and general steps taken by the KSU Bioinformatics Core to assemble molecules or align assemblies. These can be  used as a template for your own experiments with your BioNano data in a Linux environment.
+
+**IrysView_Troubleshooting.pdf -** instructions on how to view all labels in an alignment if they do not automatically load.
+
 ### assembly_qc.pl 
 
 **assembly_qc.pl -** a script that compiles assembly metrics for assemblies in all of the possible directories:'strict_t', 'default_t', 'relaxed_t', 'strict_t/strict_ml', 'strict_t/relaxed_ml', 'default_t/strict_ml', 'default_t/relaxed_ml', 'relaxed_t/strict_ml', and 'relaxed_t/relaxed_ml'. The assemblies are created using assemble_SGE_cluster/AssembleIrysCluster.pl from https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab. The parameter -b should be the same as the -b parameter used for the assembly script. It is the directory with the BNX files used for assembly.
         
-### map_editing/flip.pl 
+### map_editing 
 
 **cmap_stats.pl -** Script outputs count of cmaps, cummulative lengths of cmaps and N50 of cmaps. Tested on CMAP File Version: 0.1.
 
