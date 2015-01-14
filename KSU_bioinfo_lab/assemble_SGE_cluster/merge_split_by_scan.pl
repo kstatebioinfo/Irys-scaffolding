@@ -35,6 +35,7 @@ while (my $file = readdir(DIR))
 	next if ($file =~ m/^\./); # ignore files beginning with a period
 	next if ($file !~ m/\.bnx$/); # open only files ending in .bnx
     next if ($file =~ m/_adj_merged\.bnx$/); # ignore files that have been adjusted
+    next if ($file =~ m/_q\.bnx$/); # ignore output of alignments
     my (${filename}, ${directories}, ${suffix}) = fileparse($file,'\..*');
     ####################################################################
     ##############   Run refaligner to merge adjusted BNXs    ##########

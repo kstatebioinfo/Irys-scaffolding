@@ -17,7 +17,7 @@ use Pod::Usage;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  stitch.pl Version 1.4                                  #\n";
+print "#  stitch.pl Version 1.4.5                                #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 12/12/13                   #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -55,9 +55,43 @@ $first_min_per_aligned=$first_min_per_aligned/100;
 $second_min_per_aligned=$second_min_per_aligned/100;
 my $dirname = dirname(__FILE__);
 ##################################################################################
-##############       call programs and report if files exist    ##################
+##############                correct xmap order                ##################
 ##################################################################################
+print "Correcting xmap order ...\n";
+open (XMAP, "<", $xmap) or die "Can't open $xmap: $!";
+my $sort_xmap = "${output_basename}_sort.xmap";
+open (SORT_XMAP,">", $sort_xmap) or die "Can't open $sort_xmap: $!";
+my @xmap_table;
+while (<XMAP>) #make array of contigs from the customer and a hash of their lengths
+{
+	if ($_ =~ /^#/)
+	{
+		print SORT_XMAP;
+	}
+    elsif ($_ !~ /^#/)
+	{
+        chomp;
+        unless ($_ eq '')
+        {
+            my @xmap=split ("\t");
+            s/\s+//g foreach @xmap;
+            push (@xmap_table, [@xmap]);
+        }
+        
+	}
+}
+###################
+my @a = ([1,2], [3,4]);
+my @xmap_table_sorted = sort {
+    
+    $a->[2] <=> $b->[2] || # the result is -1,0,1 ...
+    $a->[5] <=> $b->[5]    # so [1] when [0] is same
+    
+} @xmap_table;
 
+print SORT_XMAP (join("\t", @$_), "\n") for @xmap_table_sorted;
+close (SORT_XMAP);
+$xmap = $sort_xmap;
 ##################################################################################
 ##############    make key (original headers to bionano cmap id)    ##############
 ##################################################################################
@@ -76,9 +110,11 @@ print "$out_number";
 ##################################################################################
 print "Making filtered XMAP...\n";
 my $filter=`perl ${dirname}/xmap_filter.pl $r_cmap ${1}_numbered_scaffold.fasta $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${output_basename}_key`;
-if ($filter =~ "No_scaffolds")
+if ($filter =~ /No_scaffolds/)
 {
-    die "No alignments produce superscaffolds\n";
+    print "Removing temp files...\n";
+    unlink "${1}_numbered_scaffold.fasta.index","${1}_numbered_scaffold.fasta";
+    die "No alignments produced superscaffolds therefore no super scaffold fasta was created\n";
 }
 print "$filter"; # print errors
 ##################################################################################
@@ -88,13 +124,13 @@ print "Making super-scaffold fasta file with new super-scaffolds. Unused sequenc
 my $out_x_to_fasta=`perl ${dirname}/xmap_to_fasta.pl ${output_basename}_scaffolds.stitchmap ${1}_numbered_scaffold.fasta ${output_basename}_key`;
 print "$out_x_to_fasta";
 if (-e "${output_basename}_data_summary.csv") {print "${output_basename}_data_summary.csv file Exists$!\n"; exit;}
-##################################################################################
-#########    check fasta file for redundant super-scaffold names        ##########
-#########         this step only effects iterative assemblies           ##########
-##################################################################################
-print "Checking super-scaffold fasta file for redundant super-scaffold headers. Unused sequences are still printed with original fasta headers...\n";
-my $check_fasta=`perl ${dirname}/CheckHeaders.pl ${output_basename}_superscaffold.fasta`;
-print "$check_fasta";
+###################################################################################
+##########    check fasta file for redundant super-scaffold names        ##########
+##########         this step only effects iterative assemblies           ##########
+###################################################################################
+#print "Checking super-scaffold fasta file for redundant super-scaffold headers. Unused sequences are still printed with original fasta headers...\n";
+#my $check_fasta=`perl ${dirname}/CheckHeaders.pl ${output_basename}_superscaffold.fasta`;
+#print "$check_fasta";
 ##################################################################################
 #########                     create new AGP                            ##########
 ##################################################################################
@@ -120,7 +156,7 @@ while (<REPORT>)
 }
 close (REPORT);
 open (OVERLAPS,'<',"${output_basename}_overlaps.csv") or die "couldn't open ${output_basename}_overlaps.csv $!";
-print SUMMARY "List of scaffolds that overlap on the super-scaffold. These are separated by 30 \"n\" gaps.\n";
+print SUMMARY "List of scaffolds that overlap on the super-scaffold. These are separated by 100 \"n\" gaps.\n";
 while (<OVERLAPS>)
 {
     print SUMMARY;
@@ -152,16 +188,19 @@ stitch.pl finds the best super-scaffolding alignments each run. It can be run it
 perl stitch.pl [options]
 
 Documentation options:
+ 
     -help    brief help message
     -man	    full documentation
  
 Required options:
+ 
     -r	     reference CMAP
     -x	     comparison XMAP
     -f	     scaffold FASTA
     -o	     base name for the output files
  
 Filtering options:
+ 
     --f_con	 first minimum confidence score
     --f_algn	 first minimum % of possible alignment
     --s_con	 second minimum confidence score
@@ -225,7 +264,7 @@ In the same csv file, scaffolds that have alignments passing the user-defined le
 
 In the same csv file, high quality but overlaping alignments in a csv file are listed. These may be candidates for further assembly using the overlaping contigs and paired end reads.
 
-The script also creates a non-redundant (i.e. no scaffold is used twice) super-scaffold from a user-provided scaffold file and a filtered XMAP. If two scaffolds overlap on the superscaffold then a 30 "n" gap is used as a spacer between them. If adjacent scaffolds do not overlap on the super-scaffold than the distance between the begining and end of each scaffold reported in the XMAP is used as the gap length. If a scaffold has two high quality alignments the longest alignment is selected. If both alignments are equally long the alignment with the highest confidence is selected.
+The script also creates a non-redundant (i.e. no scaffold is used twice) super-scaffold from a user-provided scaffold file and a filtered XMAP. If two scaffolds overlap on the superscaffold then a 100 "n" gap is used as a spacer between them. If adjacent scaffolds do not overlap on the super-scaffold than the distance between the begining and end of each scaffold reported in the XMAP is used as the gap length. If a scaffold has two high quality alignments the longest alignment is selected. If both alignments are equally long the alignment with the highest confidence is selected.
 
 The script also outputs contigs, an agp, and a bed file of contigs within superscaffolds from the final super-scaffold fasta file. 
 

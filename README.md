@@ -6,37 +6,49 @@ scripts to parse IrysView output
 KSU_bioinfo_lab
 ---------------
 
+###intro_material
+
+Examples of how work with BioNano software from the KSU Bioinformatics Core.
+
+**Windows_in_silico_labeling.md -** How to install software on a Windows machine and videos of how to in silico label sequence data for alignment or to determine which enzymes to use for a BioNano project.
+
+**code_examples.sh -** these are usage notes and general steps taken by the KSU Bioinformatics Core to assemble molecules or align assemblies. These can be  used as a template for your own experiments with your BioNano data in a Linux environment.
+
+**IrysView_Troubleshooting.pdf -** instructions on how to view all labels in an alignment if they do not automatically load.
+
 ### assembly_qc.pl 
 
 **assembly_qc.pl -** a script that compiles assembly metrics for assemblies in all of the possible directories:'strict_t', 'default_t', 'relaxed_t', 'strict_t/strict_ml', 'strict_t/relaxed_ml', 'default_t/strict_ml', 'default_t/relaxed_ml', 'relaxed_t/strict_ml', and 'relaxed_t/relaxed_ml'. The assemblies are created using assemble_SGE_cluster/AssembleIrysCluster.pl from https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab. The parameter -b should be the same as the -b parameter used for the assembly script. It is the directory with the BNX files used for assembly.
         
-### map_editing/flip.pl 
+### map_editing 
+
+**cmap_stats.pl -** Script outputs count of cmaps, cummulative lengths of cmaps and N50 of cmaps. Tested on CMAP File Version: 0.1.
+
+**xmap_stats.pl -** Script outputs breadth of alignment coverage and total aligned length from an xmap. Tested on XMAP File Version: 0.1.
+ 
+"Breadth of alignment coverage" is the number of bases covered by aligned maps. This is equivalent to "Total Unique Aligned Len(Mb)". 
+ 
+"Total alignment length is the total length of the alignment. This is equivalent to "Total Aligned Len(Mb)".
+ 
 
 **flip.pl -** This utility script reads from a list of maps to flip from a txt file (one CMAP id per line) and creates a CMAP with the requested flips.
-
-###assemble/AssembleIrys.pl
-
-SUMMARY
-
-**AssembleIrys.pl -** Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters. This script uses the same workflow as AssembleIrysCluster.pl but it runs on local Linux machines. This script has not been updated to account for frequent changes in Bionano output format. See **AssembleIrysCluster.pl** for fequently updated scripts.
 
 ### assemble_SGE_cluster/AssembleIrysCluster.pl 
 
 SUMMARY
 
-**AssembleIrysCluster.pl -** Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters. This script uses the same workflow as AssembleIrys.pl but it runs on the Beocat SGE cluster.
-
+**AssembleIrysCluster.pl -** Adjusts stretch by scan. Merges BNXs and writes scripts for assemblies with a range of parameters. This script uses the same workflow as AssembleIrys.pl but it runs on the Beocat SGE cluster.
 
 Workflow diagram
-![Alt text](https://raw.github.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble/bionano%20assembly%20workflow.png)
+![Alt text](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_SGE_cluster/bionano%20assembly%20workflow.png)
 
-1) The Irys produces tiff files that are converted into BNX text files.
-2) Each chip produces one BNX file for each of two flowcells.
-3) BNX files are split by scan and aligned to the sequence reference. Stretch (bases per pixel) is recalculated from the alignment.
-4) Each adjusted scan is merged back to an adjusted flowcell BNX.
-5) Adjusted flowcell BNXs are merged and aligned to the reference with and without “-BestRef”. If alignment quality changes dramatically your p-value threshold may be lax.
-6) The first assemblies are run with a variety of p-value thresholds.
-7) The best of the first assemblies (red oval) is chosen and a version of this assembly is produced with a variety of minimum molecule length filters.
+ 1) The Irys produces tiff files that are converted into BNX text files.
+ 2) Each chip produces one BNX file for each of two flowcells.
+ 3) BNX files are split by scan and aligned to the sequence reference. Stretch (bases per pixel) is recalculated from the alignment.
+ 4) Quality check graphs are created for each pre-adjusted flowcell BNX.
+ 5) Adjusted flowcell BNXs are merged.
+ 6) The first assemblies are run with a variety of p-value thresholds.
+ 7) The best of the first assemblies (red oval) is chosen and a version of this assembly is produced with a variety of minimum molecule length filters.
     
 USAGE
     
@@ -44,15 +56,10 @@ USAGE
     
 DEPENDENCIES
 
-    Perl module Statistics::LineFit. This can be installed using CPAN http://search.cpan.org/dist/Statistics-LineFit/lib/Statistics/LineFit.pm.
+
     Perl module XML::Simple. This can be installed using CPAN http://search.cpan.org/~grantm/XML-Simple-2.20/lib/XML/Simple.pm;
     Perl module Data::Dumper. This can be installed using CPAN http://search.cpan.org/~smueller/Data-Dumper-2.145/Dumper.pm;
     
-### analyze_irys_output/analyze_irys_output.pl
-
-SUMMARY
-
-**analyze_irys_output.pl - This script was replaced by stitch.pl**
     
 ### stitch/stitch.pl
 
@@ -111,5 +118,18 @@ mkdir results
 perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
 ```
 
+### CURRENTLY UNSUPPORTED PROGRAMS:
+
+###assemble/AssembleIrys.pl
+
+SUMMARY
+
+**AssembleIrys.pl -** Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters. This script uses the same workflow as AssembleIrysCluster.pl but it runs on local Linux machines. This script has not been updated to account for frequent changes in Bionano output format. See **AssembleIrysCluster.pl** for fequently updated scripts.
+
+### analyze_irys_output/analyze_irys_output.pl
+
+SUMMARY
+
+**analyze_irys_output.pl - This script was replaced by stitch.pl**
 
 

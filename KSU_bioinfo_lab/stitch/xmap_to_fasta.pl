@@ -43,9 +43,12 @@ while (<STITCHMAP>) #make array of the stitchmap
 	if (($_ !~ /^#/) && ($_ ne ''))
 	{
         chomp;
-        my @stitchmap=split ("\t");
-        s/\s+//g foreach @stitchmap;
-        push (@stitchmap_table, [@stitchmap]);
+        unless ($_ eq '')
+        {
+            my @stitchmap=split ("\t");
+            s/\s+//g foreach @stitchmap;
+            push (@stitchmap_table, [@stitchmap]);
+        }
 	}
 }
 
@@ -141,22 +144,33 @@ for my $best (keys %alignments)
 ##################      reduce stitchmap to best map     ######################
 ###############################################################################
 ### Count best alignments per BNG contig
+$main_index = 0;
 my %winning_scaffolds;
 for my $main_loop (@stitchmap_table) # for each sequence-based contig feature in the stitchmap
 {
-    if ($main_loop->[16] eq "best")
+#    if ($main_loop->[16] eq "best")
+    if ((exists $alignments{$main_loop->[1]}) && ($alignments{$main_loop->[1]} == $main_index))
     {
         ++$winning_scaffolds{$main_loop->[2]}; #count "best alignment" scaffolding events for each BNG contig
     }
+    ++$main_index;
 }
 my @bestmap_table;
+$main_index = 0;
 for my $main_loop (@stitchmap_table) # for each sequence-based contig feature in the stitchmap
 {
-    if (($main_loop->[16] eq "best")&&($winning_scaffolds{$main_loop->[2]} > 1))
+#    if (($main_loop->[16] eq "best")&&($winning_scaffolds{$main_loop->[2]} > 1))
+    if ((exists $alignments{$main_loop->[1]}) && ($alignments{$main_loop->[1]} == $main_index))
     {
-        push (@bestmap_table, [@$main_loop]); # push only best alignments with more for BNG maps that scaffold more than one best alignments to bestmap 2D array
+        if ($winning_scaffolds{$main_loop->[2]} > 1)
+        {
+#        print "$main_loop->[0]\t$main_loop->[1]\t$main_loop->[2]\n";
+            push (@bestmap_table, [@$main_loop]); # push only best alignments with more for BNG maps that scaffold more than one best alignments to bestmap 2D array
+        }
     }
+    ++$main_index;
 }
+
 ###############################################################################
 ##################   identify overlapping footprints  #########################
 ##################     add them to an overlap hash    #########################
@@ -167,7 +181,7 @@ for my $main_loop (@stitchmap_table) # for each sequence-based contig feature in
 $main_index=0;
 for my $main_loop (@bestmap_table) # for each sequence-based contig feature in the bestmap
 {
-
+    
     my $nested_index=0;
  	for my $nested_loop (@bestmap_table) # compare its footprint to every other contig feature's footprint
     {
@@ -179,8 +193,8 @@ for my $main_loop (@bestmap_table) # for each sequence-based contig feature in t
             {
                 if ("$main_loop->[1]" ne "$nested_loop->[1]")# don't calculate overlaps of the same sequence-based contig
                 {
-                    undef $main_loop->[17]{$nested_index}; ## add all overlaps to a hash in the 17th column (contig_id->[17])
-                    undef $nested_loop->[17]{$main_index};
+                    $main_loop->[17]{$nested_index} = $nested_loop->[5]; ## add all overlaps to a hash in the 17th column (contig_id->[17])
+                    $nested_loop->[17]{$main_index} = $main_loop->[5];
                     
                 }
             }
@@ -204,7 +218,7 @@ for my $row (@reversed_bestmap_table) # for each bestmap entry
         {
             if ($confounded != $main_index)
             {
-                undef $row->[17]{$confounded};
+                $row->[17]{$confounded}= $bestmap_table[$confounded]->[5];
             }
             
         }
@@ -218,21 +232,41 @@ for my $row (@reversed_bestmap_table) # for each bestmap entry
 my $key_file=$ARGV[2];
 open (KEY,"<",$key_file) or die "couldn't open $key_file $!";
 my %key_hash;
+my @supers;
 while (<KEY>)
 {
     unless (/^#/)
     {
         chomp;
-        my @row=split ("\t");
-        s/\s+//g foreach @row;
-        $key_hash{$row[4]}=$row[2];
+        unless ($_ eq '')
+        {
+            my @row=split ("\t");
+            s/\s+//g foreach @row;
+            $key_hash{$row[4]}=$row[2];
+            if ($row[2] =~ /(Super_scaffold_)(.*)/)
+            {
+                push (@supers, $2);
+            }
+        }
     }
 }
+push (@supers, 0);
+@supers = sort { $a <=> $b } @supers;
+my $max = $supers[$#supers];
+my $n = $max + 1; #prevent super scaffolds with duplicate names
 ########################################################################
 ########################     print to new    ###########################
 ######################## fasta scaffold file ###########################
 ########################################################################
-my $n=1;
+my $pos = 1;
+my $agp_element=1;
+$infile_stitchmap =~ /(.*)_scaffolds.stitchmap/;
+my $outagp="$1"."_superscaffold.agp";
+if (-e "$outagp") {print "$outagp file Exists!\n"; exit;}
+open (AGP, ">", $outagp) or die "Can't open $outagp!\n";
+print AGP "##agp-version   2.0\n";
+
+my $first=1;
 my $last_fasta=-1;
 my %finished; ## we  will use %finished as a list of scaffolds added to super scaffolds so that the remaining contigs can be added
 my $old_mol=-1; ## begins with the last molecule (in generally this should not match the first molecule but must be changed if the first molecule in the stitchmap is also the last e.g. bacterial)
@@ -248,22 +282,31 @@ for my $row (@bestmap_table)
         ###################################################################
         if ($new_mol != $old_mol) ## if we are not on the same molecule
         {
-            unless ($n==1) # unless this is the first molecule map write the old one
+            unless ($first==1) # unless this is the first molecule map write the old one
             {
                 my $scaffold_obj = Bio::Seq->new( -display_id =>  $scaffold_id, -seq => $new_seq, -alphabet => 'dna');
                 $seq_out->write_seq($scaffold_obj); ## write the finished superscaffold
             }
             $scaffold_id = "Super_scaffold_$n"; ## initialize new superscaffold
+            print "$scaffold_id: Scaffolding molecule = $row->[2]\n";
             $new_seq = '';
+            $agp_element=1;
+            $pos = 1;
             ++$n;
-            print "Scaffolding molecule = $row->[2]\n";
+            $first=0;
         }
         ###################################################################
         #### Continue building superscaffolds: append known gaps ##########
         ###################################################################
         if ($old_mol==$new_mol)
         {
-            $new_seq = "$new_seq"."n" x ($row->[10]-($bestmap_table[$last_fasta]->[11])-1); ## add n's (as many as there are positions from the the footprint start of the current contig to the footprint end of the last contig if the last contig is on the same molecule
+            my $gap_length = int(($row->[10]-($bestmap_table[$last_fasta]->[11])-1));
+            $new_seq = "$new_seq"."n" x $gap_length; ## add n's (as many as there are positions from the the footprint start of the current contig to the footprint end of the last contig if the last contig is on the same molecule
+            ##### AGP addition:
+            my $stop_agp = $pos + $gap_length - 1;
+            print AGP "$scaffold_id\t$pos\t$stop_agp\t$agp_element\tN\t$gap_length\tscaffold\tyes\tmap\n";
+            $pos =$stop_agp +1;
+            ++$agp_element;
         }
         ###################################################################
         #### append non-overlapping contigs to the superscaffold ##########
@@ -274,22 +317,50 @@ for my $row (@bestmap_table)
         ++$last_fasta; ## keep track of the array index for the last contig added
         print "\t in silico = $row->[1], $key_hash{$row->[1]}\n";
         
+        ##### AGP addition:
+        my $stop_agp_contig = $pos + $row->[15] - 1;
+        print AGP "$scaffold_id\t$pos\t$stop_agp_contig\t$agp_element\tW\t$key_hash{$row->[1]}\t1\t$row->[15]\t$row->[7]\n";
+        $pos = $stop_agp_contig +1;
+        ++$agp_element;
+
+#        open (CHECK, ">", "/homes/bioinfo/bionano/Micr_muri_2014_019/tester_check.txt");
         ###################################################################
         ######  append overlapping contigs to the superscaffold ###########
         ###################################################################
         if (scalar(keys %{ $row->[17] }) > 0 ) # if the in silico map has overlaping alignments
         {
-            for my $overlap (sort keys %{ $row->[17] } ) ## for all overlaping alignments
+#            print CHECK "$row->[1]:";
+#            for my $overlap (sort keys %{ $row->[17] } ) ## for all overlaping alignments
+#            {
+#            foreach my $name (sort { $planets{$a} <=> $planets{$b} } keys %planets)
+            foreach my $overlap (sort { $row->[17]{$a} <=> $row->[17]{$b} } keys %{ $row->[17] })
             {
-                
-                $new_seq = "$new_seq"."n" x 30; ## add "spacer" gaps of 30 x n
-                ($start,$stop) = ($bestmap_table[$overlap]->[7] eq '+')?(1, $bestmap_table[$overlap]->[15]):($bestmap_table[$overlap]->[15], 1); # "?:" operator tests if the sequence is in the forward or reverse direction and reverses start and stop if minus strand
-                $new_seq = "$new_seq".$db->seq("$bestmap_table[$overlap]->[1]:$start,$stop");
-                $finished{$bestmap_table[$overlap]->[1]}=1; ## add to the list of superscaffolded sequences
-                ++$last_fasta; ## keep track of the array index for the last contig added
-#                print "\t in silico = $row->[1], $key_hash{$row->[1]}\n";
-                print "\t in silico = $bestmap_table[$overlap]->[1], $key_hash{$bestmap_table[$overlap]->[1]}\n";
+#                print CHECK "$bestmap_table[$overlap]->[1], ";
+                unless (exists $finished{$bestmap_table[$overlap]->[1]})
+                {
+                    $new_seq = "$new_seq"."n" x 100; ## add "spacer" gaps of 30 x n
+                    
+                    ##### AGP addition:
+                    my $stop_overlap_gap = $pos + 100 - 1;
+                    print AGP "$scaffold_id\t$pos\t$stop_overlap_gap\t$agp_element\tU\t100\tscaffold\tyes\tmap\n";
+                    $pos = $stop_overlap_gap +1;
+                    ++$agp_element;
+                    
+                    ($start,$stop) = ($bestmap_table[$overlap]->[7] eq '+')?(1, $bestmap_table[$overlap]->[15]):($bestmap_table[$overlap]->[15], 1); # "?:" operator tests if the sequence is in the forward or reverse direction and reverses start and stop if minus strand
+                    $new_seq = "$new_seq".$db->seq("$bestmap_table[$overlap]->[1]:$start,$stop");
+                    $finished{$bestmap_table[$overlap]->[1]}=1; ## add to the list of superscaffolded sequences
+                    ++$last_fasta; ## keep track of the array index for the last contig added
+                    #                print "\t in silico = $row->[1], $key_hash{$row->[1]}\n";
+                    print "\t in silico = $bestmap_table[$overlap]->[1], $key_hash{$bestmap_table[$overlap]->[1]}\n";
+                    
+                    ##### AGP addition:
+                    my $stop_overlap_contig = $pos + $bestmap_table[$overlap]->[15] - 1;
+                    print AGP "$scaffold_id\t$pos\t$stop_overlap_contig\t$agp_element\tW\t$key_hash{$bestmap_table[$overlap]->[1]}\t1\t$bestmap_table[$overlap]->[15]\t$bestmap_table[$overlap]->[7]\n";
+                    $pos = $stop_agp_contig +1;
+                    ++$agp_element;
+                }
             }
+#            print CHECK "\n";
         }
 		$old_mol=$new_mol; ## now the current molecule will be listed as the last molecule we have seen
         if ($last_fasta==$#bestmap_table) ## if this is the last row in the stitchmap table
@@ -322,5 +393,5 @@ while (my $seq = $seq_in->next_seq)
         my $scaffold_obj = Bio::Seq->new( -display_id =>  $scaffold_id, -seq => $final_seq, -alphabet => 'dna');
         $seq_out->write_seq($scaffold_obj);
     }
-
+    
 }

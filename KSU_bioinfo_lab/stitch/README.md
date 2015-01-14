@@ -133,7 +133,7 @@ DESCRIPTION
        if the first and second best alignment for an in silico map align to the 
        ends of two molecule maps that each super-scaffold > 1 in silico map than 
        these alignments are listed and can be used to "stitch" together the final 
-       super-scaffold.
+       super-scaffold in a subsequent iteration.
 
 
 **Test with sample datasets**
@@ -146,3 +146,46 @@ mkdir results
 
 perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 8 --s_algn 90
 ```
+
+UPDATES
+
+####stitch.pl Version 1.4.5 
+
+rejects scaffolding alignments if overlap is longer than 20,000 (bp)
+
+####stitch.pl Version 1.4.4 
+
+correctly sort new xmaps to correct output order
+
+####stitch.pl Version 1.4.3 
+
+changed unknown gap lengths to 100 and set AGP indentity to U from N. Fixed bug in alignments that are not the best or second best.
+
+####stitch.pl Version 1.4.2 
+
+fixed bug in splitting sequence at gaps longer than 10 bp into contigs in KSU_bioinfo_lab/stitch/make_contigs_from_fasta.pl
+
+####stitch.pl Version 1.4.1 
+
+produces AGP files of super-scaffolds
+
+####stitch.pl Version 1.4. 
+
+Speed up KSU_bioinfo_lab/stitch/agp2bed.pl. Modified KSU_bioinfo_lab/stitch/make_contigs_from_fasta.pl to only split at gaps longer than ten bases.
+
+####Update to stitch.pl v.1.3
+
+Die and report when no super scaffolds can be found. Give generic names
+to contigs. Check for IUPAC ambiguous bases other than n when making
+AGP.
+
+####stitch.pl Version 1.2
+
+stitch.pl Version 1.2 : Check fasta file for redundant super-scaffold
+names (this step only effects iterative assemblies), create new AGP,
+create a BNG compatible Bed file.
+
+####stitch.pl Version 1.1
+
+Separated stitch map from best alignment map. Also generalized
+agp2bed.pl.

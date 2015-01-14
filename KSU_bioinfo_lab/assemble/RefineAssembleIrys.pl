@@ -20,7 +20,11 @@ use Data::Dumper;
 ##################################################################################
 print "###########################################################\n";
 print "#  RefineAssembleIrys.pl Version 1.0                      #\n";
-print "#                                                         #\n";
+print "# !!!                     WARNING                     !!! #\n";
+print "# !!!CURRENTLY THESE SCRIPTS ARE NOT BEING MAINTAINED !!! #\n";
+print "# !!!                      SEE                        !!! #\n";
+print "# !!!  ../assemble_SGE_cluster/RefineAssembleIrys.pl  !!! #\n";
+print "# !!!               FOR UPDATED VERSION               !!! #\n";
 print "#  Created by Jennifer Shelton 2/3/14                     #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
 print "#  perl AssembleIrys.pl -help # for usage/options         #\n";

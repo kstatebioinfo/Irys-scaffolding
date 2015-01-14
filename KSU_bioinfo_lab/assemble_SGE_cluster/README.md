@@ -3,27 +3,57 @@ SUMMARY
 **AssembleIrys.pl -** Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters. Runs on the Beocat SGE cluster.
 
 Workflow diagram
-![Alt text](https://raw.github.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble/bionano%20assembly%20workflow.png)
+![Alt text](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_SGE_cluster/bionano%20assembly%20workflow.png)
 
-1) The Irys produces tiff files that are converted into BNX text files.
-2) Each chip produces one BNX file for each of two flowcells.
-3) BNX files are split by scan and aligned to the sequence reference. Stretch (bases per pixel) is recalculated from the alignment.
-4) Quality metrics are reported in a CSV file for each adjusted flowcell BNX.
-5) Adjusted flowcell BNXs are merged and aligned to the reference with and without “-BestRef”. If alignment quality changes dramatically your p-value threshold may be lax.
-6) The first assemblies are run with a variety of p-value thresholds.
-7) The best of the first assemblies (red oval) is chosen and a version of this assembly is produced with a variety of minimum molecule length filters.
+ 1) The Irys produces tiff files that are converted into BNX text files.
+ 2) Each chip produces one BNX file for each of two flowcells.
+ 3) BNX files are split by scan and aligned to the sequence reference. Stretch (bases per pixel) is recalculated from the alignment.
+ 4) Quality check graphs are created for each pre-adjusted flowcell BNX.
+ 5) Adjusted flowcell BNXs are merged.
+ 6) The first assemblies are run with a variety of p-value thresholds.
+ 7) The best of the first assemblies (red oval) is chosen and a version of this assembly is produced with a variety of minimum molecule length filters.
     
 USAGE
     
-    perl AssembleIrys.pl -g [genome size in Mb] -r [reference CMAP] -b [directory with BNX files] -p [project name]
+    perl AssembleIrys.pl -g <genome size in Mb> -r <reference CMAP> -b <directory with BNX files> -p <project name>
     
 DEPENDENCIES
 
-    Perl module Statistics::LineFit. This can be installed using CPAN http://search.cpan.org/dist/Statistics-LineFit/lib/Statistics/LineFit.pm.
     Perl module XML::Simple. This can be installed using CPAN http://search.cpan.org/~grantm/XML-Simple-2.20/lib/XML/Simple.pm;
     Perl module Data::Dumper. This can be installed using CPAN http://search.cpan.org/~smueller/Data-Dumper-2.145/Dumper.pm;
     
 UPDATES
+
+####AssembleIrysCluster.pl Version 1.6.1. 
+
+Removed regression for adjust stretch. Deletes new alignment output files from Molecules_X directories. Removes auto-noise until further testing. Add -T and -j back to pipeline call because they are required on top of values in the cluster xml file for threads.
+
+####AssembleIrysCluster.pl Version 1.6. 
+
+Version is faster especially for larger datasets because each molecule quality report is generated from max 10,000 sub-sampled molecules.
+
+####AssembleIrysCluster.pl Version 1.5.1. 
+
+Modified KSU_bioinfo_lab/assemble_SGE_cluster/assemble.pl for new optArguments.xml. Changed KSU_bioinfo_lab/assembly_qc.pl for new informatics reports. Speed up stitch/agp2bed.pl. Modified KSU_bioinfo_lab/stitch/make_contigs_from_fasta.pl to only split at gaps longer than ten bases.
+
+####AssembleIrysCluster.pl Version 1.5
+
+Sets noise parameters based on molecule quality reports (MQR) so that
+is auto-noise fails the -y flag can be removed from
+assembly_commands.sh and the assemblies can be run with MQR parameters.
+
+####AssembleIrysCluster.pl v. 1.4
+
+Updated for new Assembler with auto noise
+
+####AssembleIrysCluster.pl v.1.3
+
+Fixed bug in lowering minimum lengths. Returned optArguments.xml to
+default parameters.
+
+####AssembleIrysCluster.pl Version 1.2
+
+AssembleIrysCluster.pl Version 1.2 fixed a bug in listing split and adjusted bnx files
 
 ####AssembleIrys.pl AssembleIrysCluster.pl Version 1.1 04/21/2014
 
