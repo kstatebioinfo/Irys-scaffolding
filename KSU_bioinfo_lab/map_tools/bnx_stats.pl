@@ -44,6 +44,7 @@ GetOptions (
 or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
+my $dirname = dirname(__FILE__);
 ###############################################################################
 ##############                Subroutines                    ##################
 ###############################################################################
@@ -123,7 +124,7 @@ for my $input_bnx (@ARGV)
 ##############################################################################
 @lengths=sort{$b<=>$a} @lengths; #Sort lengths largest to smallest
 
-my $current_length; #create a new variable for N50
+my $current_length=0; #create a new variable for N50
 my $fraction=$total_length;
 foreach(my $j=0; $fraction>$total_length/2; $j++) #until $fraction is greater than half the total length increment the index value $j for @lengths
 {
@@ -142,7 +143,7 @@ $total_length = $total_length/1000000;
 ###############################################################################
 print "Graphing data...\n";
 
-my $graph_data = `Rscript /Users/jennifer_shelton/Irys-scaffolding/KSU_bioinfo_lab/map_tools/histograms.R temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_snrs.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab 'Molecule map N50: $current_length (kb)' 'Cummulative length of molecule maps: $total_length (Mb)' 'Number of molecule maps: $bnx_count'`;
+my $graph_data = `Rscript ${dirname}/histograms.R temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_snrs.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab 'Molecule map N50: $current_length (kb)' 'Cummulative length of molecule maps: $total_length (Mb)' 'Number of molecule maps: $bnx_count'`;
 print "$graph_data\n";
 #unlink qw/temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_snrs.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab/;
 
