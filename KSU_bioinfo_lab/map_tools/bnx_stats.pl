@@ -9,11 +9,12 @@
 ##################################################################################
 use strict;
 use warnings;
+use Math::BigFloat;
 # use IO::File;
 use File::Basename; # enable maipulating of the full path
 # use File::Slurp;
- use List::Util qw(max);
- use List::Util qw(sum);
+use List::Util qw(max);
+use List::Util qw(sum);
 use Term::ANSIColor;
 use Getopt::Long;
 use Pod::Usage;
@@ -52,6 +53,7 @@ sub mean { return @_ ? sum(@_) / @_ : 0 } # calculate mean of array
 ###############################################################################
 ##############              run                              ##################
 ###############################################################################
+use bignum;
 open (my $temp_bnx_lengths, ">", 'temp_bnx_lengths.tab') or die "Can't open temp_bnx_lengths.tab: $!"; # Open temp files
 open (my $temp_mol_intensities, ">", 'temp_bnx_mol_intensities.tab') or die "Can't open temp_mol_intensities.tab: $!"; # Open temp files
 open (my $temp_mol_snrs, ">", 'temp_bnx_mol_snrs.tab') or die "Can't open temp_mol_snrs.tab: $!"; # Open temp files
@@ -59,84 +61,106 @@ open (my $temp_mol_NumberofLabels, ">", 'temp_bnx_mol_NumberofLabels.tab') or di
 open (my $temp_mean_label_snr, ">", 'temp_mean_label_snr.tab') or die "Can't open temp_mean_label_snr.tab: $!"; # Open temp files
 open (my $temp_mean_label_intensity, ">", 'temp_mean_label_intensity.tab') or die "Can't open temp_mean_label_intensity.tab: $!"; # Open temp files
 my (@lengths,@mol_intensities,@mol_snrs,@mol_NumberofLabels);
-my $total_length;
+my $total_length =0;
 my ($bnx_count,$scan_count);
 print "Reading BNX files of molecule maps...\n";
-print "\tBNX Versions\n";
+my $file_count = scalar(@ARGV); # get number of bnx files
+my $current_file_count = $file_count;
+if ($file_count == 0)
+{
+    print "No BNX files have been given exiting.\n";
+    exit;
+}
 for my $input_bnx (@ARGV)
 {
+    my $total_flowcell_length;
     open (my $bnx, "<", $input_bnx) or die "Can't open $input_bnx: $!";
-    my $first_line = 1;
     my $bnx_version;
     while (<$bnx>)
     {
-        #0h	LabelChannel	MoleculeId	Length	AvgIntensity	SNR	NumberofLabels	OriginalMoleculeId	ScanNumber	ScanDirection	ChipId	Flowcell
-        if (/^# BNX File Version:/)
+        unless (/^s+$/)
         {
-            /# BNX File Version:\t(.*)\n/;
-            my $bnx_version = $1;
-            print "\t\tBNX Version: $bnx_version\n";
-            unless ($bnx_version >= 1)
+            #0h	LabelChannel	MoleculeId	Length	AvgIntensity	SNR	NumberofLabels	OriginalMoleculeId	ScanNumber	ScanDirection	ChipId	Flowcell
+            if (/^# BNX File Version:/)
             {
-                print "Warning bnx_stats.pl was only tested on BNX version 1.0 and 1.2 files.\n";
+                /# BNX File Version:\t(.*)\n/;
+                my $bnx_version = $1;
+                #                print "$bnx_version $total_length $input_bnx \n";
+                print "BNX file $current_file_count of $file_count files\n";
+                --$current_file_count;
+                unless ($bnx_version >= 1)
+                {
+                    print "Warning bnx_stats.pl was only tested on BNX version 1.0 and 1.2 files.\n";
+                }
+            }
+            ###############################################################################
+            ##############              Log Molecule metrics             ##################
+            ###############################################################################
+            if (/^0\t/) #if the line for a backbone
+            {
+                my ($LabelChannel,$MoleculeId,$Length,$AvgIntensity,$SNR,$NumberofLabels,$OriginalMoleculeId,$ScanNumber,$ScanDirection,$ChipId,$Flowcell) = split(/\t/);
+                ++$bnx_count;
+                unless ($Length =~ /Infinity/) # Some older BNXs include this
+                {
+                    $total_flowcell_length += (int($Length)/1000);
+                    my $Lengthkb = int($Length)/1000;
+                    push (@lengths,int($Length)/1000);
+                    print $temp_bnx_lengths "$Lengthkb\n";
+                }
+                print $temp_mol_intensities "$AvgIntensity\n";
+                print $temp_mol_snrs "$SNR\n";
+                print $temp_mol_NumberofLabels "$NumberofLabels\n";
+                push (@mol_intensities,$AvgIntensity);
+                push (@mol_snrs, $SNR);
+                push (@mol_NumberofLabels,$NumberofLabels);
+            }
+            if (/^QX11\t/) #if the line is for a Label SNR
+            {
+                chomp;
+                my @label_snr = split (/\t/);
+                shift (@label_snr);
+                unless (scalar(@label_snr) == 0)
+                {
+                    my $mean_snr = &mean(@label_snr);
+                    print $temp_mean_label_snr "$mean_snr\n"; #PRINT AFTER ADDING MEAN SNR CALC
+                }
+            }
+            if (/^QX12\t/) #if the line is for a Label intensity
+            {
+                chomp;
+                my @label_intensity = split (/\t/);
+                shift (@label_intensity);
+                unless (scalar(@label_intensity) == 0)
+                {
+                    my $mean_intensity = &mean(@label_intensity);
+                    print $temp_mean_label_intensity "$mean_intensity\n"; #PRINT AFTER ADDING MEAN INTENSITY CALC
+                }
             }
         }
-        ###############################################################################
-        ##############              Log Molecule metrics             ##################
-        ###############################################################################
-        if (/^0\t/) #if the line for a backbone
-        {
-            my ($LabelChannel,$MoleculeId,$Length,$AvgIntensity,$SNR,$NumberofLabels,$OriginalMoleculeId,$ScanNumber,$ScanDirection,$ChipId,$Flowcell) = split(/\t/);
-            $total_length += $Length;
-            ++$bnx_count;
-            ++$scan_count;
-            my $Lengthkb = $Length/1000;
-            push (@lengths,$Length);
-            print $temp_bnx_lengths "$Lengthkb\n";
-            print $temp_mol_intensities "$AvgIntensity\n";
-            print $temp_mol_snrs "$SNR\n";
-            print $temp_mol_NumberofLabels "$NumberofLabels\n";
-            push (@mol_intensities,$AvgIntensity);
-            push (@mol_snrs, $SNR);
-            push (@mol_NumberofLabels,$NumberofLabels);
-        }
-        if (/^QX11\t/) #if the line for a Label SNR
-        {
-            chomp;
-            my @label_snr = split (/\t/);
-            shift (@label_snr);
-            my $mean_snr = &mean(@label_snr);
-            print $temp_mean_label_snr "$mean_snr\n"; #PRINT AFTER ADDING MEAN SNR CALC
-        }
-        if (/^QX12\t/) #if the line for a Label intensity
-        {
-            chomp;
-            my @label_intensity = split (/\t/);
-            shift (@label_intensity);
-            my $mean_intensity = &mean(@label_intensity);
-            print $temp_mean_label_intensity "$mean_intensity\n"; #PRINT AFTER ADDING MEAN INTENSITY CALC
-        }
     }
+    my $new_total_length = $total_length + $total_flowcell_length;
+    $total_length = $new_total_length;
 }
 ##############################################################################
 # CALCULATE N50:
 # Now calculate the N50 from the array of map lengths and the total length
 ##############################################################################
 @lengths=sort{$b<=>$a} @lengths; #Sort lengths largest to smallest
-
-my $current_length=0; #create a new variable for N50
+#print scalar(@lengths)."\n";
+#print "$total_length\n";
+my $current_length; #create a new variable for N50
 my $fraction=$total_length;
 foreach(my $j=0; $fraction>$total_length/2; $j++) #until $fraction is greater than half the total length increment the index value $j for @lengths
 {
     $current_length=$lengths[$j];
     $fraction -= $current_length; # subtract current length from $fraction
 }
-$current_length = $current_length/1000;
-$total_length = $total_length/1000000;
+$current_length = $current_length;
+$total_length = $total_length/1000;
 
-#print "Molecule map N50: $current_length (kb)\n";
-#print "Cummulative length of molecule maps: $total_length (Mb)\n";
-#print "Number of molecule maps: $bnx_count\n";
+print "Molecule map N50: $current_length (kb)\n";
+print "Cummulative length of molecule maps: $total_length (Mb)\n";
+print "Number of molecule maps: $bnx_count\n";
 
 ###############################################################################
 ##############               Graph data                      ##################
@@ -145,7 +169,7 @@ print "Graphing data...\n";
 
 my $graph_data = `Rscript ${dirname}/histograms.R temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_snrs.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab 'Molecule map N50: $current_length (kb)' 'Cummulative length of molecule maps: $total_length (Mb)' 'Number of molecule maps: $bnx_count'`;
 print "$graph_data\n";
-#unlink qw/temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_snrs.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab/;
+unlink qw/temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_snrs.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab Rplots.pdf/;
 
 
 print "Done\n";
@@ -157,9 +181,11 @@ __END__
 
 =head1 NAME
  
- bnx_stats.pl - Script outputs count of molecule maps in BNX files, cummulative lengths of molecule maps and N50 of molecule maps. Tested on BNX File Version 1 however it should work on Version 1.2 as well. The user inputs a list of BNX files or a glob as the final arguments to script. 
- Script has no options other than help menus currently but it was designed to be adapted into a molecule cleaning script similar to prinseq or fastx. Feel free to fork this and add your own filters.
-DEPENDENCIES
+bnx_stats.pl - Script outputs count of molecule maps in BNX files, cummulative lengths of molecule maps and N50 of molecule maps. Tested on BNX File Version 1 however it should work on Version 1.2 as well. The user inputs a list of BNX files or a glob as the final arguments to script. Script shortens molecule maps to integers before making calculations. Things to add include filtering by min molecule length and switchinh between QC and cleaning.
+ 
+Script has no options other than help menus currently but it was designed to be adapted into a molecule cleaning script similar to prinseq or fastx. Feel free to fork this and add your own filters.
+ 
+=head1 DEPENDENCIES
  
  Perl and R
  
