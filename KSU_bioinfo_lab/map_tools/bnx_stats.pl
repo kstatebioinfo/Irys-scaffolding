@@ -22,7 +22,9 @@ use Pod::Usage;
 ##############         Print informative message             ##################
 ###############################################################################
 print "###########################################################\n";
-print colored ("#   !!!!!WARNING UNDER DEVELOPMENT!!!!                    #", 'bold white on_blue'), "\n";
+print colored ("#           !!!!!WARNING UNDER DEVELOPMENT!!!!            #", 'bold white on_blue'), "\n";
+print colored ("#             NOTE: SCRIPT ASSUMES DATA WITH              #", 'bold white on_blue'), "\n";
+print colored ("#     BACKBONE & A SINGLE CHANNEL OF LABEL INFORMATION    #", 'bold white on_blue'), "\n";
 print "#   bnx_stats.pl Version 1.0                              #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 01/15/15                   #\n";
@@ -36,11 +38,11 @@ print "###########################################################\n";
 my $input_bnx;
 my $man = 0;
 my $help = 0;
+my $min_length_kb = 0;
 GetOptions (
-'help|?' => \$help,
-'man' => \$man,
-'s|snr:s' => \$input_bnx,
-
+    'help|?' => \$help,
+    'man' => \$man,
+    'l|min_length_kb:s' => \$min_length_kb,
 )
 or pod2usage(2);
 pod2usage(1) if $help;
@@ -50,6 +52,17 @@ my $dirname = dirname(__FILE__);
 ##############                Subroutines                    ##################
 ###############################################################################
 sub mean { return @_ ? sum(@_) / @_ : 0 } # calculate mean of array
+
+sub next_three # take the next three lines in a subroutine
+{
+    my $sub_fh=shift;
+    my $next_lines;
+    foreach (1..3)
+    {
+        $next_lines .= <$sub_fh>;
+    }
+    return $next_lines;
+}
 ###############################################################################
 ##############              run                              ##################
 ###############################################################################
@@ -94,41 +107,50 @@ for my $input_bnx (@ARGV)
                 }
             }
             ###############################################################################
-            ##############              Log Molecule metrics             ##################
+            ##############              Log Molecule metrics NEW            ##################
             ###############################################################################
-            if (/^0\t/) #if the line for a backbone
+            unless (/^#/)
             {
+                #########################################################################
+                ##############              Backbone line              ##################
+                #########################################################################
                 my ($LabelChannel,$MoleculeId,$Length,$AvgIntensity,$SNR,$NumberofLabels,$OriginalMoleculeId,$ScanNumber,$ScanDirection,$ChipId,$Flowcell) = split(/\t/);
-                ++$bnx_count;
-                unless ($Length =~ /Infinity/) # Some older BNXs include this
+                my $three_lines = &next_three($bnx);
+                my($label_pos_line, $label_snr_line, $label_intensity_line) = split(/\n/,$three_lines);
+                if ($Length =~ /Infinity/) #exit if the molecule have no recorded length
                 {
-                    $total_flowcell_length += (int($Length)/1000);
-                    my $Lengthkb = int($Length)/1000;
-                    push (@lengths,int($Length)/1000);
-                    print $temp_bnx_lengths "$Lengthkb\n";
+                    next;
                 }
+                my $Lengthkb = int($Length)/1000; # use length data
+                if ($Lengthkb < $min_length_kb) #skip molecule map if min length if greater than length of current molecule map
+                {
+                    next;
+                }
+                ++$bnx_count; # count molecules
+                $total_flowcell_length += $Lengthkb;
+                push (@lengths,$Lengthkb);
+                print $temp_bnx_lengths "$Lengthkb\n";
+                
                 print $temp_mol_intensities "$AvgIntensity\n";
                 print $temp_mol_snrs "$SNR\n";
                 print $temp_mol_NumberofLabels "$NumberofLabels\n";
-                push (@mol_intensities,$AvgIntensity);
-                push (@mol_snrs, $SNR);
-                push (@mol_NumberofLabels,$NumberofLabels);
-            }
-            if (/^QX11\t/) #if the line is for a Label SNR
-            {
-                chomp;
-                my @label_snr = split (/\t/);
+#                push (@mol_intensities,$AvgIntensity);
+#                push (@mol_snrs, $SNR);
+#                push (@mol_NumberofLabels,$NumberofLabels);
+                #########################################################################
+                ##############              Label SNR line             ##################
+                #########################################################################
+                my @label_snr = split (/\t/,$label_snr_line);
                 shift (@label_snr);
                 unless (scalar(@label_snr) == 0)
                 {
                     my $mean_snr = &mean(@label_snr);
                     print $temp_mean_label_snr "$mean_snr\n"; #PRINT AFTER ADDING MEAN SNR CALC
                 }
-            }
-            if (/^QX12\t/) #if the line is for a Label intensity
-            {
-                chomp;
-                my @label_intensity = split (/\t/);
+                #########################################################################
+                ##############           Label intensity line          ##################
+                #########################################################################
+                my @label_intensity = split (/\t/,$label_intensity_line);
                 shift (@label_intensity);
                 unless (scalar(@label_intensity) == 0)
                 {
@@ -170,7 +192,6 @@ print "Graphing data...\n";
 my $graph_data = `Rscript ${dirname}/histograms.R temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_snrs.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab 'Molecule map N50: $current_length (kb)' 'Cummulative length of molecule maps: $total_length (Mb)' 'Number of molecule maps: $bnx_count'`;
 print "$graph_data\n";
 unlink qw/temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_snrs.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab Rplots.pdf/;
-
 
 print "Done\n";
 ###############################################################################
@@ -216,10 +237,9 @@ Print a brief help message and exits.
 
 Prints the more detailed manual page with output details and examples and exits.
 
-=item B<-x, --x>
+=item B<-l, --min_length_kb>
 
-No additional options currently.
-
+Minimum molecule length in kb. Molecules shorter than this are not analyzed (Default = 0).
 
 =back
 
