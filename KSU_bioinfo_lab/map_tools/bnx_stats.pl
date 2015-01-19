@@ -2,7 +2,8 @@
 ##################################################################################
 #
 # USAGE: perl  bnx_stats.pl [OPTIONS] BNX_FILES...
-# Script outputs count of molecule maps in BNX files, cummulative lengths of molecule maps and N50 of molecule maps. Tested on BNX File Version 1 however it should work on Version 1.2 as well. The user inputs a list of BNX files or a glob as the final arguments to script.
+# Script outputs count of molecule maps in BNX files, cummulative lengths of molecule maps and N50 of molecule maps. Script also outputs a PDF with these metrics as well as histograms of molecule map quality metrics. Tested on BNX File Version 1.0 however it should work on Version 1.2 as well. The user inputs a list of BNX files or a glob as the final arguments to script. Things to add include filtering by min molecule length and switching between QC and cleaning.
+#
 # Script has no options other than help menus currently but it was designed to be adapted into a molecule cleaning script similar to prinseq or fastx. Feel free to fork this and add your own filters.
 #  Created by jennifer shelton 01/15/15
 #
@@ -99,7 +100,7 @@ for my $input_bnx (@ARGV)
                 /# BNX File Version:\t(.*)\n/;
                 my $bnx_version = $1;
                 #                print "$bnx_version $total_length $input_bnx \n";
-                print "BNX file $current_file_count of $file_count files\n";
+                print "Reading BNX file $current_file_count of $file_count files\n";
                 --$current_file_count;
                 unless ($bnx_version >= 1)
                 {
@@ -115,13 +116,18 @@ for my $input_bnx (@ARGV)
                 ##############              Backbone line              ##################
                 #########################################################################
                 my ($LabelChannel,$MoleculeId,$Length,$AvgIntensity,$SNR,$NumberofLabels,$OriginalMoleculeId,$ScanNumber,$ScanDirection,$ChipId,$Flowcell) = split(/\t/);
+                if ($LabelChannel != 0) # Test for number of lines agrees with expected number of lines per molecule.
+                {
+                    print "Warning BNX file $input_bnx appears to be corrupt. Each record should be four lines if only the backbone and one label channel are described in a BNX file. Skipping this file.\n";
+                    last;
+                }
                 my $three_lines = &next_three($bnx);
                 my($label_pos_line, $label_snr_line, $label_intensity_line) = split(/\n/,$three_lines);
                 if ($Length =~ /Infinity/) #exit if the molecule have no recorded length
                 {
                     next;
                 }
-                my $Lengthkb = int($Length)/1000; # use length data
+                my $Lengthkb = $Length/1000; # use length data (removed int)
                 if ($Lengthkb < $min_length_kb) #skip molecule map if min length if greater than length of current molecule map
                 {
                     next;
@@ -134,9 +140,6 @@ for my $input_bnx (@ARGV)
                 print $temp_mol_intensities "$AvgIntensity\n";
                 print $temp_mol_snrs "$SNR\n";
                 print $temp_mol_NumberofLabels "$NumberofLabels\n";
-#                push (@mol_intensities,$AvgIntensity);
-#                push (@mol_snrs, $SNR);
-#                push (@mol_NumberofLabels,$NumberofLabels);
                 #########################################################################
                 ##############              Label SNR line             ##################
                 #########################################################################
@@ -202,7 +205,7 @@ __END__
 
 =head1 NAME
  
-bnx_stats.pl - Script outputs count of molecule maps in BNX files, cummulative lengths of molecule maps and N50 of molecule maps. Tested on BNX File Version 1 however it should work on Version 1.2 as well. The user inputs a list of BNX files or a glob as the final arguments to script. Script shortens molecule maps to integers before making calculations. Things to add include filtering by min molecule length and switchinh between QC and cleaning.
+bnx_stats.pl - Script outputs count of molecule maps in BNX files, cummulative lengths of molecule maps and N50 of molecule maps. Script also outputs a PDF with these metrics as well as histograms of molecule map quality metrics. Tested on BNX File Version 1.0 however it should work on Version 1.2 as well. The user inputs a list of BNX files or a glob as the final arguments to script. Things to add include filtering by min molecule length and switching between QC and cleaning.
  
 Script has no options other than help menus currently but it was designed to be adapted into a molecule cleaning script similar to prinseq or fastx. Feel free to fork this and add your own filters.
  
@@ -221,9 +224,7 @@ Documentation options:
 
 Required parameters:
 
-    -x	    no additional options currently
-
-
+    -l	    minimum molecule map length
 
 =head1 OPTIONS
 
@@ -239,7 +240,7 @@ Prints the more detailed manual page with output details and examples and exits.
 
 =item B<-l, --min_length_kb>
 
-Minimum molecule length in kb. Molecules shorter than this are not analyzed (Default = 0).
+Minimum molecule length in kb. Molecules shorter than this are not analyzed. Currently this script does not produce filtered BNX files so this value will cause reports to include only molecule maps longer than the value but will not change the BNX file (Default = 0).
 
 =back
 
