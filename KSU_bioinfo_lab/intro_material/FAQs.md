@@ -57,5 +57,12 @@ You can find the observed bpp by aligning molecule maps to your ref and finding 
 ~/tools/RefAligner -f -i sample_dir/bnx_merged.bnx -merge -bnx -bpp $bpp -o $sample_dir/bnx_merged_adj -maxthreads 16`;
 ```
 
+###Are the scripts you are using for a customer's assembly the ones in your github account (Irys scaffolding). If so, should we also try to run it on our server? 
+
+For small to medium genomes (generally this means genomes < 1 Gb) we assemble using AssembleIrysCluster.pl. AssembleIrysCluster.pl and the version we used will be described in your report. For large genomes we assemble using the Irys Solve Cloud (although we will have an update about this topic soon).
+
+AssembleIrysCluster.pl was developed to run on our cluster and would probably not be easy to use on a different cluster. We will be rewritting this over the next few weeks but I am not sure yet whether the new pipeline will be easier to use elsewhere or not.
+
+All of our other tools (stitch.pl, cmap_stats.pl, xmap_stats.pl, bnx_stats.pl, etc.) were designed to be portable.
 
 
