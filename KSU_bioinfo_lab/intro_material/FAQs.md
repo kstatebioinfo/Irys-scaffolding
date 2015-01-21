@@ -14,7 +14,7 @@ perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/make_key.pl <fasta> <output_basen
 
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/number_fasta.pl <fasta>
 
-perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/number_fasta.pl xmap_filter.pl <q.cmap> <numbered fasta> <output_basename.flip> <output_basename> [min confidence] [min % aligned] [second min confidence] [second min % aligned] <fasta_key_file>
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/number_fasta.pl xmap_filter.pl <q.cmap> <numbered fasta> <output_basename.flip> <output_basename> <min confidence> <min % aligned> <second min confidence> <second min % aligned> <fasta_key_file>
 
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/get_passing_xmap.pl -f <filtered_fliped_xmap> -o <original_xmap>
 ```
@@ -36,6 +36,10 @@ perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/get_passing_xmap.pl -f <filtered_
 ###The first column in the Bionano assembled genome map (a CMAP file) is named CMapID; does this correspond to the QryContigID column in the XMAP comparison file?
 
 Yes it does infact the query should always be an assembled BioNano genome map rather than the in silico genome map created from your sequence assembly (also a CMAP). This number is also the number displayed in IrysView.
+
+###Is the BioNano assembled genome map (CMAP) in any particular order? 
+
+No, the CMAP is printed in the order individual genome maps are reported by the assembler. This is basically random order. A BioNano genome map CMAP is a consensus map (in the same way that a sequence based contig can be a consensus of the sequence from many reads). The CMAP is inferred by the assembler from overlapping molecule maps. The BioNano assembler is basically an overlap layout consensus assembler.
 
 ###Comparing the size distribution of these 'fragments' with the ones from the in silico genome map, we noticed a difference (map fragments on average smaller than in silico fragments). Does that matter somehow?
 
@@ -64,5 +68,3 @@ For small to medium genomes (generally this means genomes < 1 Gb) we assemble us
 AssembleIrysCluster.pl was developed to run on our cluster and would probably not be easy to use on a different cluster. We will be rewritting this over the next few weeks but I am not sure yet whether the new pipeline will be easier to use elsewhere or not.
 
 All of our other tools (stitch.pl, cmap_stats.pl, xmap_stats.pl, bnx_stats.pl, etc.) were designed to be portable.
-
-
