@@ -16,11 +16,17 @@ SCRIPT
        be examined in IrysView to see that the alignments agree with what the
        user would manually select. 
        
-       It can be run iteratively until all super-scaffolds have been found by 
+It can be run iteratively until all super-scaffolds have been found by 
        creating a new cmap from the output super-scaffold fasta, aligning
        this cmap as the query with the BNG consensus map as the reference and 
        using the x_map, r_cmap and the super-scaffold fasta as input for another 
        run of stitch.pl.
+       
+####Note: BioNano's refaligner was only built to take the in silico CMAP (created from the sequence assembly) as the reference and the BioNano assembled CMAP (assembled from BioNano molecule maps) as the query. This needs to be inverted before running stitch.pl. You can flip your XMAP by running the code below. Then use the `.flip` file with the `-x` flag and your original `_q.cmap` with the `-r` flag...
+
+```
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/flip_xmap.pl <original_xmap> <output_basename>
+```
 
 ![Alt text](https://raw.github.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/scaffolding.png)
 
