@@ -10,19 +10,16 @@ KSU_bioinfo_lab
 
 Examples of how work with BioNano software from the KSU Bioinformatics Core.
 
+**FAQs -** Discussions or code that we are frequently asked about. Many of our tools are built out of smaller scripts that can also be used by themselves in the FAQ markdown we discuss things like generating an XMAP filtered by minimum percent alignment and what a CMAP is.
+
 **Windows_in_silico_labeling.md -** How to install software on a Windows machine and videos of how to in silico label sequence data for alignment or to determine which enzymes to use for a BioNano project.
 
 **code_examples.sh -** these are usage notes and general steps taken by the KSU Bioinformatics Core to assemble molecules or align assemblies. These can be  used as a template for your own experiments with your BioNano data in a Linux environment.
 
 **IrysView_Troubleshooting.pdf -** instructions on how to view all labels in an alignment if they do not automatically load.
 
-### assembly_qc.pl 
-
-**assembly_qc.pl -** a script that compiles assembly metrics for assemblies in all of the possible directories:'strict_t', 'default_t', 'relaxed_t', 'strict_t/strict_ml', 'strict_t/relaxed_ml', 'default_t/strict_ml', 'default_t/relaxed_ml', 'relaxed_t/strict_ml', and 'relaxed_t/relaxed_ml'. The assemblies are created using assemble_SGE_cluster/AssembleIrysCluster.pl from https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab. The parameter -b should be the same as the -b parameter used for the assembly script. It is the directory with the BNX files used for assembly.
-
         
-### map_tools
-Random tools to work with BioNano data
+### map_editing 
 
 **cmap_stats.pl -** Script outputs count of cmaps, cummulative lengths of cmaps and N50 of cmaps. Tested on CMAP File Version: 0.1.
 
@@ -36,14 +33,13 @@ perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/cmap_stats.pl -c sample_data/s
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/xmap_stats.pl -x sample_data/sample.xmap
 ```
 
-**bnx_stats.pl -** Script outputs count of molecule maps in BNX files, cummulative lengths of molecule maps and N50 of molecule maps. Script also outputs a PDF with these metrics as well as histograms of molecule map quality metrics. Tested on BNX File Version 1.0 however it should work on Version 1.2. The user inputs a list of BNX files or a glob as the final arguments to script. Use the "-l" flag to filter results by minimum molecule length. Things to add include switching between QC and cleaning.
+**bnx_stats.pl - **Script outputs count of molecule maps in BNX files, cummulative lengths of molecule maps and N50 of molecule maps. Script also outputs a PDF with these metrics as well as histograms of molecule map quality metrics. Tested on BNX File Version 1.0 however it should work on Version 1.2. The user inputs a list of BNX files or a glob as the final arguments to script. Users can filter results by min molecule length in kb using the `-l` flag. Things to add include switching between QC and cleaning.
  
-Script has no options other than help menus currently and min length but it was designed to be adapted into a molecule cleaning script similar to prinseq or fastx. Feel free to fork this and add your own filters.
+Script has no options other than help menus and min length currently but it was designed to be adapted into a molecule cleaning script similar to prinseq or fastx. Feel free to fork this and add your own filters.
 
 ```
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/bnx_stats.pl -l 150 sample_data/Molecules*.bnx
 ```
-
 
 **flip.pl -** This utility script reads from a list of maps to flip from a txt file (one CMAP id per line) and creates a CMAP with the requested flips.
 
@@ -131,6 +127,18 @@ mkdir results
 
 perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
 ```
+
+### assembly_qc.pl 
+
+**assembly_qc.pl -** a script that compiles assembly metrics for assemblies in all of the possible directories:'strict_t', 'default_t', 'relaxed_t', 'strict_t/strict_ml', 'strict_t/relaxed_ml', 'default_t/strict_ml', 'default_t/relaxed_ml', 'relaxed_t/strict_ml', and 'relaxed_t/relaxed_ml'. The assemblies are created using assemble_SGE_cluster/AssembleIrysCluster.pl from https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab. The parameter -b should be the same as the -b parameter used for the assembly script. It is the directory with the BNX files used for assembly.
+
+```
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/assembly_qc.pl -b ~/sample_data -p My_project_ID
+```
+
+###sv_detect
+
+These scripts were created to generate BED files of gaps in sequence-based assemblies and to run sv_detect from BioNano as a standalone pipeline but the scripts may be redundant now with the new IrysView release. If we find that they are they will be removed.
 
 ### CURRENTLY UNSUPPORTED PROGRAMS:
 
