@@ -50,20 +50,25 @@ No, the CMAP is printed in the order individual genome maps are reported by the 
 
 Yes and it can be corrected using RefAligner. Stretch or bpp is 500 bases per pixel under ideal conditions. Where possible we adjust stretch based on alignment of you molecule maps (BNX files) to an in silico genome map (CMAP) because observed bpp is generally not 500. This sounds like what you are describing.
 
-You can find the observed bpp by aligning molecule maps to your ref and finding the last non-zero bpp value listed in the `.err` file. Then use a slightly different RefAligner command to adjust stretch. Instuctions below use RefAligner contact sheltonj@ksu.edu for a link the software.
+You can find the observed bpp by aligning molecule maps to your ref and finding the last non-zero bpp value listed in the `.err` file. Then use a slightly different RefAligner command to adjust stretch. Instuctions below use RefAligner contact sheltonj@ksu.edu for a link the software. (Note: you may need to adjust the last four parameter in the last three steps below depending on how many threads and how much memory your machine has available.)
 
 ```
 # Merge your BNX files
 
 ~/tools/RefAligner -if sample_dir/bnx_list.txt -o sample_dir/bnx_merged -merge -bnx -minsites 5 -minlen 100 -maxthreads 16
 
-# Subsample alignments with five iterations (T should be about inverse of the genome size)
+# Subsample 50,000 molecules and run alignment with very loose alignment parameters (T should be about inverse of the genome size).
 
-~/tools/RefAligner -i sample_dir/bnx_merged.bnx -o sample_dir/sample_in_silico_to_bnx_merged -T $T -ref sample_dir/sample_in_silico.cmap -bnx -nosplit 2 -BestRef 1 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 100 -minsites 5 -maxthreads 16 -randomize 1 -subset 1 10000
+~/tools/RefAligner -o sample_dir/bnx_merged_errA -i sample_dir/bnx_merged.bnx -ref sample_dir/sample_in_silico.cmap -minlen 180 -minsites 9 -refine 0 -id 1 -mres 0.9 -res 3.4 -resSD 0.75 -FP 1.0 -FN 0.1 -sf 0.2 -sd 0 -sr 0.02 -resbias 4.0 64 -outlier 1e-4 -endoutlier 1e-4 -S -999 -T 1e-4 -MapRate 0.7 -A 5 -nosplit 2 -biaswt 0 -deltaX 4 -deltaY 6 -extend 1 -PVres 2 -f -randomize -subset 1 50000 -BestRef 1 -BestRefPV 1 -hashoffset 1 -AlignRes 1.5 -resEstimate -M 5 -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 2 -hash -hashdelta 10 -maxmem 240 -hashmaxmem 120 -insertThreads 16 -maxthreads 64
 
-# Get the empirical bpp (`$bpp`) from `sample_dir/sample_in_silico_to_bnx_merged.err` and use RefAligner to adjust stretch.
+# The error metrics returned are refined in the following step using 100000 molecules and more stringent alignments.
 
-~/tools/RefAligner -f -i sample_dir/bnx_merged.bnx -merge -bnx -bpp $bpp -o $sample_dir/bnx_merged_adj -maxthreads 16`;
+~/tools/RefAligner -o sample_dir/bnx_merged_errB -i sample_dir/bnx_merged.bnx -ref sample_dir/sample_in_silico.cmap -readparameters sample_dir/bnx_merged_errA_id1.errbin -minlen 180 -minsites 9 -refine 0 -id 1 -resbias 4.0 64 -outlier 1e-4 -endoutlier 1e-4 -S -999 -T 1e-4 -MapRate 0.7 -A 5 -nosplit 2 -biaswt 0 -deltaX 4 -deltaY 6 -extend 1 -PVres 2 -f -randomize -subset 1 100000 -BestRef 1 -BestRefPV 1 -hashoffset 1  -AlignRes 1.5 -resEstimate -M 5 -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 2 -hash -hashdelta 10 -maxmem 240 -hashmaxmem 120 -insertThreads 16  -maxthreads 64
+
+# Finally the original BNX set is rescaled per the noise parameters from the second step. In this step, after noise parameters have be estimated using long molecules the minimum molecule length is set back to 100 kb.
+
+~/tools/RefAligner -o sample_dir/bnx_merged_adj -i sample_dir/bnx_merged.bnx -ref sample_dir/sample_in_silico.cmap -readparameters sample_dir/bnx_merged_errB_id1.errbin -minlen 100 -minsites 9 -refine 0 -id 1 -resbias 4.0 64 -outlier 1e-4 -endoutlier 1e-4 -S -9 -T 1e-4 -MapRate 0.7 -A 5 -nosplit 2 -biaswt 0 -deltaX 4 -deltaY 6 -extend 1 -PVres 2 -f -BestRef 1 -BestRefPV 1 -maptype 1 -hashoffset 1 -AligneRes 1.5  -resEstimate -ScanScaling 2 -M 5 -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 2 -hash -hashdelta 10 -maxmem 240 -hashmaxmem 120 -insertThreads 16  -maxthreads 64
+
 ```
 
 ###Are the scripts you are using for a customer's assembly the ones in your github account (Irys scaffolding). If so, should we also try to run it on our server? 
