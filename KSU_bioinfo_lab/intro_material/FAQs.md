@@ -1,6 +1,11 @@
 Irys-scaffolding FAQs
 =====================
 
+###Do you usually explore different sets of nicking enzymes in silico if you have the sequence fasta file before you attempt a map of a new organsim you haven't done before?
+
+We generally estimate "label density" from contigs so that gap don't artificially reduce the estimate. Here is our break down of how to do that: https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/intro_material/Windows_in_silico_labeling.md.
+
+
 ###How can I filter an XMAP by the percent of possible alignment to the observed alignment length?
 
 This can be done with a script that `stitch.pl` uses called `xmap_filter.pl`. You can find out more about this filter by reading the `README.md` in https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab/stitch. Because of the algorithm will need to know the length of both CMAPS in an alignment to calculate the CMAP's footprint (part of determining the potential aligned length) you need to run a couple steps before and after `xmap_filter.pl`. You will also be flipping the xmap and then reverting it using the code below.
