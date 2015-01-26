@@ -2,7 +2,7 @@
 ##################################################################################
 #
 # USAGE: perl  bnx_stats.pl [OPTIONS] BNX_FILES...
-# Script outputs count of molecule maps in BNX files, cummulative lengths of molecule maps and N50 of molecule maps. Script also outputs a PDF with these metrics as well as histograms of molecule map quality metrics. Tested on BNX File Version 1.0 however it should work on Version 1.2 as well. The user inputs a list of BNX files or a glob as the final arguments to script. Things to add include filtering by min molecule length and switching between QC and cleaning.
+# Script outputs count of molecule maps in BNX files, cumulative lengths of molecule maps and N50 of molecule maps. Script also outputs a PDF with these metrics as well as histograms of molecule map quality metrics. Tested on BNX File Version 1.0 however it should work on Version 1.2 as well. The user inputs a list of BNX files or a glob as the final arguments to script. Things to add include filtering by min molecule length and switching between QC and cleaning.
 #
 # Script has no options other than help menus currently but it was designed to be adapted into a molecule cleaning script similar to prinseq or fastx. Feel free to fork this and add your own filters.
 #  Created by jennifer shelton 01/15/15
@@ -184,7 +184,7 @@ $current_length = $current_length;
 $total_length = $total_length/1000;
 
 print "Molecule map N50: $current_length (kb)\n";
-print "Cummulative length of molecule maps: $total_length (Mb)\n";
+print "Cumulative length of molecule maps: $total_length (Mb)\n";
 print "Number of molecule maps: $bnx_count\n";
 
 ###############################################################################
@@ -192,7 +192,7 @@ print "Number of molecule maps: $bnx_count\n";
 ###############################################################################
 print "Graphing data...\n";
 
-my $graph_data = `Rscript ${dirname}/histograms.R temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_snrs.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab 'Molecule map N50: $current_length (kb)' 'Cummulative length of molecule maps: $total_length (Mb)' 'Number of molecule maps: $bnx_count'`;
+my $graph_data = `Rscript ${dirname}/histograms.R temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_snrs.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab 'Molecule map N50: $current_length (kb)' 'Cumulative length of molecule maps: $total_length (Mb)' 'Number of molecule maps: $bnx_count'`;
 print "$graph_data\n";
 unlink qw/temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_snrs.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab Rplots.pdf/;
 
@@ -205,7 +205,7 @@ __END__
 
 =head1 NAME
  
-bnx_stats.pl - Script outputs count of molecule maps in BNX files, cummulative lengths of molecule maps and N50 of molecule maps. Script also outputs a PDF with these metrics as well as histograms of molecule map quality metrics. Tested on BNX File Version 1.0 however it should work on Version 1.2 as well. The user inputs a list of BNX files or a glob as the final arguments to script. Things to add include filtering by min molecule length and switching between QC and cleaning.
+bnx_stats.pl - Script outputs count of molecule maps in BNX files, cumulative lengths of molecule maps and N50 of molecule maps. Script also outputs a PDF with these metrics as well as histograms of molecule map quality metrics. Tested on BNX File Version 1.0 however it should work on Version 1.2 as well. The user inputs a list of BNX files or a glob as the final arguments to script. Things to add include filtering by min molecule length and switching between QC and cleaning.
  
 Script has no options other than help menus currently but it was designed to be adapted into a molecule cleaning script similar to prinseq or fastx. Feel free to fork this and add your own filters.
  
