@@ -41,6 +41,16 @@ Script has no options other than help menus and min length currently but it was 
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/bnx_stats.pl -l 150 sample_data/Molecules*.bnx
 ```
 
+**CmapById.pl** - Script outputs new CMAP with only maps with user specified IDs. Tested on CMAP File Version: 0.1. Call with "-help" flag for detailed instructions.
+
+```
+perl  ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/CmapById.pl -c sample_data/sample.cmap -i 1,3,6 -o sample_data/sample_out_file
+
+perl  ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/CmapById.pl -c sample_data/sample.cmap -i 3..10 -o sample_data/sample_out_3_10
+
+perl  ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/CmapById.pl -c sample_data/sample.cmap -i 2 -o sample_data/sample_out_cmap_2
+```
+
 **flip.pl -** This utility script reads from a list of maps to flip from a txt file (one CMAP id per line) and creates a CMAP with the requested flips.
 
 ### assemble_SGE_cluster/AssembleIrysCluster.pl 
