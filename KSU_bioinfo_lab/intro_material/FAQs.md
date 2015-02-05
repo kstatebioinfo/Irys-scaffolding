@@ -1,7 +1,7 @@
 Irys-scaffolding FAQs
 =====================
 
-###How can I take a single map contig from the BNG consensus map, convert it into a cmap and then map it against a the in silico map of a single scaffold? I have several map contigs of special interest which I would like to map against the corresponding scaffold of another species’ genome (i.e. the in silico map), without using both the whole genome and the BNG consensus map (which would take significantly longer).
+###How can I take a single map contig from the BNG consensus map, convert it into a cmap and then map it against a the in silico map of a single scaffold? 
 
 So both an in silico and a BioNano CMAP file are tab delimited files. Any line that does not start with a `#` (a comment line) will begin with a CMAP ID as the first field. You can use `CmapById.pl` to grab any individual map using one or more CMAP IDs. Read more about CmapById.pl here: https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab/map_tools
 
