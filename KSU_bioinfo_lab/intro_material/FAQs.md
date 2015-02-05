@@ -1,6 +1,27 @@
 Irys-scaffolding FAQs
 =====================
 
+###How can I take a single map contig from the BNG consensus map, convert it into a cmap and then map it against a the in silico map of a single scaffold? I have several map contigs of special interest which I would like to map against the corresponding scaffold of another species’ genome (i.e. the in silico map), without using both the whole genome and the BNG consensus map (which would take significantly longer).
+
+So both an in silico and a BioNano CMAP file are tab delimited files. Any line that does not start with a `#` (a comment line) will begin with a CMAP ID as the first field.
+
+Below is an example of the first 12 lines of a CMAP file:
+
+```
+# CMAP File Version:	0.1
+# Label Channels:	1
+# Nickase Recognition Site 1:	cctcagc
+# Nickase Recognition Site 2:	gctcttc
+# Enzyme1:	Nt.BbvCI
+# Enzyme2:	Nt.BspQI
+# Number of Consensus Nanomaps:	223
+#h CMapId	ContigLength	NumSites	SiteID	LabelChannel	Position	StdDev	Coverage	Occurrence
+#f int	float	int	int	int	float	float	int	int
+1	255324.0	28	1	1	13448.0	1.0	1	1
+1	255324.0	28	2	1	13774.0	1.0	1	1
+1	255324.0	28	3	1	20282.0	1.0	1	1
+```
+
 ###Do you usually explore different sets of nicking enzymes in silico if you have the sequence fasta file before you attempt a map of a new organsim you haven't done before?
 
 We generally estimate "label density" from contigs so that gap don't artificially reduce the estimate. Here is our break down of how to do that: https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/intro_material/Windows_in_silico_labeling.md.
