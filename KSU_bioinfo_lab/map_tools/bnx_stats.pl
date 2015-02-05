@@ -23,7 +23,6 @@ use Pod::Usage;
 ##############         Print informative message             ##################
 ###############################################################################
 print "###########################################################\n";
-print colored ("#           !!!!!WARNING UNDER DEVELOPMENT!!!!            #", 'bold white on_blue'), "\n";
 print colored ("#             NOTE: SCRIPT ASSUMES DATA WITH              #", 'bold white on_blue'), "\n";
 print colored ("#     BACKBONE & A SINGLE CHANNEL OF LABEL INFORMATION    #", 'bold white on_blue'), "\n";
 print "#   bnx_stats.pl Version 1.0                              #\n";
