@@ -19,7 +19,7 @@ Examples of how work with BioNano software from the KSU Bioinformatics Core.
 **IrysView_Troubleshooting.pdf -** instructions on how to view all labels in an alignment if they do not automatically load.
 
         
-### map_editing 
+### map_tools 
 
 **cmap_stats.pl -** Script outputs count of cmaps, cummulative lengths of cmaps and N50 of cmaps. Tested on CMAP File Version: 0.1.
 
