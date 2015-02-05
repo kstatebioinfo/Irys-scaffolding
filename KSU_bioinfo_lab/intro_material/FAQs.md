@@ -24,7 +24,7 @@ Below is an example of the first 12 lines of a CMAP file:
 
 ###Do you usually explore different sets of nicking enzymes in silico if you have the sequence fasta file before you attempt a map of a new organsim you haven't done before?
 
-We generally estimate "label density" from contigs so that gap don't artificially reduce the estimate. Here is our break down of how to do that: https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/intro_material/Windows_in_silico_labeling.md.
+We generally estimate "label density" from contigs so that gaps don't artificially reduce the estimate. Here is our break down of how to do that: https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/intro_material/Windows_in_silico_labeling.md.
 
 
 ###How can I filter an XMAP by the percent of possible alignment to the observed alignment length?
