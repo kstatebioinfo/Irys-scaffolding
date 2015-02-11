@@ -99,3 +99,12 @@ For small to medium genomes (generally this means genomes < 1 Gb) we assemble us
 AssembleIrysCluster.pl was developed to run on our cluster and would probably not be easy to use on a different cluster. We will be rewritting this over the next few weeks but I am not sure yet whether the new pipeline will be easier to use elsewhere or not.
 
 All of our other tools (stitch.pl, cmap_stats.pl, xmap_stats.pl, bnx_stats.pl, etc.) were designed to be portable.
+
+###How can I recover a new genome FASTA file from the BioNano hybridScaffold pipeline FASTA file (my HYBRID_SCAFFOLD.fasta)?
+
+The hybridScaffold_finish_fasta.pl script creates new FASTA files including new hybrid sequences output by hybridScaffold and all sequences that were not used by hybridScaffold with their original headers. Also outputs a text file list of the headers for sequences that were used to make the new hybrid sequences.
+
+```
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/hybridScaffold_finish_fasta.pl -x HYBRID_SCAFFOLD.xmap -s HYBRID_SCAFFOLD.fasta -f original.fasta
+```
+

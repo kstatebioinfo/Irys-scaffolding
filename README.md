@@ -41,6 +41,12 @@ Script has no options other than help menus and min length currently but it was 
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/bnx_stats.pl -l 150 sample_data/Molecules*.bnx
 ```
 
+**hybridScaffold_finish_fasta.pl** - Script creates new FASTA files including new hybrid sequences output by hybridScaffold and all sequences that were not used by hybridScaffold with their original headers. Also outputs a text file list of the headers for sequences that were used to make the new hybrid sequences.
+
+```
+perl hybridScaffold_finish_fasta.pl -x HYBRID_SCAFFOLD.xmap -s HYBRID_SCAFFOLD.fasta -f original.fasta
+```
+
 **CmapById.pl** - Script outputs new CMAP with only maps with user specified IDs. Tested on CMAP File Version: 0.1. Call with "-help" flag for detailed instructions.
 
 ```

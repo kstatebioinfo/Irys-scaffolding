@@ -2,7 +2,7 @@
 ##################################################################################
 #
 #	USAGE: perl hybridScaffold_finish_fasta.pl [options]
-#	TYPICAL USAGE: perl hybridScaffold_finish_fasta.pl -x [HYBRID_SCAFFOLD.xmap] -s [HYBRID_SCAFFOLD.fasta] -f [original.fasta]
+#	TYPICAL USAGE: perl hybridScaffold_finish_fasta.pl -x <HYBRID_SCAFFOLD.xmap> -s <HYBRID_SCAFFOLD.fasta> -f <original.fasta>
 #
 #   Created by jennifer shelton
 #	Script creates new FASTA files including new hybrid sequences output by
@@ -158,7 +158,9 @@ __END__
 
 =head1 NAME
 
-bnx_stats.pl - Script creates new FASTA files including new hybrid sequences output by hybridScaffold and all sequences that were not used by hybridScaffold with their original headers. Also outputs a text file list of the headers for sequences that were used to make the new hybrid sequences.
+
+
+hybridScaffold_finish_fasta.pl - Script creates new FASTA files including new hybrid sequences output by hybridScaffold and all sequences that were not used by hybridScaffold with their original headers. Also outputs a text file list of the headers for sequences that were used to make the new hybrid sequences.
 
 =head1 DEPENDENCIES
 
@@ -166,7 +168,12 @@ Perl and BioPerl
 
 =head1 USAGE
 
-perl  bnx_stats.pl [OPTIONS] BNX_FILES...
+perl hybridScaffold_finish_fasta.pl [OPTIONS]
+ 
+=head1 EXAMPLE
+
+perl hybridScaffold_finish_fasta.pl -x <HYBRID_SCAFFOLD.xmap> -s <HYBRID_SCAFFOLD.fasta> -f <original.fasta>
+
 
 Documentation options:
 
