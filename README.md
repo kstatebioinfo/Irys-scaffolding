@@ -146,7 +146,7 @@ perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample
 
 ### assembly_qc.pl 
 
-**assembly_qc.pl -** a script that compiles assembly metrics for assemblies in all of the possible directories:'strict_t', 'default_t', 'relaxed_t', 'strict_t/strict_ml', 'strict_t/relaxed_ml', 'default_t/strict_ml', 'default_t/relaxed_ml', 'relaxed_t/strict_ml', and 'relaxed_t/relaxed_ml'. The assemblies are created using assemble_SGE_cluster/AssembleIrysCluster.pl from https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab. The parameter -b should be the same as the -b parameter used for the assembly script. It is the directory with the BNX files used for assembly.
+**assembly_qc.pl -** a script that compiles assembly metrics for assemblies in all of the possible directories:'strict_t', 'default_t', 'relaxed_t', 'strict_t/strict_ml', 'strict_t/relaxed_ml', 'default_t/strict_ml', 'default_t/relaxed_ml', 'relaxed_t/strict_ml', and 'relaxed_t/relaxed_ml'. The assemblies are created using assemble_SGE_cluster/AssembleIrysCluster.pl from https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab. The parameter `-b` should be the same th same as the `-b` parameter used for the assembly script (same with the `-p` parameter). It is the directory with the BNX files used for assembly.
 
 ```
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/assembly_qc.pl -b ~/sample_data -p My_project_ID
