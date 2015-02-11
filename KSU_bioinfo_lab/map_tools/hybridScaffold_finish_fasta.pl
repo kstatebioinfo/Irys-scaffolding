@@ -21,7 +21,7 @@ use Bio::DB::Fasta; #makes a searchable db from my fasta file
 # use List::Util qw(sum);
 use File::Basename; # enable maipulating of the full path
 # use File::Slurp;
-#use Term::ANSIColor;
+use Term::ANSIColor;
 use Getopt::Long;
 use Pod::Usage;
 ###############################################################################
@@ -83,7 +83,7 @@ open (my $orig_fasta, "<", $orig_fasta_file) or die "Can't open $hybScf_xmap_fil
 my (@grab_id,@skip_id); # list to get FASTA records using headers
 my $fasta_count = 1;
 my $skipped_count = 0;
-while (<$original_fasta>)
+while (<$orig_fasta>)
 {
     if ((/^>/))
     {
@@ -102,30 +102,40 @@ while (<$original_fasta>)
     }
     
 }
-close ($original_fasta);
+close ($orig_fasta);
+my $count = scalar(@grab_id);
+print "count = $count\n";
+#print @grab_id;
 ###############################################################################
 ##            add hybrid sequence from HYBRID_SCAFFOLD.fasta                 ##
 ##                 and unchanged FASTA records to the                        ##
 ##               genome_post_HYBRID_SCAFFOLD FASTA file                      ##
 ###############################################################################
-my (${filename}, ${directories}, ${suffix}) = fileparse($orig_fasta_file,'\..*'); # directories has trailing slash
-my $out = "${directories}${filename}_genome_post_HYBRID_SCAFFOLD.fasta";
-open (my , ">", $out) or die "Can't open $out: $!";
-open (my $hybScf_fasta,"<", $hybScf_fasta_file) or die "Can't open $hybScf_fasta_file:$!";
-while (<$hybScf_fasta>)
-{
-    print $out "$_"; # add hybrid sequence from HYBRID_SCAFFOLD.fasta to the genome_post_HYBRID_SCAFFOLD FASTA file
-}
-close ($hybScf_fasta);
 
+my (${filename}, ${directories}, ${suffix}) = fileparse($orig_fasta_file,'\..*'); # directories has trailing slash
 my $db = Bio::DB::Fasta->new("$orig_fasta_file");
-my $seq_out = Bio::SeqIO->new('-file' => ">>$out",'-format' => 'fasta');		#Create new fasta outfile object.
+my $out_file_temp = "${directories}${filename}_genome_post_HYBRID_SCAFFOLD_temp.fasta";
+my $seq_out = Bio::SeqIO->new('-file' => ">$out_file_temp",'-format' => 'fasta');		#Create new fasta outfile object.
 
 for my $header (@grab_id)
 {
     my $seq_obj = $db->get_Seq_by_id($header); # get FASTA records using headers for sequence was NOT used already in the HYBRID_SCAFFOLD.fasta
     $seq_out->write_seq($seq_obj);
 }
+
+my $out_file = "${directories}${filename}_genome_post_HYBRID_SCAFFOLD.fasta";
+open (my $out, ">", $out_file) or die "Can't open $out_file: $!";
+open (my $hybScf_fasta,"<", $hybScf_fasta_file) or die "Can't open $hybScf_fasta_file:$!";
+while (<$hybScf_fasta>)
+{
+    print $out "$_"; # add hybrid sequence from HYBRID_SCAFFOLD.fasta to the genome_post_HYBRID_SCAFFOLD FASTA file
+}
+open (my $temp_file, "<",$out_file_temp) or die "Can't open $out_file_temp: $!";
+while (<$temp_file>)
+{
+    print $out "$_"; # add non-hybrid sequence from original.fasta to the genome_post_HYBRID_SCAFFOLD FASTA file
+}
+close ($hybScf_fasta);
 
 my $out_used_file="${directories}${filename}_sequences_used_in_HYBRID_SCAFFOLD.txt";
 open (my $out_used, ">", $out_used_file) or die "Can't open $out_used_file: $!";
@@ -137,6 +147,7 @@ for my $header (@skip_id)
 
 
 print "remove_count: $remove_count\nskipped_count: $skipped_count\n";
+unlink ($out_file_temp);
 
 print "Done\n";
 ###############################################################################
