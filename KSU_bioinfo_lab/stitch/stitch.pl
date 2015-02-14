@@ -26,13 +26,14 @@ print "#  perl stitch.pl -man # for more details                 #\n";
 print "###########################################################\n";
 
 ##################################################################################
-##############                get arguments                     ##################
+##############           get arguments and set defaults         ##################
 ##################################################################################
-my ($r_cmap,$xmap,$scaffold_fasta,$output_basename);
-my $first_min_confidence=0;
-my $first_min_per_aligned=0;
-my $second_min_confidence=0;
-my $second_min_per_aligned=0;
+my ($r_cmap,$xmap,$scaffold_fasta,$output_basename); # Required
+my $first_min_confidence=0; ## Default: No filter
+my $first_min_per_aligned=0; ## Default: No filter
+my $second_min_confidence=0; ## Default: No filter
+my $second_min_per_aligned=0; ## Default: No filter
+my $neg_gap = 20000; ## Default: Filter fails overlaps less than -20,000 (bp)
 my $man = 0;
 my $help = 0;
 GetOptions (
@@ -45,7 +46,8 @@ GetOptions (
 'f_con|fc:f' => \$first_min_confidence,
 'f_algn|fa:f' => \$first_min_per_aligned,
 's_con|sc:f' => \$second_min_confidence,
-'s_algn|sa:f' => \$second_min_per_aligned
+'s_algn|sa:f' => \$second_min_per_aligned,
+'n|neg_gap:f'=> \$neg_gap
 )
 or pod2usage(2);
 pod2usage(1) if $help;
@@ -109,7 +111,7 @@ print "$out_number";
 ##################     filter xmap and create stitchmap         ##################
 ##################################################################################
 print "Making filtered XMAP...\n";
-my $filter=`perl ${dirname}/xmap_filter.pl $r_cmap ${1}_numbered_scaffold.fasta $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${output_basename}_key`;
+my $filter=`perl ${dirname}/xmap_filter.pl $r_cmap ${1}_numbered_scaffold.fasta $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${output_basename}_key $neg_gap`;
 if ($filter =~ /No_scaffolds/)
 {
     print "Removing temp files...\n";
@@ -201,10 +203,11 @@ Required options:
  
 Filtering options:
  
-    --f_con	 first minimum confidence score
-    --f_algn	 first minimum % of possible alignment
-    --s_con	 second minimum confidence score
-    --s_algn	 second minimum % of possible alignment
+    --f_con	 first minimum confidence score (default = 0)
+    --f_algn	 first minimum % of possible alignment (default = 0)
+    --s_con	 second minimum confidence score (default = 0)
+    --s_algn	 second minimum % of possible alignment (default = 0)
+    --n	         minimum negative gap length allowed (default = 20000 bp)
 
 =head1 OPTIONS
 
@@ -249,6 +252,10 @@ The minimum confidence score for alignments for the second round of filtering. T
 =item B<--f_algn, --sa>
 
 The minimum percent of the full potential length of the alignment allowed for the second round of filtering. This should be higher than the setting for the first round of filtering.
+
+=item B<-n, --neg_gap>
+
+Allows user to adjust minimum negative gap length allowed (default = 20000 bp).
 
 =back
 
