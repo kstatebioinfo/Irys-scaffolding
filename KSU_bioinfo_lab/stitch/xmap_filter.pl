@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ##################################################################################
 #   xmap_filter.pl
-#	USAGE: perl xmap_filter.pl [r.cmap] [numbered fasta] [xmap] [new_xmap] [min confidence] [min % aligned] [second min confidence] [second min % aligned] [fasta key]
+#	USAGE: perl xmap_filter.pl [r.cmap] [numbered fasta] [xmap] [new_xmap] [min confidence] [min % aligned] [second min confidence] [second min % aligned] [fasta key] [neg gap]
 #
 #  Created by jennifer shelton
 #
@@ -18,7 +18,7 @@ use Bio::DB::Fasta; #makes a searchable db from my fasta file
 ##################################################################################
 # xmap_filter.pl
 #
-# USAGE: perl xmap_filter.pl [r.cmap] [numbered fasta] [xmap] [new_xmap] [min confidence] [min % aligned] [second min confidence] [second min % aligned] [fasta key]
+# USAGE: perl xmap_filter.pl [r.cmap] [numbered fasta] [xmap] [new_xmap] [min confidence] [min % aligned] [second min confidence] [second min % aligned] [fasta key] [neg gap]
 #
 # Script to filter Xmaps by confidence and the precent of the maximum potential length of the alignment and generates summary stats of the more stringent alignment. An xmap with only molecules that scaffold contigs. Script also lists remaining conflicting alignments. These may be candidates for further assembly using the conflicting contigs and paired end reads.
 # perl xmap_filter.pl chicken1_r.cmap chicken1_q.cmap chicken1.xmap new_basename 40 0.3 5 0.8
@@ -29,6 +29,14 @@ my $infile_rcmap=$ARGV[0];
 my $infile_numbered_fasta=$ARGV[1];
 my $infile_xmap=$ARGV[2];
 my $outfile_base=$ARGV[3];
+if ($ARGV[9])
+{
+	my $neg_gap = $ARGV[9]; ## Grab min neg gap length (Default = 20000)
+}
+else
+{
+	my $neg_gap = 20000; ## Default: Fail overlaps less than -20,000 (bp)
+}
 ############################## create filenames ##############################
 my $outfile_scf="${outfile_base}_scaffolds".".xmap"; # xmap of molecules that scaffold contigs
 my $outfile_report="$outfile_base"."_report.csv"; # summary of alignments
@@ -307,7 +315,7 @@ for my $main_loop (@xmap_table) # for each sequence-based contig feature in the 
                                 print OVERLAPS "$key_hash{$main_loop->[1]},$main_loop->[1],$key_hash{$nested_loop->[1]},$nested_loop->[1],$overlap";
                                 ++$overlap_count;
                             }
-                            if ($overlap > 20000) # Fail overlaps greater the 20,000 (bp)
+                            if ($overlap > $neg_gap) # Fail overlaps less than -20,000 (bp)
                             {
                                 $nested_loop->[12] = "failed";
                                 $main_loop->[12] = "failed";
