@@ -7,7 +7,7 @@
 #
 # DESCRIPTION: Script makes links to all Molecules.bnx files in a common bnx directory and renames with auto-incremented numbers. Make paths absolute. Do not include trailing spaces in paths.
 
-# The script takes the path to the "Datasets" directory transfered from the IrysView workspace and the new BNX directory name. This organizes the raw data in the correct format to run AssembleIrysXeonPhi.pl.
+# The script takes the path to the "Datasets" directory transfered from the IrysView workspace and the new BNX directory name. This organizes the raw data in the correct format to run AssembleIrysXeonPhi.pl. The script also write a key with the original file path and the new link.
 
 #
 # Example: perl /home/irys/Data/Irys-scaffolding/KSU_bioinfo_lab/assemble/prep_bnx.pl /home/irys/Data/Esch_coli_0000/Datasets /home/irys/Data/Esch_coli_0000/bnx
@@ -34,7 +34,7 @@ unless(mkdir $directory)
 ##############            Move and rename files              ##################
 ###############################################################################
 #my @dir_array = ('/homes', grep -d, glob "$dataset_directory/*");
-my $logfile = "$directory/bnx_log.txt";
+my $logfile = "$directory/bnx_key.txt";
 open (LOG, ">", $logfile) or die "Can't open $logfile\n";
 opendir (DATA, $dataset_directory) or die "Can't open $dataset_directory\n";
 print "Creating links to all Molecules.bnx files in a common bnx directory and renaming with auto-incremented numbers...\n";

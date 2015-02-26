@@ -66,7 +66,7 @@ print "$bnx_stats";
 print "##################################################################################\n";
 print "Adjusting stretch (bpp) for BNX files...\n";
 print "##################################################################################\n";
-my $adj_stretch=`perl ${dirname}/../map_tools/adj_stretch.pl -l 100 ${bnx_dir}/Molecules_*.bnx`;
+my $adj_stretch=`perl ${dirname}/adj_stretch.pl $bnx_dir $reference $T`;
 print "$adj_stretch";
 
 
