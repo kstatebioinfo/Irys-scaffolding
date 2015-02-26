@@ -22,7 +22,7 @@ print "###########################################################\n";
 print colored ("#      WARNING: SCRIPT CURRENTLY UNDER DEVELOPMENT        #", 'bold white on_blue'), "\n";
 print "#  AssembleIrysXeonPhi.pl Version 1.6.1                   #\n";
 print "#                                                         #\n";
-print "#  Created by Jennifer Shelton 1/27/14                    #\n";
+print "#  Created by Jennifer Shelton 2/26/15                    #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
 print "#  perl AssembleIrysXeonPhi.pl -help # for usage/options  #\n";
 print "#  perl AssembleIrysXeonPhi.pl -man # for more details    #\n";
@@ -50,57 +50,73 @@ pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 my $dirname = dirname(__FILE__);
 my $T = 0.00001/$genome;
 ###################################################################################
-###############                    Split by scan                 ##################
+############          Generate BNX file summaries                ##################
 ###################################################################################
 print "##################################################################################\n";
-print "Spliting BNX by scan...\n";
+print "Generating BNX stats...\n";
 print "##################################################################################\n";
-my $split=`perl ${dirname}/split_by_scan.pl $bnx_dir`;
-print "$split";
-if ($split =~ /BNX version is not 1!!!\n/)
-{
-	die;
-}
-##################################################################################
-##############  Run first molecule quality report and replace old bpp  ###########
-##################################################################################
-print "##################################################################################\n";
-print "Generating first Molecule Quality Reports...\n";
-print "##################################################################################\n";
-my $first_mqr=`perl ${dirname}/first_mqr.pl $bnx_dir $reference $T`;
-print "$first_mqr";
-##################################################################################
-##############  Merge each split adjusted flowcells BNXs                    ######
-##################################################################################
-print "##################################################################################\n";
-print "Merging split, adjusted BNX files for each flowcell...\n";
-print "##################################################################################\n";
-my $second_mqr=`perl ${dirname}/merge_split_by_scan.pl $bnx_dir $reference $T`;
-print "$second_mqr";
-##################################################################################
-########### Merge each BNX foreach flowcell and run second molecule quality ######
-###########     report on merged file with and without BestRef.             ######
-##################################################################################
-print "##################################################################################\n";
-print "Merging the merged BNX for each flowcell. Generating second Molecule Quality Report for final merged BNX file...\n";
-print "##################################################################################\n";
-my $third_mqr=`perl ${dirname}/third_mqr.pl $bnx_dir $reference $T`;
-print "$third_mqr";
-##################################################################################
-## Write assembly scripts with a range of p-value thresholds and minimum lengths##
-##################################################################################
-print "##################################################################################\n";
-print " Write assembly scripts with a range of p-value thresholds and minimum lengths...\n";
-print "##################################################################################\n";
-my $assemble=`perl ${dirname}/assemble.pl $bnx_dir $reference $T $dirname $project`;
-print "$assemble";
-print "Finished running AssembleIrysXeonPhi.pl\n";
+mkdir "${bnx_dir}/../${project}";
+chdir "${bnx_dir}/../${project}";
+my $bnx_stats=`perl ${dirname}/../map_tools/bnx_stats.pl -l 100 ${bnx_dir}/Molecules_*.bnx`;
+print "$bnx_stats";
 
-##################################################################################
-##############                        run                       ##################
-##################################################################################
-# ~/tools/RefAligner -if ${file_list} -o /dev/null -bnx -minsites 5 -minlen 150 -M 5
-# ~/tools/RefAligner -i /home/irys/data/Merged_Molecule_Set/test.bnx -o /dev/null -bnx -minsites 5 -minlen 150 -M 5 -T ${T}
+###################################################################################
+############          Adjust stretch (bpp) for BNX files         ##################
+###################################################################################
+print "##################################################################################\n";
+print "Adjusting stretch (bpp) for BNX files...\n";
+print "##################################################################################\n";
+my $adj_stretch=`perl ${dirname}/../map_tools/adj_stretch.pl -l 100 ${bnx_dir}/Molecules_*.bnx`;
+print "$adj_stretch";
+
+
+####################################################################################
+################                    Split by scan                 ##################
+####################################################################################
+#print "##################################################################################\n";
+#print "Spliting BNX by scan...\n";
+#print "##################################################################################\n";
+#my $split=`perl ${dirname}/split_by_scan.pl $bnx_dir`;
+#print "$split";
+#if ($split =~ /BNX version is not 1!!!\n/)
+#{
+#	die;
+#}
+###################################################################################
+###############  Run first molecule quality report and replace old bpp  ###########
+###################################################################################
+#print "##################################################################################\n";
+#print "Generating first Molecule Quality Reports...\n";
+#print "##################################################################################\n";
+#my $first_mqr=`perl ${dirname}/first_mqr.pl $bnx_dir $reference $T`;
+#print "$first_mqr";
+###################################################################################
+###############  Merge each split adjusted flowcells BNXs                    ######
+###################################################################################
+#print "##################################################################################\n";
+#print "Merging split, adjusted BNX files for each flowcell...\n";
+#print "##################################################################################\n";
+#my $second_mqr=`perl ${dirname}/merge_split_by_scan.pl $bnx_dir $reference $T`;
+#print "$second_mqr";
+###################################################################################
+############ Merge each BNX foreach flowcell and run second molecule quality ######
+############     report on merged file with and without BestRef.             ######
+###################################################################################
+#print "##################################################################################\n";
+#print "Merging the merged BNX for each flowcell. Generating second Molecule Quality Report for final merged BNX file...\n";
+#print "##################################################################################\n";
+#my $third_mqr=`perl ${dirname}/third_mqr.pl $bnx_dir $reference $T`;
+#print "$third_mqr";
+###################################################################################
+### Write assembly scripts with a range of p-value thresholds and minimum lengths##
+###################################################################################
+#print "##################################################################################\n";
+#print " Write assembly scripts with a range of p-value thresholds and minimum lengths...\n";
+#print "##################################################################################\n";
+#my $assemble=`perl ${dirname}/assemble.pl $bnx_dir $reference $T $dirname $project`;
+#print "$assemble";
+#print "Finished running AssembleIrysXeonPhi.pl\n";
+
 ##################################################################################
 ##############                  Documentation                   ##################
 ##################################################################################
