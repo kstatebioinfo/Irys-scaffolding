@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ##################################################################################
 #   Script reads from a list of maps to flip from a txt file (one CMmap id per line) and creates a CMap with the requested flips.
-#	USAGE: perl flip.pl [cmap] [list of maps to flip]
+#	USAGE: perl FlipByID.pl [cmap] [list of maps to flip]
 #
 #  Created by jennifer shelton
 #

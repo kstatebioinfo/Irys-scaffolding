@@ -2,7 +2,7 @@
 ##################################################################################
 #
 # USAGE: perl  cmap_stats.pl [options]
-# Script outputs count of cmaps, cummulative lengths of cmaps and N50 of cmaps. Tested on CMAP File Version: 0.1
+# Script outputs count of cmaps, cumulative lengths of cmaps and N50 of cmaps. Tested on CMAP File Version: 0.1
 #  Created by jennifer shelton 08/26/14
 #
 ##################################################################################
@@ -93,7 +93,7 @@ __END__
 
 =head1 NAME
 
-cmap_stats.pl - Script outputs count of cmaps, cummulative lengths of cmaps and N50 of cmaps. Tested on CMAP File Version: 0.1.
+cmap_stats.pl - Script outputs count of cmaps, cumulative lengths of cmaps and N50 of cmaps. Tested on CMAP File Version: 0.1.
 
 =head1 USAGE
 
