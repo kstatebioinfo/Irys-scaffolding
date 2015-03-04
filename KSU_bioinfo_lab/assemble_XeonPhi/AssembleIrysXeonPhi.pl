@@ -20,7 +20,7 @@ use Pod::Usage;
 ##################################################################################
 print "###########################################################\n";
 print colored ("#      WARNING: SCRIPT CURRENTLY UNDER DEVELOPMENT        #", 'bold white on_blue'), "\n";
-print "#  AssembleIrysXeonPhi.pl Version 1.6.1                   #\n";
+print "#  AssembleIrysXeonPhi.pl Version 1.0.0                   #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 2/26/15                    #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -61,27 +61,25 @@ my $bnx_stats=`perl ${dirname}/../map_tools/bnx_stats.pl -l 100 ${bnx_dir}/Molec
 print "$bnx_stats";
 
 ###################################################################################
-############          Adjust stretch (bpp) for BNX files         ##################
+############          Rescaling molecules in BNX files         ##################
 ###################################################################################
 print "##################################################################################\n";
-print "Adjusting stretch (bpp) for BNX files...\n";
+print "Rescaling molecules in BNX files (formerly the adjusting stretch (bpp) step)...\n";
 print "##################################################################################\n";
-my $adj_stretch=`perl ${dirname}/adj_stretch.pl $bnx_dir $reference $T`;
-print "$adj_stretch";
+my $rescale_stretch=`perl ${dirname}/rescale_stretch.pl $bnx_dir $reference $T $project`;
+print "$rescale_stretch";
+
+###################################################################################
+############                Writing assembly scripts               ################
+###################################################################################
+print "##################################################################################\n";
+print "Writing assembly scripts...\n";
+print "##################################################################################\n";
+my $writing_assemblies=`perl ${dirname}/assemble.pl $bnx_dir $reference $T $project $genome`;
+print "$writing_assemblies";
 
 
-####################################################################################
-################                    Split by scan                 ##################
-####################################################################################
-#print "##################################################################################\n";
-#print "Spliting BNX by scan...\n";
-#print "##################################################################################\n";
-#my $split=`perl ${dirname}/split_by_scan.pl $bnx_dir`;
-#print "$split";
-#if ($split =~ /BNX version is not 1!!!\n/)
-#{
-#	die;
-#}
+
 ###################################################################################
 ###############  Run first molecule quality report and replace old bpp  ###########
 ###################################################################################
