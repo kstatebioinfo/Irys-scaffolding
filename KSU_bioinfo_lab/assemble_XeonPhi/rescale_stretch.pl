@@ -100,6 +100,7 @@ my $rescaling_factor_list_out_file = "${bnx_dir}/../${project}/bnx_rescaling_fac
 open (my $rescaling_factor_list_out, ">", $rescaling_factor_list_out_file) or die "Can't open $rescaling_factor_list_out_file in rescale_stretch.pl\n";
 print $rescaling_factor_list_out "flow_cell\tscan\tscale\n";
 my $scan_count=0;
+my $first_scans = '';
 while (<$refalign_log>) # grab rescaling factor for each scan from RefAlign log
 {
     chomp;
@@ -111,9 +112,16 @@ while (<$refalign_log>) # grab rescaling factor for each scan from RefAlign log
         my $scale = $4;
         print $rescaling_factor_list_out "$RunIndex\t$ScanNumber\t$scale\n";
         ++$scan_count;
+        if ($ScanNumber == 0)
+        {
+            my $first_scans = $first_scans." ".$ScanNumber; # grab position of the first scan for each BNX file
+        }
     }
 }
-my $get_rescaled_bnx = `Rscript ${dirname}/plot_bnx_rescaling_factors.R ${bnx_dir}/../${project}/bnx_rescaling_factors.tab ${bnx_dir}/../${project}/bnx_rescaling_factors.pdf $scan_count`; # plot rescaling factor for each scan
+#$first_scans =~ s/^s+//;
+my $command = "Rscript ${dirname}/plot_bnx_rescaling_factors.R ${bnx_dir}/../${project}/bnx_rescaling_factors.tab ${bnx_dir}/../${project}/bnx_rescaling_factors.pdf $scan_count $first_scans";
+print "Command: $command\n";
+my $get_rescaled_bnx = `$command`; # plot rescaling factor for each scan
 print "$get_rescaled_bnx";
 
 ##############################################################################

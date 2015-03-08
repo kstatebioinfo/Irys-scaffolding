@@ -55,8 +55,14 @@ my $T = 0.00001/$genome;
 print "##################################################################################\n";
 print "Generating BNX stats...\n";
 print "##################################################################################\n";
-mkdir "${bnx_dir}/../${project}";
-chdir "${bnx_dir}/../${project}";
+my $directory = "${bnx_dir}/../${project}";
+unless(mkdir $directory)
+{
+    print "Warning unable to create $directory. Directory exists\n";
+}
+chdir $directory;
+my $linked= `ln -s \'${bnx_dir}/../Datasets\' \'${directory}/\'`; # link Datasets directories to customers directory
+print "$linked";
 my $bnx_stats=`perl ${dirname}/../map_tools/bnx_stats.pl -l 100 ${bnx_dir}/Molecules_*.bnx`;
 print "$bnx_stats";
 

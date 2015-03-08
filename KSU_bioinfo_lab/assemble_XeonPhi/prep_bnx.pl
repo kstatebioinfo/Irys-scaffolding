@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ###############################################################################
 #
-#	USAGE: perl prep_bnx.pl <dataset directory> <bnx directory>
+#	USAGE: perl prep_bnx.pl <dataset directory>
 #
 #  Created by Jennifer Shelton 2/26/15
 #
@@ -10,7 +10,7 @@
 # The script takes the path to the "Datasets" directory transfered from the IrysView workspace and the new BNX directory name. This organizes the raw data in the correct format to run AssembleIrysXeonPhi.pl. The script also write a key with the original file path and the new link.
 
 #
-# Example: perl /home/irys/Data/Irys-scaffolding/KSU_bioinfo_lab/assemble/prep_bnx.pl /home/irys/Data/Esch_coli_0000/Datasets /home/irys/Data/Esch_coli_0000/bnx
+# Example: perl /home/irys/Data/Irys-scaffolding/KSU_bioinfo_lab/assemble/prep_bnx.pl /home/irys/Data/Esch_coli_0000/Datasets 
 #
 ###############################################################################
 use strict;
@@ -25,7 +25,7 @@ use warnings;
 ###############################################################################
 my $dataset_directory=$ARGV[0];
 my $i=1;
-my $directory = $ARGV[1];
+my $directory = "${dataset_directory}/../bnx";
 unless(mkdir $directory)
 {
     print "Unable to create $directory\n";
@@ -51,8 +51,8 @@ while (my $entry = readdir DATA )
                 $link = "$directory/Molecules_${i}.bnx";
                 
             }
-            my $linked= `ln -s \'${dataset_directory}/${entry}/Molecules.bnx\' $link`; # code for new Datasets directories
-            #            print "ln -s \'${dataset_directory}/${entry}/Detect Molecules/Molecules.bnx\' $link\n"; # code for older Datasets directories
+#            my $linked= `ln -s \'${dataset_directory}/${entry}/Molecules.bnx\' $link`; # code for new Datasets directories
+            my $linked= `ln -s \'${dataset_directory}/${entry}/Detect Molecules/Molecules.bnx\' $link`; # code for older Datasets directories
             print "$linked";
             print LOG "Molecules_${i}.bnx\t${entry}\n";
             ++$i;
@@ -60,5 +60,6 @@ while (my $entry = readdir DATA )
         
     }
 }
+
 
 print "Done\n";

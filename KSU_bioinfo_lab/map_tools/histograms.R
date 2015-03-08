@@ -1,10 +1,11 @@
 #!/usr/local/bin/Rscript
-# USAGE: Rscript histograms.R lengths_file mol_intensities_file mol_snrs_file mol_NumberofLabels_file mean_label_snr_file mean_label_intensity_file
+# USAGE: Rscript histograms.R <lengths_file> <mol_intensities_file> <mol_snrs_file> <min_length> <mol_NumberofLabels_file> <mean_label_snr_file> <mean_label_intensity_file>
 # DESCRIPTION: Plots QC graphs for bnx_stats.pl
 args <- commandArgs(TRUE)
 
 
 ## Molecule map lengths (Mb) ##
+
 lengths <- read.table(args[1], header=FALSE)
 names(lengths) <- c("Lengths")
 p1 <- hist(lengths$Lengths,breaks=100)
@@ -37,10 +38,10 @@ p6 <- hist(mean_label_intensity$Label_MeanIntensity,breaks=100)
 myblue <- rgb(0,0,1,3/4)
 #myorange <- rgb(1,0,0,3/4)
 pdf("MapStatsHistograms.pdf", bg='white', width=15, height=5)
-a = "Summary metrics for all molecule maps within all BNX files"
-b = args[7]
-c = args[8]
-d = args[9]
+a = args[7]
+b = args[8]
+c = args[9]
+d = args[10]
 
 #pdf('out.pdf',width=5,height=5)
 plot(NA, xlim=c(0,5), ylim=c(0,5), bty='n',
@@ -51,12 +52,25 @@ text(1,2,c, pos=4, cex=1.5)
 text(1,1,d, pos=4, cex=1.5)
 #points(rep(1,4),1:4, pch=15)
 
-plot( p1, col=c(myblue),main="Length",xlab="Molecule map lengths (kb)",ylab="Count")  # first histogram
-plot( p2, col=c(myblue),main="Average Intensity",xlab="Molecule map average intensities",ylab="Count")  # first histogram
-plot( p3, col=c(myblue),main="Average Molecule Map SNR",xlab="Molecule map average SNRs",ylab="Count")  # first histogram
-plot( p4, col=c(myblue),main="Number of labels",xlab="Molecule map average number of labels",ylab="Count")  # first histogram
-plot( p5, col=c(myblue),main="Per molecule map average label SNR",xlab="Molecule map average label SNR",ylab="Count")  # first histogram
-plot( p6, col=c(myblue),main="Per molecule map average label intensity",xlab="Molecule map average label intensity",ylab="Count")  # first histogram
+plot( p1, col=c(myblue),main="Length",xlab="Molecule map lengths (kb)",ylab="Count", xaxt="n")  # first histogram
+at <- seq(from = 0, to = max(lengths$Lengths), by = 100)
+axis(side = 1, at = at)
+plot( p2, col=c(myblue),main="Average Intensity",xlab="Molecule map average intensities",ylab="Count", xaxt="n")  # first histogram
+at <- seq(from = 0, to = max(mol_intensities$Mol_intensities), by = 0.1)
+axis(side = 1, at = at)
+plot( p3, col=c(myblue),main="Average Molecule Map SNR",xlab="Molecule map average SNRs (SNRs above 50 not shown)",ylab="Count", xaxt="n")  # first histogram
+at <- seq(from = 0, max(mol_snrs$Mol_SNRs), by = 1)
+axis(side = 1, at = at)
+plot( p4, col=c(myblue),main="Number of labels",xlab="Molecule map average number of labels (molecules with 200 or more labels not shown)",ylab="Count", xaxt="n")  # first histogram
+at <- seq(from = 0, to = max(mol_NumberofLabels$Mol_NumberofLabels), by = 10)
+axis(side = 1, at = at)
+plot( p5, col=c(myblue),main="Per molecule map average label SNR",xlab="Molecule map average label SNR", ylab="Count", xaxt="n")  # first histogram
+at <- seq(from = 0, to = max(mean_label_snr$Label_MeanSNR), by = 2)
+axis(side = 1, at = at)
+plot( p6, col=c(myblue),main="Per molecule map average label intensity",xlab="Molecule map average label intensity",ylab="Count", xaxt="n")  # first histogram
+at <- seq(from = 0, to = max(mean_label_intensity$Label_MeanIntensity), by = 0.02)
+axis(side = 1, at = at)
+
 
 dev.off()
 
