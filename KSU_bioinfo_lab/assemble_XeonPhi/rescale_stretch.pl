@@ -114,12 +114,12 @@ while (<$refalign_log>) # grab rescaling factor for each scan from RefAlign log
         ++$scan_count;
         if ($ScanNumber == 0)
         {
-            my $first_scans = $first_scans." ".$ScanNumber; # grab position of the first scan for each BNX file
+            $first_scans = $first_scans." ".$scan_count; # grab position of the first scan for each BNX file
         }
     }
 }
-#$first_scans =~ s/^s+//;
-my $command = "Rscript ${dirname}/plot_bnx_rescaling_factors.R ${bnx_dir}/../${project}/bnx_rescaling_factors.tab ${bnx_dir}/../${project}/bnx_rescaling_factors.pdf $scan_count $first_scans";
+
+my $command = "Rscript ${dirname}/plot_bnx_rescaling_factors.R ${bnx_dir}/../${project}/bnx_rescaling_factors.tab ${bnx_dir}/../${project}/bnx_rescaling_factors.pdf ${scan_count}${first_scans}";
 print "Command: $command\n";
 my $get_rescaled_bnx = `$command`; # plot rescaling factor for each scan
 print "$get_rescaled_bnx";

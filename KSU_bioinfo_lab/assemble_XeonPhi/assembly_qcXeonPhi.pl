@@ -48,21 +48,19 @@ pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 my @directories = qw/default_t_150 relaxed_t_150 strict_t_150 default_t_100 relaxed_t_100 strict_t_100 default_t_180 relaxed_t_180 strict_t_180/;
 
 open (QC_METRICS,'>',"$bnx_dir/../Assembly_quality_metrics.csv") or die "couldn't open $bnx_dir/../Assembly_quality_metrics.csv!";
-print QC_METRICS "Assembly Name,Assembly N50,refineB1 N50,Merge 0 N50,Extension 1 N50,Merge 1 N50,Extension 2 N50,Merge 2 N50,Extension 3 N50,Merge 3 N50,Extension 4 N50,Merge 4 N50,Extension 5 N50,Merge 5 N50,N contigs,Total Contig Len(Mb),Avg. Contig Len(Mb),Contig N50(Mb),Total Ref Len(Mb),Total Contig Len / Ref Len,N contigs total align I,Total Aligned Len(Mb) I,Total Aligned Len / Ref Len I,Total Unique Aligned Len(Mb) I,Total Unique Len / Ref Len I,N contigs total align II,Total Aligned Len(Mb) II,Total Aligned Len / Ref Len II,Total Unique Aligned Len(Mb) Final,Total Unique Len / Ref Len II\n";
+print QC_METRICS "Assembly name,Number of BioNano genome map contigs,Total BioNano genome map length(Mb),Avg. BioNano genome map contig length(Mb),BioNano genome map contig N50(Mb),Total in silico genome map length(Mb),Total BioNano genome map length / in silico genome map length,Number BioNano genome map contigs aligned I,Total aligned length(Mb) I,Total aligned length / in silico genome map length I,Total Unique aligned length(Mb) I,Total unique aligned length / in silico genome map length I,Number BioNano genome map contigs aligned II,Total aligned length(Mb) II,Total aligned length / in silico genome map length II,Total unique aligned length(Mb) II,Total unique aligned length / in silico genome map length II\n";
+#print QC_METRICS "Assembly Name,Assembly N50,refineB1 N50,Merge 0 N50,Extension 1 N50,Merge 1 N50,Extension 2 N50,Merge 2 N50,Extension 3 N50,Merge 3 N50,Extension 4 N50,Merge 4 N50,Extension 5 N50,Merge 5 N50,N contigs,Total Contig Len(Mb),Avg. Contig Len(Mb),Contig N50(Mb),Total Ref Len(Mb),Total Contig Len / Ref Len,N contigs total align I,Total Aligned Len(Mb) I,Total Aligned Len / Ref Len I,Total Unique Aligned Len(Mb) I,Total Unique Len / Ref Len I,N contigs total align II,Total Aligned Len(Mb) II,Total Aligned Len / Ref Len II,Total Unique Aligned Len(Mb) Final,Total Unique Len / Ref Len II\n";
 
 
 ###############################################################################
 ##########            open all assembly directories           #################
 ###############################################################################
-my $final = 0;
-
-my $single_mol_breadth_of_coverage = 0;
 for my $assembly_dir (@directories)
 {
     my $final = 0;
     unless (opendir(DIR, "${bnx_dir}/${assembly_dir}"))
     {
-        print "can't open the directory ${bnx_dir}/${assembly_dir}\n"; # open directory full of assembly files
+        print "Can't open the directory ${bnx_dir}/${assembly_dir}\n"; # open directory full of assembly files
         next;
     }
     while (my $file = readdir(DIR))
@@ -71,6 +69,7 @@ for my $assembly_dir (@directories)
         next if ($file !~ m/\_informaticsReport.txt$/); # ignore files not ending with a "_informaticsReport.txt"
         my $report = $file;
         print QC_METRICS "$project: $assembly_dir,";
+        print  "$project: $assembly_dir,";
         open (BIOINFO_REPORT,'<',"${bnx_dir}/${assembly_dir}/$report");
         
         ###################################################################
@@ -81,45 +80,45 @@ for my $assembly_dir (@directories)
             chomp;
             if (/SV detect:/)
             {
-                next;
+                last;
             }
             if (/Stage\s+Summary:\s+Characterize.*\s+refineFinal1/i)
             {
                 ++$final;
             }
-            #########################################################
-            #####  pull N50 from each stage of assembly  ############
-            #########################################################
-            if (($final == 0) && (/Contig N50/i))
-            {
-                s/(.*:\s+)(.*)/$2/;
-                print QC_METRICS;
-                print QC_METRICS ",";
-            }
+#            #########################################################
+#            #####  pull N50 from each stage of assembly  ############
+#            #########################################################
+#            if (($final == 0) && (/Contig N50/i))
+#            {
+#                s/(.*:\s+)(.*)/$2/;
+#                print QC_METRICS;
+#                print QC_METRICS ",";
+#            }
             #########################################################
             ##  pull all metrics from final stage of assembly  ######
             #########################################################
             if ($final == 1)
             {
-                if (/N contigs:/i)
+                if (/N Genome Maps:/i)
                 {
                     s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                elsif (/Total Contig Len \(Mb\):/)
+                elsif (/Total Genome Map Len \(Mb\):/)
                 {
                     s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                elsif (/Avg. Contig Len\s+\(Mb\):/)
+                elsif (/Avg\. Genome Map Len\s+\(Mb\):/)
                 {
                     s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                elsif (/Contig n50.*:/i)
+                elsif (/Genome Map n50.*:/i)
                 {
                     s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
@@ -131,7 +130,7 @@ for my $assembly_dir (@directories)
                     print QC_METRICS;
                     print QC_METRICS ",";
                 }
-                elsif (/Total Contig Len \/ Ref Len/)
+                elsif (/Total Genome Map Len \/ Ref Len/)
                 {
                     s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
@@ -140,7 +139,7 @@ for my $assembly_dir (@directories)
             }
             if (($final == 1)||($final ==2))
             {
-                if (/N contigs total align/)
+                if (/N Genome Maps total align/)
                 {
                     s/(.*:\s+)(.*)/$2/;
                     print QC_METRICS;
@@ -175,15 +174,9 @@ for my $assembly_dir (@directories)
         }
         print QC_METRICS "\n";
     }
-#    print QC_METRICS "\n";
-#    my $report= "$bnx_dir/$assembly_dir/all_flowcells/all_flowcells_adj_merged_bestref.xmap";
-#    if (-e $report)
-#    {
-#        # ADD SCRIPT TO CALCULATE SINGLE MOLECULE BREADTH OF COVERAGE FROM XMAP
-#    }
 }
 ###############################################################################
-print "Done\n";
+print "Done generating assembly metrics\n";
 
 ###############################################################################
 ##############                  Documentation                ##################
@@ -193,9 +186,9 @@ __END__
 
 =head1 NAME
 
-assembly_qcXeonPhi.pl - a package of scripts that compile assembly metrics for assemblies in all of the possible directories:'strict_t', 'default_t', 'relaxed_t', 'strict_t/strict_ml', 'strict_t/relaxed_ml', 'default_t/strict_ml', 'default_t/relaxed_ml', 'relaxed_t/strict_ml', and 'relaxed_t/relaxed_ml'.
+assembly_qcXeonPhi.pl - a package of scripts that compile assembly metrics for assemblies in all of the possible subdirectories of the assembly directory: default_t_150 relaxed_t_150 strict_t_150 default_t_100 relaxed_t_100 strict_t_100 default_t_180 relaxed_t_180 strict_t_180.
 
-The assemblies are created using either of the following scripts assemble/AssembleIrys.pl or assemble_SGE_cluster/AssembleIrysCluster.pl from https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab. 
+The assemblies are created using AssembleIrysXeonPhi.pl from https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab.
 
 The parameter -b should be the same as the -b parameter used for the assembly script. It is the directory with the BNX files used for assembly.
  
@@ -241,12 +234,12 @@ The project id. The parameter -p should be the same as the -p parameter used for
 B<OUTPUT DETAILS:>
 
 B<Assembly_quality_metrics.csv:>
-This file is a CSV file for each of the existing assemblies out of the existing assemblies out of the nine possible stringency parameters.
+This is a CSV file of assembly metrics for each of the existing assemblies in one of the possible assembly subdirectories: default_t_150 relaxed_t_150 strict_t_150 default_t_100 relaxed_t_100 strict_t_100 default_t_180 relaxed_t_180 strict_t_180.
 
 B<Test with sample datasets:>
 
 get clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
 
-perl ~/Irys-scaffolding/KSU_bioinfo_lab/assembly_qcXeonPhi.pl -b [bnx_dir]
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/assembly_qcXeonPhi.pl -b [bnx_dir]
 
 =cut
