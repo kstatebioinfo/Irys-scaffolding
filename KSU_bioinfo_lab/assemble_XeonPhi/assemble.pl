@@ -52,6 +52,7 @@ print "Label Density per 100 kb: $LabelDensity\n";
 ##############  Select optArguments.xml file based on genome size ################
 ##################################################################################
 my $xml_infile;
+my $iterations = 5;
 if ( $genome < 100 )
 {
     $xml_infile = "${dirname}/optArguments_small.xml";
@@ -59,6 +60,7 @@ if ( $genome < 100 )
 elsif ( $genome < 1000 )
 {
     $xml_infile = "${dirname}/optArguments_medium.xml";
+    $iterations = 1;
 }
 else
 {
@@ -192,7 +194,7 @@ for my $stringency (@commands)
     {
         print $out_assemble "#"; #start with default min length assemblies
     }
-    print $out_assemble "python2 ~/scripts/pipelineCL.py -T 240 -j 240 -N 6 -i 5 -a $xml_final -w -t ~/tools/ -l $out_dir -b ${assembly_directory}/all_flowcells/bnx_merged_adj_rescaled.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -U -C ${dirname}/clusterArguments.xml\n";
+    print $out_assemble "python2 ~/scripts/pipelineCL.py -T 240 -j 240 -N 6 -i $iterations -a $xml_final -w -t ~/tools/ -l $out_dir -b ${assembly_directory}/all_flowcells/bnx_merged_adj_rescaled.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -U -C ${dirname}/clusterArguments.xml\n";
 }
 
 print "Done writing assembly scripts.\n";
