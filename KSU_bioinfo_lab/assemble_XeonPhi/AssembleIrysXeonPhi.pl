@@ -27,19 +27,19 @@ print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
 print "#  perl AssembleIrysXeonPhi.pl -help # for usage/options  #\n";
 print "#  perl AssembleIrysXeonPhi.pl -man # for more details    #\n";
 print "###########################################################\n";
-#perl /Users/jennifershelton/Desktop/Perl_course_texts/scripts/Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrysXeonPhi.pl -g 230 -b test_bnx - p Oryz_sati_0027
+#perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrysXeonPhi.pl -g 230 -a test_assembly_dir - p Oryz_sati_0027
 
 ##################################################################################
 ##############                get arguments                     ##################
 ##################################################################################
-my ($bnx_dir,$genome,$reference,$project);
+my ($assembly_directory,$genome,$reference,$project);
 
 my $man = 0;
 my $help = 0;
 GetOptions (
 			  'help|?' => \$help, 
 			  'man' => \$man,
-			  'b|bnx_dir:s' => \$bnx_dir,    
+			  'a|assembly_dir:s' => \$assembly_directory,
               'g|genome:i' => \$genome,
               'r|ref:s' => \$reference,
               'p|proj:s' => \$project
@@ -55,14 +55,15 @@ my $T = 0.00001/$genome;
 print "##################################################################################\n";
 print "Generating BNX stats...\n";
 print "##################################################################################\n";
-my $directory = "${bnx_dir}/../${project}";
+my $directory = "${assembly_directory}/${project}";
 unless(mkdir $directory)
 {
     print "Warning unable to create $directory. Directory exists\n";
 }
 chdir $directory;
-my $linked= `ln -s \'${bnx_dir}/../Datasets\' \'${directory}/\'`; # link Datasets directories to customers directory
+my $linked= `ln -s \'${assembly_directory}/Datasets\' \'${directory}/\'`; # link Datasets directories to customers directory
 print "$linked";
+my $bnx_dir = "${assembly_directory}/bnx";
 my $bnx_stats=`perl ${dirname}/../map_tools/bnx_stats.pl -l 100 ${bnx_dir}/Molecules_*.bnx`;
 print "$bnx_stats";
 
@@ -72,7 +73,7 @@ print "$bnx_stats";
 print "##################################################################################\n";
 print "Rescaling molecules in BNX files (formerly the adjusting stretch (bpp) step)...\n";
 print "##################################################################################\n";
-my $rescale_stretch=`perl ${dirname}/rescale_stretch.pl $bnx_dir $reference $T $project`;
+my $rescale_stretch=`perl ${dirname}/rescale_stretch.pl $assembly_directory $reference $T $project`;
 print "$rescale_stretch";
 
 ###################################################################################
@@ -81,7 +82,7 @@ print "$rescale_stretch";
 print "##################################################################################\n";
 print "Writing assembly scripts...\n";
 print "##################################################################################\n";
-my $writing_assemblies=`perl ${dirname}/assemble.pl $bnx_dir $reference $T $project $genome`;
+my $writing_assemblies=`perl ${dirname}/assemble.pl $assembly_directory $reference $T $project $genome`;
 print "$writing_assemblies";
 
 
@@ -139,7 +140,7 @@ perl AssembleIrysXeonPhi.pl [options]
    -help    brief help message
    -man	    full documentation
  Required options:
-    -b	     directory with all BNX's meant for assembly (any BNX in this directory will be used in assembly)
+    -a	     the assembly working directory for a project
     -g	     genome size in Mb
     -r	     reference CMAP
     -p	     project name for all assemblies
@@ -158,9 +159,9 @@ Print a brief help message and exits.
 Prints the more detailed manual page with output details and exits.
 
 
-=item B<-b, --bnx_dir>
+=item B<-a, --assembly_dir>
 
-The directory with all BNX's meant for assembly (any BNX in this directory will be used in assembly. Use absolute not relative paths. Do not use a trailing / for this directory.
+The assembly working directory for a project. This should include the subdirectory "bnx" (any BNX in this directory will be used in assembly). Use absolute not relative paths. Do not use a trailing "/" for this directory.
 
 =item B<-g, --genome>
 
@@ -180,17 +181,17 @@ The project id. This will be used to name all assemblies
 
 B<OUTPUT DETAILS:>
 
-strict_t - This directory holds the output for the strictest assembly (where the p-value threshold is divided by 10).
+strict_t - These directories hold the output for the strictest assemblies (where the p-value threshold is divided by 10).
  
-relaxed_t - This directory holds the output for the laxest assembly (where the p-value threshold is multiplied by 10).
+relaxed_t - These directories hold the output for the laxest assemblies (where the p-value threshold is multiplied by 10).
  
-default_t - This directory holds the output for the default assembly (where the p-value threshold is used as-is).
+default_t - These directories hold the output for the default assemblies (where the p-value threshold is used as-is).
  
-bestref_effect_summary.csv - this shows the difference between running a molecule quality report with and without - BestRef. If the values change substantially than your p-value threshold may be too lax.
+assembly_commands.sh - These are the commands to start the first pass of assemblies. In these strict, relaxed, and default p-value thresholds will be used all will the default minimum molecule length of 150kb.
  
-assembly_commands.sh - These are the commands to start the first pass of assemblies. In these strict, relaxed, and default p-value thresholds will be used.
+bnx_rescaling_factors.pdf - This graph can be evaluated to check flowcell and alignment quality (ability to align to reference for each flowcell (you should see a consistant pattern.
  
-flowcell_summary.csv - This file can be evaluated to check quality (ability to align to reference for each flowcell.
+MapStatsHistograms.pdf - This file can be evaluated to check molecule map quality.
 
 B<Test with sample datasets:>
 
@@ -198,7 +199,7 @@ git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
 
 # no test dataset is available yet but here is an example of a command
  
-perl Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrysXeonPhi.pl -g  -b  -r  -p Test_project_name > testing_log.txt
+perl Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrysXeonPhi.pl -g  -a  -r  -p Test_project_name > testing_log.txt
  
 bash assembly_commands.sh
 

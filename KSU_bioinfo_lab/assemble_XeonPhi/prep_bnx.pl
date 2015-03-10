@@ -1,16 +1,16 @@
 #!/usr/bin/perl
 ###############################################################################
 #
-#	USAGE: perl prep_bnx.pl <dataset directory>
+#	USAGE: perl prep_bnx.pl <assembly working directory>
 #
 #  Created by Jennifer Shelton 2/26/15
 #
 # DESCRIPTION: Script makes links to all Molecules.bnx files in a common bnx directory and renames with auto-incremented numbers. Make paths absolute. Do not include trailing spaces in paths.
 
-# The script takes the path to the "Datasets" directory transfered from the IrysView workspace and the new BNX directory name. This organizes the raw data in the correct format to run AssembleIrysXeonPhi.pl. The script also write a key with the original file path and the new link.
+# Make an assembly working directory for a project. Transfer the "Datasets" directory transfered from the IrysView workspace to the assembly working directory for your project. The script then takes the path of the assembly working directory for your project as input and organizes the raw data in the correct format to run AssembleIrysXeonPhi.pl. The script also writes a key with the original file path and the new link for all BNX files.
 
 #
-# Example: perl /home/irys/Data/Irys-scaffolding/KSU_bioinfo_lab/assemble/prep_bnx.pl /home/irys/Data/Esch_coli_0000/Datasets 
+# Example: perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble/prep_bnx.pl /home/irys/Data/Esch_coli_0000
 #
 ###############################################################################
 use strict;
@@ -23,20 +23,21 @@ use warnings;
 ###############################################################################
 ##############                 get arguments                 ##################
 ###############################################################################
-my $dataset_directory=$ARGV[0];
+my $assembly_directory=$ARGV[0];
 my $i=1;
-my $directory = "${dataset_directory}/../bnx";
-unless(mkdir $directory)
+my $bnx_directory = "${assembly_directory}/bnx";
+unless(mkdir $bnx_directory)
 {
-    print "Unable to create $directory\n";
+    print "Unable to create $assembly_directory\n";
 }
 ###############################################################################
 ##############            Move and rename files              ##################
 ###############################################################################
 #my @dir_array = ('/homes', grep -d, glob "$dataset_directory/*");
-my $logfile = "$directory/bnx_key.txt";
+my $logfile = "$bnx_directory/bnx_key.txt";
 open (LOG, ">", $logfile) or die "Can't open $logfile\n";
-opendir (DATA, $dataset_directory) or die "Can't open $dataset_directory\n";
+my $dataset_directory = "${assembly_directory}/Datasets";
+opendir (DATA, $dataset_directory) or die "Can't open $dataset_directory. Transfer the Dataset directory from Irysview after generating the run report.\n";
 print "Creating links to all Molecules.bnx files in a common bnx directory and renaming with auto-incremented numbers...\n";
 while (my $entry = readdir DATA )
 {
@@ -44,11 +45,11 @@ while (my $entry = readdir DATA )
     {
         unless (($entry eq '..') || ($entry eq '.'))
         {
-            my $link = "$directory/Molecules_${i}.bnx";
+            my $link = "$bnx_directory/Molecules_${i}.bnx";
             while (-e $link)
             {
                 ++$i;
-                $link = "$directory/Molecules_${i}.bnx";
+                $link = "$bnx_directory/Molecules_${i}.bnx";
                 
             }
 #            my $linked= `ln -s \'${dataset_directory}/${entry}/Molecules.bnx\' $link`; # code for new Datasets directories
@@ -62,4 +63,4 @@ while (my $entry = readdir DATA )
 }
 
 
-print "Done\n";
+print "Done preping the working directory for AssembleIrysXeonPhi.pl\n";
