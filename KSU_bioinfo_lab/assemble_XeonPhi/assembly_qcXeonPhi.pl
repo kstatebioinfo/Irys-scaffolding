@@ -17,7 +17,7 @@ use Pod::Usage;
 ##############         Print informative message             ##################
 ###############################################################################
 print "###########################################################\n";
-print "#  assembly_qcXeonPhi.pl                                  #\n";
+print "#  assembly_qcXeonPhi.pl Version 1.0.0                    #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 03/03/15                   #\n";
 print "#  https://github.com/i5K-KINBRE-script-share             #\n";
@@ -36,7 +36,7 @@ GetOptions (
 			  'help|?' => \$help, 
 			  'man' => \$man,
 			  'a|assembly_dir:s' => \$assembly_directory,
-			  'p|proj:s' => \$project
+			  'p|proj:s' => \$project,
               )  
 or pod2usage(2);
 pod2usage(1) if $help;
@@ -174,6 +174,8 @@ for my $assembly_dir (@directories)
         print QC_METRICS "\n";
     }
 }
+$Assembly_parameter_tests_file = "${assembly_directory}/Assembly_parameter_tests.csv";
+open ( my $Assembly_parameter_tests, ">", $Assembly_parameter_tests_file) or die "Can't open $Assembly_parameter_tests_file: $!";
 ###############################################################################
 print "Done generating assembly metrics\n";
 
@@ -197,10 +199,13 @@ The parameter -a should be the same as the -a parameter used for the assembly sc
 
 perl assembly_qcXeonPhi.pl [options]
 
- Documentation options:
+Documentation options:
+ 
    -help    brief help message
    -man	    full documentation
- Required options:
+ 
+Required options:
+ 
    -b	     bnx directory
    -p	     project name for all assemblies
   

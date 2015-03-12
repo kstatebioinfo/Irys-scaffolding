@@ -1,16 +1,16 @@
 #!/usr/bin/perl
 ###############################################################################
 #
-#	USAGE: perl prep_bnx.pl <assembly working directory>
+#	USAGE: perl run_compare.pl <assembly working directory>
 #
 #  Created by Jennifer Shelton 2/26/15
 #
-# DESCRIPTION: Script makes links to all Molecules.bnx files in a common bnx directory and renames with auto-incremented numbers. Make paths absolute. Do not include trailing spaces in paths.
-
-# Make an assembly working directory for a project. Transfer the "Datasets" directory transfered from the IrysView workspace to the assembly working directory for your project. The script then takes the path of the assembly working directory for your project as input and organizes the raw data in the correct format to run AssembleIrysXeonPhi.pl. The script also writes a key with the original file path and the new link for all BNX files.
+# DESCRIPTION: # Script replaces project_directory with the name of the working directory update other variables for project in "Project variables" section
 
 #
-# Example: perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble/prep_bnx.pl /home/irys/Data/Esch_coli_0000
+
+#
+# Example: perl run_compare.pl
 #
 ###############################################################################
 use strict;
@@ -19,7 +19,29 @@ use warnings;
 # use List::Util qw(max);
 # use List::Util qw(sum);
 #
-#
+########################  Project variables  ########################
+
+# Working directory without trailing slash
+my $best_dir ="best assembly directory"; # no trailing slash
+my $fasta = "fasta full path";
+my $enzyme= "enzyme or enzymes"; # space separated list that can include BspQI BbvCI BsrDI bseCI
+#bng_assembly="BNG_assembly_basename"
+#FASTA_EXT="fasta_extension_without_dot"
+
+my $f_con="13";
+my $f_algn="30";
+my $s_con="8";
+my $s_algn="90";
+
+# Strict alignments
+my $strict_align_para ="-FP 0.8 -FN 0.08 -sf 0.20 -sd 0.10";
+# Relaxed alignments
+my $relaxed_align_para="-FP 1.2 -FN 0.15 -sf 0.10 -sd 0.15";
+
+my $project="project_name";
+
+########################  End project variables  ########################
+
 ###############################################################################
 ##############                 get arguments                 ##################
 ###############################################################################
