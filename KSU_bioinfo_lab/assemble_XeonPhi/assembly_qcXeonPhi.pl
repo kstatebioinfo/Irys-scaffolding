@@ -28,7 +28,7 @@ print "###########################################################\n";
 ###############################################################################
 ##############             get arguments                     ##################
 ###############################################################################
-my ($assembly_directory,$project);
+my ($assembly_directory,$project,$genome);
 
 my $man = 0;
 my $help = 0;
@@ -37,26 +37,62 @@ GetOptions (
 			  'man' => \$man,
 			  'a|assembly_dir:s' => \$assembly_directory,
 			  'p|proj:s' => \$project,
+			  'g|genome:i' => \$genome
               )  
 or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
-
+my $dirname = dirname(__FILE__);
 ###############################################################################
 ########## create array with all default assembly directories #################
 ###############################################################################
-my @directories = qw/default_t_150 relaxed_t_150 strict_t_150 default_t_100 relaxed_t_100 strict_t_100 default_t_180 relaxed_t_180 strict_t_180 default_t_default_noise/;
+#my @directories = qw/default_t_150 relaxed_t_150 strict_t_150 default_t_100 relaxed_t_100 strict_t_100 default_t_180 relaxed_t_180 strict_t_180 default_t_default_noise/;
+my @directories = qw/default_t_150 relaxed_t_150 strict_t_150 default_t_100 relaxed_t_100 strict_t_100 default_t_180 relaxed_t_180 strict_t_180 default_t_default_noise default_t_150_no_rescale/;
 
 open (QC_METRICS,'>',"${assembly_directory}/Assembly_quality_metrics.csv") or die "couldn't open ${assembly_directory}/Assembly_quality_metrics.csv!";
 print QC_METRICS "Assembly name,Number of BioNano genome map contigs,Total BioNano genome map length(Mb),Avg. BioNano genome map contig length(Mb),BioNano genome map contig N50(Mb),Total in silico genome map length(Mb),Total BioNano genome map length / in silico genome map length,Number BioNano genome map contigs aligned I,Total aligned length(Mb) I,Total aligned length / in silico genome map length I,Total Unique aligned length(Mb) I,Total unique aligned length / in silico genome map length I,Number BioNano genome map contigs aligned II,Total aligned length(Mb) II,Total aligned length / in silico genome map length II,Total unique aligned length(Mb) II,Total unique aligned length / in silico genome map length II\n";
-#print QC_METRICS "Assembly Name,Assembly N50,refineB1 N50,Merge 0 N50,Extension 1 N50,Merge 1 N50,Extension 2 N50,Merge 2 N50,Extension 3 N50,Merge 3 N50,Extension 4 N50,Merge 4 N50,Extension 5 N50,Merge 5 N50,N contigs,Total Contig Len(Mb),Avg. Contig Len(Mb),Contig N50(Mb),Total Ref Len(Mb),Total Contig Len / Ref Len,N contigs total align I,Total Aligned Len(Mb) I,Total Aligned Len / Ref Len I,Total Unique Aligned Len(Mb) I,Total Unique Len / Ref Len I,N contigs total align II,Total Aligned Len(Mb) II,Total Aligned Len / Ref Len II,Total Unique Aligned Len(Mb) Final,Total Unique Len / Ref Len II\n";
-
 
 ###############################################################################
 ##########            open all assembly directories           #################
 ###############################################################################
+my $Assembly_parameter_tests_file = "${assembly_directory}/Assembly_parameter_tests.csv";
+open ( my $Assembly_parameter_tests, ">", $Assembly_parameter_tests_file) or die "Can't open $Assembly_parameter_tests_file: $!";
+print $Assembly_parameter_tests "Genome_map,Breadth_of_alignment,Total_alignment_length,Cumulative_length\n"; # print headers to csv file
 for my $assembly_dir (@directories)
 {
+    if (-d "${assembly_directory}/${assembly_dir}/contigs")
+    {
+        ###################################################################
+        #####            pull QC metrics from CMAP             ############
+        ###################################################################
+    #    /home/bionano/bionano/Gram_nega_2014_055/strict_t_150/contigs/Gram_nega_2014_055_strict_t_150_refineFinal1
+        my $cmap = "${assembly_directory}/${assembly_dir}/contigs/*_refineFinal1/*_REFINEFINAL1.cmap"; # BioNano genome map assembly CMAP
+        my $cmap_stats_out = `perl ${dirname}/../map_tools/cmap_stats.pl -c $cmap`;
+        if ($cmap_stats_out !~ /cmap N50:/)
+        {
+            print "\nThe $assembly_dir assembly may be in progress, skipping this assembly.\n";
+            next;
+        }
+        $cmap_stats_out =~ /.*Total cmap length: (.*) \(Mb\).*/;
+        my $cmap_length = $1;
+        ###################################################################
+        #####            pull QC metrics from XMAP             ############
+        ###################################################################
+        #    /home/bionano/bionano/Gram_nega_2014_055/strict_t_150/contigs/Gram_nega_2014_055_strict_t_150_refineFinal1/alignref_final/GRAM_NEGA_2014_055_STRICT_T_150_REFINEFINAL1.xmap
+        my $xmap = "${assembly_directory}/${assembly_dir}/contigs/*_refineFinal1/alignref/*_REFINEFINAL1.xmap"; # in silico genome map to BioNano genome map XMAP
+#        my $xmap = "${assembly_directory}/${assembly_dir}/contigs/*_refineFinal1/alignref_final/*_REFINEFINAL1.xmap"; # in silico genome map to BioNano genome map XMAP
+        my $xmap_stats_out = `perl ${dirname}/../map_tools/xmap_stats.pl -x $xmap`;
+        $xmap_stats_out =~ /Breadth of alignment coverage = (.*) \(Mb\)\nTotal alignment length = (.*) \(Mb\)/;
+        my $breadth = $1;
+        my $total_aligned_length = $2;
+        ###################################################################
+        #####      print QC metrics from CMAP and XMAP         ############
+        ###################################################################
+        print $Assembly_parameter_tests "${assembly_dir},${breadth},${total_aligned_length},${cmap_length}\n";
+    }
+    ###################################################################
+    #####    Get metrics from BioNano informatics report   ############
+    ###################################################################
     my $final = 0;
     unless (opendir(DIR, "${assembly_directory}/${assembly_dir}"))
     {
@@ -85,15 +121,6 @@ for my $assembly_dir (@directories)
             {
                 ++$final;
             }
-#            #########################################################
-#            #####  pull N50 from each stage of assembly  ############
-#            #########################################################
-#            if (($final == 0) && (/Contig N50/i))
-#            {
-#                s/(.*:\s+)(.*)/$2/;
-#                print QC_METRICS;
-#                print QC_METRICS ",";
-#            }
             #########################################################
             ##  pull all metrics from final stage of assembly  ######
             #########################################################
@@ -174,8 +201,14 @@ for my $assembly_dir (@directories)
         print QC_METRICS "\n";
     }
 }
-$Assembly_parameter_tests_file = "${assembly_directory}/Assembly_parameter_tests.csv";
-open ( my $Assembly_parameter_tests, ">", $Assembly_parameter_tests_file) or die "Can't open $Assembly_parameter_tests_file: $!";
+###############################################################################
+##########                Plot assembly metrics               #################
+###############################################################################
+close ($Assembly_parameter_tests);
+my $Assembly_parameter_tests_plot = "${assembly_directory}/Assembly_parameter_tests.pdf";
+my $assembly_plot_out = `Rscript ${dirname}/graph_assemblies.R $Assembly_parameter_tests_file $Assembly_parameter_tests_plot $genome`;
+#print "Rscript ${dirname}/ $Assembly_parameter_tests_file $Assembly_parameter_tests_plot $genome\n";
+print $assembly_plot_out;
 ###############################################################################
 print "Done generating assembly metrics\n";
 
@@ -208,7 +241,7 @@ Required options:
  
    -b	     bnx directory
    -p	     project name for all assemblies
-  
+   -g	     genome size in Mb
  
 =head1 OPTIONS
 
@@ -229,6 +262,10 @@ The BNX directory. The parameter -b should be the same as the -b parameter used 
 =item B<-p, --project>
  
 The project id. The parameter -p should be the same as the -p parameter used for the assembly script. This was used to name all assemblies.
+ 
+=item B<-g, --genome>
+
+The estimated size of the genome in Mb.
 
 
 =back
