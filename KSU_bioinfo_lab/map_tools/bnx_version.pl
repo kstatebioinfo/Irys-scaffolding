@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ##################################################################################
 #
-# USAGE: perl  bnx_version.pl [OPTIONS] BNX_FILES...
+# USAGE: perl  bnx_version.pl [OPTIONS]
 # Script reports version of BNX files.
 #
 # Script has no options other than help menus currently.

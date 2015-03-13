@@ -122,61 +122,61 @@ for my $stringency (@commands)
     {
         if (/<flag attr=\"-T\".*group=\"Initial Assembly\"/)
         {
-            s/(val0=\")(1e-9)(\".*group=\"Initial Assembly\".*)/$1$p_value{$stringency}$3/;
+            s/(val0=\")(.*)(\"\s+display.*group=\"Initial Assembly\".*)/$1$p_value{$stringency}$3/;
             print $optarg_final "$_";
             next CUSTOMXML;
         }
         elsif (/<flag attr=\"-T\".*group=\"Extension and Refinement\"/)
         {
             my $new_p=$p_value{$stringency}/10;
-            s/(val0=\")(1e-10)(\".*group=\"Extension and Refinement\".*)/$1${new_p}$3/;
+            s/(val0=\")(.*)(\"\s+display.*group=\"Extension and Refinement\".*)/$1${new_p}$3/;
             print $optarg_final "$_";
             next CUSTOMXML;
-            #            print "Yes#6\n";
+#                        print "Yes#6\n";
         }
         elsif (/<flag attr=\"-T\".*group=\"Merge\"/)
         {
             my $final_p=$p_value{$stringency}/10000;
-            s/(val0=\")(1e-15)(\".*group=\"Merge\".*)/$1${final_p}$3/;
+            s/(val0=\")(.*)(\"\s+display.*group=\"Merge\".*)/$1${final_p}$3/;
             print $optarg_final "$_";
             next CUSTOMXML;
-            #            print "Yes#7\n";
+#                        print "Yes#7\n";
         }
         elsif (/<flag attr=\"-minlen\".*group=\"BNX Sort\"/)
         {
 #            <flag attr="-minlen"      val0="150" display="Molecule Length Threshold (Kb)" group="BNX Sort" default0="150" description="Minimum length of molecules (kb) that are used in BNX sort. This will also be the minimum length used for all downstream Pipeline stages (entire assembly)." />
-            s/(.*val0=\")(1.0)(\".*display=.*)/$1${min_length}$3/;
+            s/(.*val0=\")(.*)(\"\s+display=\"Molecule Length Threshold.*)/$1${min_length}$3/;
             print $optarg_final "$_";
             next CUSTOMXML;
-            #            print "Yes#1\n";
+#                        print "Yes#1\n";
         }
         elsif ($stringency ne 'default_t_default_noise') # skip adjusting molecule length and noise parameters for the default_noise assembly
         {
 
             if (/<flag attr=\"-FP\".*group=\"DeNovo Assembly Noise\"/)
             {
-                s/(<flag attr=\"-FP\" val0=\")(1.5)(.*)/$1${FP}$3/;
+                s/(<flag attr=\"-FP\" val0=\")(.*)(\"\s+display.*)/$1${FP}$3/;
                 print $optarg_final "$_";
     #            print "Yes#2\n";
                 next CUSTOMXML;
             }
             elsif (/<flag attr=\"-FN\".*group=\"DeNovo Assembly Noise\"/)
             {
-                s/(<flag attr=\"-FN\" val0=\")(0.15)(\.*)/$1${FN}$3/;
+                s/(<flag attr=\"-FN\" val0=\")(.*)(\"\s+display.*)/$1${FN}$3/;
                 print $optarg_final "$_";
     #            print "Yes#3\n";
                 next CUSTOMXML;
             }
             elsif (/<flag attr=\"-sd\".*group=\"DeNovo Assembly Noise\"/)
             {
-                s/(val0=\")(0.2)(\".*)/$1${ScalingSD_Kb_square}$3/;
+                s/(val0=\")(.*)(\"\s+display.*)/$1${ScalingSD_Kb_square}$3/;
                 print $optarg_final "$_";
     #            print "Yes#4\n";
                 next CUSTOMXML;
             }
             elsif (/<flag attr=\"-sf\".*group=\"DeNovo Assembly Noise\"/)
             {
-                s/(val0=\")(0.2)(\".*)/$1${SiteSD_Kb}$3/;
+                s/(val0=\")(.*)(\"\s+display.*)/$1${SiteSD_Kb}$3/;
                 print $optarg_final "$_";
                 next CUSTOMXML;
             }
@@ -192,7 +192,7 @@ for my $stringency (@commands)
 #    /home/mic_common/scripts_fresh/pipelineCL.py -y -d -U -T 240 -N 6 -j 240 -i 5 -l /home/irys/data/human_100x_test/output/ -t /usr/src/genome_grid/configurations/Human_hg19/tools -C /home/irys/data/human_100x_test/clusterArguments.xml -b /home/irys/data/human_100x_test/input.bnx -r /home/irys/data/human_100x_test/ref.cmap -a /home/irys/data/human_100x_test/optArguments.xml
     if ($min_length != 150)
     {
-        print $out_assemble "#"; #start with default min length assemblies
+        print $out_assemble "#"; #start with default min length assemblies by commenting other assemblies
     }
     print $out_assemble "python2 ~/scripts/pipelineCL.py -T 240 -j 240 -N 6 -i $iterations -a $xml_final -w -t ~/tools/ -l $out_dir -b ${assembly_directory}/all_flowcells/bnx_merged_adj_rescaled.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -U -C ${dirname}/clusterArguments.xml\n";
 }
