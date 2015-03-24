@@ -41,6 +41,7 @@ GetOptions (
 or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
+die "Option -c or --input_cmap not specified.\n" unless $input_cmap; # report missing required variables
 ###############################################################################
 ##############              run                              ##################
 ###############################################################################

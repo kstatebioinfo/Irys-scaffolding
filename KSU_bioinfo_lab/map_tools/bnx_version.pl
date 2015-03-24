@@ -46,7 +46,7 @@ or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 my $dirname = dirname(__FILE__);
-
+die "Option -i or --input_bnx not specified.\n" unless $input_bnx; # report missing required variables
 ###############################################################################
 ##############              run                              ##################
 ###############################################################################

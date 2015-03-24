@@ -32,7 +32,7 @@ my $T_relaxed = $T * 10;
 my $T_strict = $T/10;
 my ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square,$LabelDensity);
 
-my $merged_error_file = "${assembly_directory}/all_flowcells/bnx_merged_adj_id1.err";
+my $merged_error_file = "${assembly_directory}/all_flowcells/bnx_merged_rescaled_final.err";
 
 #0Iteration	1FP(/100kb)	2FNrate	3SiteSD(Kb)	4ScalingSD(Kb^1/2)	5bpp	6res(pixels)	7Maps	8Log10LR(/Maps)	9GoodMaps	10log10LR(/GoodMaps)	11bppSD	12FPrate	13RelativeSD	14ResolutionSD	15LabelDensity(/100kb)	16resSD	17mres	18mresSD
 open (my $merged_error, "<", $merged_error_file) or die "Can't open $merged_error_file!\n";
@@ -60,11 +60,12 @@ if ( $genome < 100 )
 elsif ( $genome < 1000 )
 {
     $xml_infile = "${dirname}/optArguments_medium.xml";
-    $iterations = 1;
 }
 else
 {
     $xml_infile = "${dirname}/optArguments_human.xml";
+    $iterations = 5; # Can lower the number of itereations for large genomes in future if needed
+
 }
 
 ##################################################################################

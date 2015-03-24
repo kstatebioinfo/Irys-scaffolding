@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ##################################################################################
 #
-# USAGE: perl label_density.pl [OPTIONS] FASTA_FILES...
+# USAGE: perl nick_density.pl [OPTIONS] FASTA_FILES...
 # Script reports label density for various enzymes for FASTA files. Script requires fa2cmap_multi.pl from BioNano Genomics.
 #
 #
@@ -23,12 +23,12 @@ use Pod::Usage;
 ##############         Print informative message             ##################
 ###############################################################################
 print "###########################################################\n";
-print "#   label_density.pl Version 1.0                          #\n";
+print "#   nick_density.pl Version 1.0                           #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 03/13/15                   #\n";
 print "#  github.com/i5K-KINBRE-script-share                     #\n";
-print "#  perl  label_density.pl -help # for usage/options       #\n";
-print "#  perl  label_density.pl -man # for more details         #\n";
+print "#  perl  nick_density.pl -help # for usage/options        #\n";
+print "#  perl  nick_density.pl -man # for more details          #\n";
 print "###########################################################\n";
 ###############################################################################
 ##############                get arguments                  ##################
@@ -46,6 +46,10 @@ or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 my $dirname = dirname(__FILE__);
+if (scalar(@ARGV) == 0)
+{
+    die "No FASTA flies were selected.\n";
+}
 ###############################################################################
 ##############              run                              ##################
 ###############################################################################
@@ -54,11 +58,11 @@ if ($two_enzyme)
 {
     @enzymes = qw/BspQI BbvCI/;
 }
-print "FASTA Enzyme : Label density\n";
+print "FASTA Enzyme : Nick density\n";
 for my $fasta (@ARGV)
 {
     my (${filename}, ${directories}, ${suffix}) = fileparse($fasta,'\.[^.]+$'); # requires File::Basename and adds trailing slash to $directories
-    my $file_out = "${directories}/${filename}_label_density.csv";
+    my $file_out = "${directories}/${filename}_nick_density.csv";
     open (my $out, ">", $file_out) or die "Can't open $file_out: $!";
     print $out "FASTA,Enzyme,Label density\n";
     for my $enzyme (@enzymes)
@@ -71,8 +75,8 @@ for my $fasta (@ARGV)
     }
 }
 #perl ~/bin/fa2cmap_multi.pl -v -i GCF_000002825.2_ASM282v1_genomic.fna -e BspQI BbvCI BsmI BsrDI bseCI
-#perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/label_density.pl --two_enzyme /home/bionano/bionano/Trit_foet_2014_042/GCF_000002825.2_ASM282v1_genomic.fna
-print "Done graphing BNX QC metrics\n";
+#perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/nick_density.pl --two_enzyme /home/bionano/bionano/Trit_foet_2014_042/GCF_000002825.2_ASM282v1_genomic.fna
+print "Done reporting nick density estimates\n";
 ###############################################################################
 ##############                  Documentation                ##################
 ###############################################################################
@@ -81,7 +85,7 @@ __END__
 
 =head1 NAME
  
-label_density.pl - Script reports label density for various enzymes for FASTA files. Script requires fa2cmap_multi.pl from BioNano Genomics. Script logs the label density values in the project's directory with the file suffix "_label_density.csv" as well as printing the results to the screen. You could also run the following if you just wanted to quickly check density for BspQI and BbvCI with the "--two_enzyme" flag.
+nick_density.pl - Script reports label density for various enzymes for FASTA files. Script requires fa2cmap_multi.pl from BioNano Genomics. Script logs the label density values in the project's directory with the file suffix "_nick_density.csv" as well as printing the results to the screen. You could also run the following if you just wanted to quickly check density for BspQI and BbvCI with the "--two_enzyme" flag.
 
 Script can also determine label density for multiple FASTA files.
 
@@ -96,7 +100,7 @@ Perl and R
 
 =head1 USAGE
 
-perl label_density.pl [OPTIONS] FASTA_FILES...
+perl nick_density.pl [OPTIONS] FASTA_FILES...
 
 Documentation options:
 

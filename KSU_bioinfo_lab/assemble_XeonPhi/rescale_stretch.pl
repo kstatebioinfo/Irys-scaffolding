@@ -62,11 +62,11 @@ print $refalign_log "$merge_bnxs";
 ####                   inverse of the genome size).                            ####
 ###################################################################################
 
-## Subsample 50,000 molecules and run alignment with very loose alignment parameters (T should be about inverse of the genome size).
+## Subsample 50,000 molecules and run alignment with very loose alignment parameters .
 my $merged_file = "${bnx_dir}/../all_flowcells/bnx_merged.bnx";
 my $error_A = "${bnx_dir}/../all_flowcells/bnx_merged_errA";
-my $get_error_A = `~/tools/RefAligner -o $error_A -i $merged_file -ref $reference -minlen 180 -minsites 9 -refine 0 -id 1 -mres 0.9 -res 3.4 -resSD 0.75 -FP 1.0 -FN 0.1 -sf 0.2 -sd 0 -sr 0.02 -resbias 4.0 64 -outlier 1e-4 -endoutlier 1e-4 -S -999 -T $T -MapRate 0.7 -A 5 -nosplit 2 -biaswt 0 -deltaX 4 -deltaY 6 -extend 1 -PVres 2 -f -randomize -subset 1 50000 -BestRef 1 -BestRefPV 1 -hashoffset 1 -AlignRes 1.5 -resEstimate -M 5 -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 2 -hash -hashdelta 10 -maxmem 240 -hashmaxmem 120 -insertThreads 16 -maxthreads 64`; ## TEST when you get a reference !!!!!!!!
-print $refalign_log "#####\n#####\nStep 1: Subsample 50,000 molecules and run alignment with very loose alignment parameters (T should be about inverse of the genome size)\n#####\n#####\n";
+my $get_error_A = `~/tools/RefAligner -o $error_A -i $merged_file -ref $reference -minlen 180 -minsites 9 -refine 0 -id 1 -mres 0.9 -res 3.4 -resSD 0.75 -FP 1.0 -FN 0.1 -sf 0.2 -sd 0 -sr 0.02 -resbias 4.0 64 -outlier 1e-4 -endoutlier 1e-4 -S -999 -T 1e-4 -MapRate 0.7 -A 5 -nosplit 2 -biaswt 0 -deltaX 4 -deltaY 6 -extend 1 -PVres 2 -f -randomize -subset 1 50000 -BestRef 1 -BestRefPV 1 -hashoffset 1 -AlignRes 1.5 -resEstimate -M 5 -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 2 -hash -hashdelta 10 -maxmem 240 -hashmaxmem 120 -insertThreads 16 -maxthreads 64`; ## TEST when you get a reference !!!!!!!!
+print $refalign_log "#####\n#####\nStep 1: Subsample 50,000 molecules and run alignment with very loose alignment parameters\n#####\n#####\n";
 
 
 print $refalign_log "$get_error_A";
@@ -88,6 +88,13 @@ my $merged_file_adjusted = "${assembly_directory}/all_flowcells/bnx_merged_adj";
 my $get_adjusted_bnx = `~/tools/RefAligner -o $merged_file_adjusted -i $merged_file -ref $reference -readparameters ${error_B}_id1.errbin -minlen 100 -minsites 9 -refine 0 -id 1 -resbias 4.0 64 -outlier 1e-4 -endoutlier 1e-4 -S -9 -T 1e-4 -MapRate 0.7 -A 5 -nosplit 2 -biaswt 0 -deltaX 4 -deltaY 6 -extend 1 -PVres 2 -f -BestRef 1 -BestRefPV 1 -maptype 1 -hashoffset 1 -resEstimate -ScanScaling 2 -M 5 -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 2 -hash -hashdelta 10 -maxmem 240 -hashmaxmem 120 -insertThreads 16  -maxthreads 64`;
 print $refalign_log "#####\n#####\nStep 3: Finally the original BNX set is rescaled per the noise parameters from the second step. In this step, after noise parameters have be estimated using long molecules the minimum molecule length is set back to 100 kb\n#####\n#####\n";
 print $refalign_log "$get_adjusted_bnx";
+
+## Run final alignment for noise parameters .
+my $rescaled_file = "${bnx_dir}/../all_flowcells/bnx_merged_adj_rescaled.bnx";
+my $error_C = "${bnx_dir}/../all_flowcells/bnx_merged_rescaled_final";
+my $get_error_C = `~/tools/RefAligner -o $error_C -i $rescaled_file -ref $reference -nosplit 2 -M 5 -biaswt 0 -Mfast 0 -FP 1.5 -FN 0.15 -sf 0.2 -sd 0.2 -A 5 -res 3.5 -resSD 0.7 -outlier 1e-4 -endoutlier 1e-4 -minlen 100 -minsites 5 -T $T -insertThreads 16 -maxthreads 64 -randomize 1 -subset 1 10000`;
+print $refalign_log "#####\n#####\nStep 4: Subsample 10,000 molecules and run final alignment for noise parameters\n#####\n#####\n";
+print $refalign_log "$get_error_C";
 
 close($refalign_log);
 

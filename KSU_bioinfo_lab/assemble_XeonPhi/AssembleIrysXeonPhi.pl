@@ -48,6 +48,10 @@ or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 my $dirname = dirname(__FILE__);
+die "Option -a or --assembly_dir not specified.\n" unless $assembly_directory; # report missing required variables
+die "Option -p or --proj not specified.\n" unless $project; # report missing required variables
+die "Option -g or --genome not specified.\n" unless $genome; # report missing required variables
+die "Option -r or --ref not specified.\n" unless $reference; # report missing required variables
 my $T = 0.00001/$genome;
 ###################################################################################
 ############          Generate BNX file summaries                ##################

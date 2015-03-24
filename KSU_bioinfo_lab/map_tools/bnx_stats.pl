@@ -48,6 +48,11 @@ or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 my $dirname = dirname(__FILE__);
+if (scalar(@ARGV) == 0)
+{
+    die "No BNX flies were selected.\n";
+}
+
 ###############################################################################
 ##############                Subroutines                    ##################
 ###############################################################################

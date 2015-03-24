@@ -50,6 +50,9 @@ or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 
+die "Option -a or --assembly_dir not specified.\n" unless $assembly_directory; # report missing required variables
+
+
 my $bnx_directory = "${assembly_directory}/bnx";
 unless(mkdir $bnx_directory)
 {

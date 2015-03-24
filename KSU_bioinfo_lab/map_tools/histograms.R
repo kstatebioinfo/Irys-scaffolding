@@ -55,7 +55,7 @@ text(1,1,d, pos=4, cex=1.5)
 plot( p1, col=c(myblue),main="Length",xlab="Molecule map lengths (kb)",ylab="Count", xaxt="n")  # first histogram
 at <- seq(from = 0, to = max(lengths$Lengths), by = 100)
 axis(side = 1, at = at)
-plot( p2, col=c(myblue),main="Average Intensity",xlab="Molecule map average intensities",ylab="Count", xaxt="n")  # first histogram
+plot( p2, col=c(myblue),main="Average Molecule Map Intensity",xlab="Molecule map average intensities",ylab="Count", xaxt="n")  # first histogram
 at <- seq(from = 0, to = max(mol_intensities$Mol_intensities), by = 0.1)
 axis(side = 1, at = at)
 plot( p3, col=c(myblue),main="Average Molecule Map SNR",xlab="Molecule map average SNRs (SNRs above 50 not shown)",ylab="Count", xaxt="n")  # first histogram

@@ -43,6 +43,9 @@ or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 my $dirname = dirname(__FILE__);
+die "Option -a or --assembly_dir not specified.\n" unless $assembly_directory; # report missing required variables
+die "Option -p or --proj not specified.\n" unless $project; # report missing required variables
+die "Option -g or --genome not specified.\n" unless $genome; # report missing required variables
 ###############################################################################
 ########## create array with all default assembly directories #################
 ###############################################################################
@@ -57,7 +60,8 @@ print QC_METRICS "Assembly name,Number of BioNano genome map contigs,Total BioNa
 ###############################################################################
 my $Assembly_parameter_tests_file = "${assembly_directory}/Assembly_parameter_tests.csv";
 open ( my $Assembly_parameter_tests, ">", $Assembly_parameter_tests_file) or die "Can't open $Assembly_parameter_tests_file: $!";
-print $Assembly_parameter_tests "Genome_map,Breadth_of_alignment,Total_alignment_length,Cumulative_length\n"; # print headers to csv file
+my $assembly_count =1;
+print $Assembly_parameter_tests "Number,Genome_map,Breadth_of_alignment,Total_alignment_length,Cumulative_length\n"; # print headers to csv file
 for my $assembly_dir (@directories)
 {
     if (-d "${assembly_directory}/${assembly_dir}/contigs")
@@ -88,7 +92,8 @@ for my $assembly_dir (@directories)
         ###################################################################
         #####      print QC metrics from CMAP and XMAP         ############
         ###################################################################
-        print $Assembly_parameter_tests "${assembly_dir},${breadth},${total_aligned_length},${cmap_length}\n";
+        print $Assembly_parameter_tests "${assembly_count},${assembly_dir},${breadth},${total_aligned_length},${cmap_length}\n";
+        ++$assembly_count;
     }
     ###################################################################
     #####    Get metrics from BioNano informatics report   ############
@@ -206,7 +211,8 @@ for my $assembly_dir (@directories)
 ###############################################################################
 close ($Assembly_parameter_tests);
 my $Assembly_parameter_tests_plot = "${assembly_directory}/Assembly_parameter_tests.pdf";
-my $assembly_plot_out = `Rscript ${dirname}/graph_assemblies.R $Assembly_parameter_tests_file $Assembly_parameter_tests_plot $genome`;
+my $title = "Assembly metrics for selection of best $project assembly";
+my $assembly_plot_out = `Rscript ${dirname}/graph_assemblies.R $Assembly_parameter_tests_file $Assembly_parameter_tests_plot $genome '$title'`;
 #print "Rscript ${dirname}/ $Assembly_parameter_tests_file $Assembly_parameter_tests_plot $genome\n";
 print $assembly_plot_out;
 ###############################################################################
