@@ -64,12 +64,26 @@ unless(mkdir $directory)
 {
     print "Warning unable to create $directory. Directory exists\n";
 }
-chdir $directory;
-my $linked= `ln -s \'${assembly_directory}/Datasets\' \'${directory}/\'`; # link Datasets directories to customers directory
+chdir $directory; # becasue bnx_stats.pl prints out to the current directory
+my $linked= `ln -s \'${assembly_directory}/Datasets\' \'${directory}/\'`; # link Datasets directories to final report directory
 print "$linked";
 my $bnx_dir = "${assembly_directory}/bnx";
 my $bnx_stats=`perl ${dirname}/../map_tools/bnx_stats.pl -l 100 ${bnx_dir}/Molecules_*.bnx`;
 print "$bnx_stats";
+###################################################################################
+############    Make reference CMAP available for final report   ##################
+###################################################################################
+
+my $ref_directory = "${assembly_directory}/${project}/in_silico_cmap";
+unless(mkdir $ref_directory)
+{
+    print "Warning unable to create $ref_directory. Directory exists\n";
+}
+my (${cmap_filename}, ${cmap_directories}, ${cmap_suffix}) = fileparse($reference,'\.[^.]+$'); # requires File::Basename and adds trailing slash to $directories and keeps dot in file extension
+my $cmap_linked= `ln -s \'$reference\' \'${ref_directory}/${cmap_filename}${cmap_suffix}\'`; # link reference cmap directories to final report directory
+print "cmap_$linked";
+my $cmap_key_linked= `ln -s \'${cmap_directories}${cmap_filename}_key.txt\' \'${ref_directory}/${cmap_filename}_key.txt\'`; # link reference cmap key to final report directory
+print "$cmap_key_linked";
 
 ###################################################################################
 ############          Rescaling molecules in BNX files         ##################
@@ -88,8 +102,6 @@ print "Writing assembly scripts...\n";
 print "##################################################################################\n";
 my $writing_assemblies=`perl ${dirname}/assemble.pl $assembly_directory $reference $T $project $genome`;
 print "$writing_assemblies";
-
-
 
 ###################################################################################
 ###############  Run first molecule quality report and replace old bpp  ###########

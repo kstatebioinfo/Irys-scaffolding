@@ -65,7 +65,7 @@ for my $fasta (@ARGV)
     ##################################################################
     ##############     Create cmap directory  ##################
     ##################################################################
-    my $out_dir = "${directories}/cmaps";
+    my $out_dir = "${directories}cmaps";
     unless (-d $out_dir)
     {
         unless(mkdir $out_dir)
@@ -93,8 +93,8 @@ for my $fasta (@ARGV)
         if (($entry =~ /\.cmap$/) || ($entry =~ /_key\.txt$/))
         {
             my (${cmap_filename}, ${cmap_directories}, ${cmap_suffix}) = fileparse($entry,'\.[^.]+$'); # requires File::Basename and adds trailing slash to $directories
-            my $moved_cmap = "${out_dir}/${cmap_filename}.${cmap_suffix}";
-            rename($entry,$moved_cmap);
+            my $moved_cmap = "${out_dir}/${cmap_filename}${cmap_suffix}";
+            rename("${directories}$entry",$moved_cmap); # move cmaps and keys to a subdirectory
         }
     }
     closedir ($temp_out_dir);
