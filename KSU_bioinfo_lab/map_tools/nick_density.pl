@@ -62,9 +62,20 @@ print "FASTA Enzyme : Nick density\n";
 for my $fasta (@ARGV)
 {
     my (${filename}, ${directories}, ${suffix}) = fileparse($fasta,'\.[^.]+$'); # requires File::Basename and adds trailing slash to $directories
-    my $file_out = "${directories}/${filename}_nick_density.csv";
+    ##################################################################
+    ##############     Create cmap directory  ##################
+    ##################################################################
+    my $out_dir = "${directories}/cmaps";
+    unless (-d $out_dir)
+    {
+        unless(mkdir $out_dir)
+        {
+            print "Warning unable to create $out_dir: $!";
+        }
+    }
+    my $file_out = "${out_dir}/${filename}_nick_density.csv";
     open (my $out, ">", $file_out) or die "Can't open $file_out: $!";
-    print $out "FASTA,Enzyme,Label density\n";
+    print $out "FASTA,Enzyme,Nick density\n";
     for my $enzyme (@enzymes)
     {
         my $run_check = `perl $path_to_fa2cmap_multi -v -i $fasta -e $enzyme`;
@@ -73,6 +84,21 @@ for my $fasta (@ARGV)
         print "$filename $enzyme : $1\n";
         print $out "$filename,$enzyme,$1\n";
     }
+    ###############################################################################
+    ##############              Clean up files                   ##################
+    ###############################################################################
+    opendir (my $temp_out_dir, $directories) or die "Can't open $directories: $!";
+    while (my $entry = readdir $temp_out_dir )
+    {
+        if (($entry =~ /\.cmap$/) || ($entry =~ /_key\.txt$/))
+        {
+            my (${cmap_filename}, ${cmap_directories}, ${cmap_suffix}) = fileparse($entry,'\.[^.]+$'); # requires File::Basename and adds trailing slash to $directories
+            my $moved_cmap = "${out_dir}/${cmap_filename}.${cmap_suffix}";
+            rename($entry,$moved_cmap);
+        }
+    }
+    closedir ($temp_out_dir);
+    
 }
 #perl ~/bin/fa2cmap_multi.pl -v -i GCF_000002825.2_ASM282v1_genomic.fna -e BspQI BbvCI BsmI BsrDI bseCI
 #perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/nick_density.pl --two_enzyme /home/bionano/bionano/Trit_foet_2014_042/GCF_000002825.2_ASM282v1_genomic.fna
