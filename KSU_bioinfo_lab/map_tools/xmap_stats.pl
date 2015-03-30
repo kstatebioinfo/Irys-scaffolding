@@ -90,6 +90,14 @@ while (<$xmap>)
         }
     }
 }
+if (!$breadth)
+{
+    $breadth = 0;
+}
+if (!$total_length)
+{
+    $total_length = 0;
+}
 $breadth = $breadth/1000000;
 $total_length = $total_length/1000000;
 print "Breadth of alignment coverage = $breadth (Mb)\n";
