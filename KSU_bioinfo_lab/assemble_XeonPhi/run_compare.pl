@@ -16,6 +16,7 @@ use warnings;
 #use File::Find::Rule;
 # use List::Util qw(max);
 # use List::Util qw(sum);
+use File::Basename; # enable manipulating of the full path
 #
 ########################  Project variables  ########################
 
@@ -24,8 +25,6 @@ my $best_dir ="best assembly directory"; # no trailing slash
 my $fasta = "fasta full path";
 my $cmap = "reference cmap full path";
 my $enzyme= "enzyme or enzymes"; # space separated list that can include BspQI BbvCI BsrDI bseCI
-#bng_assembly="BNG_assembly_basename"
-#FASTA_EXT="fasta_extension_without_dot"
 
 my $f_con="13";
 my $f_algn="30";
@@ -34,19 +33,18 @@ my $s_algn="90";
 my $T = 1e-8;
 my $project="project_name";
 
-
 ########################  End project variables  ########################
 
 my %alignment_parameters;
 # Default alignments
-my $alignment_parameters{'default_alignment'} ="-FP 0.8 -FN 0.08 -sf 0.20 -sd 0.10";
+$alignment_parameters{'default_alignment'} ="-FP 0.8 -FN 0.08 -sf 0.20 -sd 0.10";
 # Relaxed alignments
-my $alignment_parameters{'relaxed_alignment'} ="-FP 1.2 -FN 0.15 -sf 0.10 -sd 0.15";
+$alignment_parameters{'relaxed_alignment'} ="-FP 1.2 -FN 0.15 -sf 0.10 -sd 0.15";
 
 my (${filename}, ${directories}, ${suffix}) = fileparse($fasta,qr/\.[^.]*/); # directories has trailing slash
 my (${filename_cmap}, ${directories_cmap}, ${suffix_cmap}) = fileparse($cmap,qr/\.[^.]*/); # directories has trailing slash
 my @alignments = qw/default_alignment relaxed_alignment/;
-open (
+#open (
 for my $stringency (@alignments)
 {
     unless(mkdir "$best_dir/../$stringency")
@@ -75,7 +73,7 @@ for my $stringency (@alignments)
     my $agp_list_file = "$best_dir/../$stringency/agp_list.txt";
     open (my $agp_list, ">", $agp_list_file) or die "Can't open $agp_list_file: $!";
     print $agp_list "$stitch_dir/${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_1_superscaffold.agp\n";
-#    /home/bionano/bionano/Gram_nega_2014_055/strict_t_150/contigs/Gram_nega_2014_055_strict_t_150_refineFinal1/alignref_final/GRAM_NEGA_2014_055_STRICT_T_150_REFINEFINAL1.xmap
+    #    /home/bionano/bionano/Gram_nega_2014_055/strict_t_150/contigs/Gram_nega_2014_055_strict_t_150_refineFinal1/alignref_final/GRAM_NEGA_2014_055_STRICT_T_150_REFINEFINAL1.xmap
 }
 
 print "Done generating comparisons of BioNano and in silico genome maps\n";
