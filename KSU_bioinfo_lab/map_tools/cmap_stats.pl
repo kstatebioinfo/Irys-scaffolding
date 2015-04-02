@@ -80,6 +80,15 @@ foreach(my $j=0; $fraction>$total_length/2; $j++) #until $fraction is greater th
     $current_length=$lengths[$j];
     $fraction -= $current_length; # subtract current length from $fraction
 }
+# Set lengths to 0 if not found
+if (!$current_length)
+{
+    $current_length = 0;
+}
+if (!$total_length)
+{
+    $total_length = 0;
+}
 $current_length = $current_length/1000000;
 $total_length = $total_length/1000000;
 print "cmap N50: $current_length (Mb)\n";
