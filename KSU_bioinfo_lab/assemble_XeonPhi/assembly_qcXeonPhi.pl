@@ -51,8 +51,8 @@ die "Option -g or --genome not specified.\n" unless $genome; # report missing re
 ###############################################################################
 #my @directories = qw/default_t_150 relaxed_t_150 strict_t_150 default_t_100 relaxed_t_100 strict_t_100 default_t_180 relaxed_t_180 strict_t_180 default_t_default_noise/;
 #my @directories = qw/default_t_150 relaxed_t_150 strict_t_150 default_t_100 relaxed_t_100 strict_t_100 default_t_180 relaxed_t_180 strict_t_180 default_t_default_noise default_t_150_no_rescale default_t_150_adj_stretch\/default_t_150_adj_stretch/;
-my @directories = qw/default_t_150 relaxed_t_150 strict_t_150 default_t_100 relaxed_t_100 strict_t_100 default_t_180 relaxed_t_180 strict_t_180 default_t_default_noise default_t_150_no_rescale/;
-open (QC_METRICS,'>',"${assembly_directory}/Assembly_quality_metrics.csv") or die "couldn't open ${assembly_directory}/Assembly_quality_metrics.csv!";
+my @directories = qw/default_t_150 relaxed_t_150 strict_t_150 default_t_100 relaxed_t_100 strict_t_100 default_t_180 relaxed_t_180 strict_t_180 default_t_default_noise/;
+open (QC_METRICS,'>',"${assembly_directory}/Assembly_quality_metrics.csv") or die "Couldn't open ${assembly_directory}/Assembly_quality_metrics.csv!";
 print QC_METRICS "Assembly name,Number of BioNano genome map contigs,Total BioNano genome map length(Mb),Avg. BioNano genome map contig length(Mb),BioNano genome map contig N50(Mb),Total in silico genome map length(Mb),Total BioNano genome map length / in silico genome map length,Number BioNano genome map contigs aligned I,Total aligned length(Mb) I,Total aligned length / in silico genome map length I,Total Unique aligned length(Mb) I,Total unique aligned length / in silico genome map length I,Number BioNano genome map contigs aligned II,Total aligned length(Mb) II,Total aligned length / in silico genome map length II,Total unique aligned length(Mb) II,Total unique aligned length / in silico genome map length II\n";
 
 ###############################################################################
@@ -74,7 +74,7 @@ for my $assembly_dir (@directories)
         my $cmap_stats_out = `perl ${dirname}/../map_tools/cmap_stats.pl -c $cmap`;
         if ($cmap_stats_out !~ /cmap N50:/)
         {
-            print "\nThe $assembly_dir assembly may be in progress, skipping this assembly.\n";
+            print "The $assembly_dir assembly may be in progress, skipping this assembly.\n\n";
             next;
         }
         $cmap_stats_out =~ /.*Total cmap length: (.*) \(Mb\).*/;
@@ -212,9 +212,26 @@ for my $assembly_dir (@directories)
 close ($Assembly_parameter_tests);
 my $Assembly_parameter_tests_plot = "${assembly_directory}/Assembly_parameter_tests.pdf";
 my $title = "Assembly metrics for selection of best $project assembly";
-my $assembly_plot_out = `Rscript ${dirname}/graph_assemblies.R $Assembly_parameter_tests_file $Assembly_parameter_tests_plot $genome '$title'`;
-#print "Rscript ${dirname}/ $Assembly_parameter_tests_file $Assembly_parameter_tests_plot $genome\n";
-print $assembly_plot_out;
+########## Check that any informatics report included output in the final iteration (check that the assembly did not fail) (if so line count will be greater than 2)
+open ( $Assembly_parameter_tests, "<", $Assembly_parameter_tests_file) or die "Can't open $Assembly_parameter_tests_file: $!";
+my $Assembly_parameter_line_count = 0;
+while (<$Assembly_parameter_tests>)
+{
+    if (eof)
+    {
+        $Assembly_parameter_line_count = $. ;
+    }
+}
+if ($Assembly_parameter_line_count > 2)
+{
+    my $assembly_plot_out = `Rscript ${dirname}/graph_assemblies.R $Assembly_parameter_tests_file $Assembly_parameter_tests_plot $genome '$title'`;
+    print $assembly_plot_out;
+}
+else
+{
+    print "Currently no assemblies have produced results therefore no graph was plotted\n";
+}
+
 ###############################################################################
 print "Done generating assembly metrics\n";
 
