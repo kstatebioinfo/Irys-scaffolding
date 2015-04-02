@@ -29,13 +29,14 @@ my $infile_rcmap=$ARGV[0];
 my $infile_numbered_fasta=$ARGV[1];
 my $infile_xmap=$ARGV[2];
 my $outfile_base=$ARGV[3];
+my $neg_gap;
 if ($ARGV[9])
 {
-	my $neg_gap = $ARGV[9]; ## Grab min neg gap length (Default = 20000)
+	$neg_gap = $ARGV[9]; ## Grab min neg gap length (Default = 20000)
 }
 else
 {
-	my $neg_gap = 20000; ## Default: Fail overlaps less than -20,000 (bp)
+	$neg_gap = 20000; ## Default: Fail overlaps less than -20,000 (bp)
 }
 ############################## create filenames ##############################
 my $outfile_scf="${outfile_base}_scaffolds".".xmap"; # xmap of molecules that scaffold contigs
