@@ -64,7 +64,7 @@ elsif ( $genome < 1000 )
 else
 {
     $xml_infile = "${dirname}/optArguments_human.xml";
-    $iterations = 5; # Can lower the number of itereations for large genomes in future if needed
+    $iterations = 2; # Can lower the number of itereations for large genomes in future if needed
 
 }
 
