@@ -24,7 +24,7 @@ my $genome = $ARGV[4];
 print "assembly_directory = $ARGV[0]\n";
 print "ref = $ARGV[1]\n";
 print "T = $ARGV[2]\n";
-my $dirname = dirname(__FILE__);
+my $dirname = dirname(__FILE__); # has no trailing slash
 ##################################################################################
 ##############              get parameters for XML              ##################
 ##################################################################################
@@ -196,6 +196,7 @@ for my $stringency (@commands)
         print $out_assemble "#"; #start with default min length assemblies by commenting other assemblies
     }
     print $out_assemble "python2 ~/scripts/pipelineCL.py -T 240 -j 240 -N 6 -i $iterations -a $xml_final -w -t ~/tools/ -l $out_dir -b ${assembly_directory}/all_flowcells/bnx_merged_adj_rescaled.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -U -C ${dirname}/clusterArguments.xml\n";
+    print $out_assemble "bash ${dirname}/rm_intermediate_files.sh ${assembly_directory} ${stringency} ${project}\n";
 }
 
 print "Done writing assembly scripts.\n";
