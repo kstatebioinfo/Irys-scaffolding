@@ -63,7 +63,7 @@ for my $fasta (@ARGV)
 {
     my (${filename}, ${directories}, ${suffix}) = fileparse($fasta,'\.[^.]+$'); # requires File::Basename and adds trailing slash to $directories
     ##################################################################
-    ##############     Create cmap directory  ##################
+    ##############        Create cmap directory     ##################
     ##################################################################
     my $out_dir = "${directories}cmaps";
     unless (-d $out_dir)
