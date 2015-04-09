@@ -5,7 +5,7 @@
 #
 #  Created by Jennifer Shelton 2/26/15
 #
-# DESCRIPTION: # Copy script into assembly working directory and update other variables for project in "Project variables" section. To do this cd to the assembly working directory and "cp ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/run_compare.pl ." and then edit the new version to point to the best asssembly.
+# DESCRIPTION: # Copy script into assembly working directory and update other variables for project in "Project variables" section. To do this cd to the assembly working directory and "cp ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/run_compare.pl ." and then edit the new version to point to the best asssembly or the best assembly CMAP.
 # REQUIREMENTS: Requires BNGCompare from https://github.com/i5K-KINBRE-script-share/BNGCompare in your home directory. Also requires BioPerl.
 #
 # Example: perl run_compare.pl
@@ -31,6 +31,7 @@ my $s_con="15";
 my $s_algn="90";
 my $T = 1e-8;
 my $project="project_name";
+my $optional_assembled_cmap = ''; # add assembled cmap path here if it is not in the "refineFinal1" subdirectory within the "contigs" subdirectory of the best assembly directory
 #########################################################################
 ########################  End project variables  ########################
 #########################################################################
@@ -38,18 +39,26 @@ my $project="project_name";
 ###########################################################
 #            Get genome map CMAP file (fullpath)
 ###########################################################
-my $genome_map_cmap = `ls ${best_dir}/contigs/*_refineFinal1/*_REFINEFINAL1.cmap`;
-chomp($genome_map_cmap);
+my $genome_map_cmap;
+unless($optional_assembled_cmap)
+{
+    $genome_map_cmap = `ls ${best_dir}/contigs/*_refineFinal1/*_REFINEFINAL1.cmap`;
+    chomp($genome_map_cmap);
+}
+else
+{
+    $genome_map_cmap = $optional_assembled_cmap;
+}
 ###########################################################
 #          Sanity check project variables section
 ###########################################################
 unless(( -f $fasta) && ( -f $cmap) && (-f $genome_map_cmap))
 {
-      die "File paths in the \"Project variables\" section of run_compare.pl are not valid. Remember to copy the run_compare.pl script into your assembly working directory and update other variables for project in \"Project variables\" section. To do this cd to the assembly working directory and \"cp ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/run_compare.pl .\" and then edit the new version to point to the best asssembly.\n";
+      die "File paths in the \"Project variables\" section of run_compare.pl are not valid. Remember to copy the run_compare.pl script into your assembly working directory and update other variables for project in \"Project variables\" section. To do this cd to the assembly working directory and \"cp ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/run_compare.pl .\" and then edit the new version to point to the best asssembly or the best assembly CMAP.\n";
 }
 unless($enzyme =~ /(BspQI|BbvCI|BsrDI|bseCI)/)
 {
-    die "Enzymes listed in the \"Project variables\" section of run_compare.pl are not valid. Valid entries would be a space separated list that includes one or more of the following options \"BspQI BbvCI BsrDI bseCI\". Remember to copy the run_compare.pl script into your assembly working directory and update other variables for project in \"Project variables\" section. To do this cd to the assembly working directory and \"cp ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/run_compare.pl .\" and then edit the new version to point to the best asssembly.\n";
+    die "Enzymes listed in the \"Project variables\" section of run_compare.pl are not valid. Valid entries would be a space separated list that includes one or more of the following options \"BspQI BbvCI BsrDI bseCI\". Remember to copy the run_compare.pl script into your assembly working directory and update other variables for project in \"Project variables\" section. To do this cd to the assembly working directory and \"cp ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/run_compare.pl .\" and then edit the new version to point to the best asssembly or the best assembly CMAP.\n";
 }
 ###########################################################
 #                  Default alignments
