@@ -40,7 +40,7 @@ perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/make_key.pl <fasta> <output_basen
 
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/number_fasta.pl <fasta>
 
-perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/number_fasta.pl xmap_filter.pl <q.cmap> <numbered fasta> <output_basename.flip> <output_basename> <min confidence> <min % aligned> <second min confidence> <second min % aligned> <fasta_key_file>
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/xmap_filter.pl <q.cmap> <numbered fasta> <output_basename.flip> <output_basename> <min confidence> <min % aligned> <second min confidence> <second min % aligned> <fasta_key_file>
 
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/get_passing_xmap.pl -f <filtered_fliped_xmap> -o <original_xmap>
 ```
