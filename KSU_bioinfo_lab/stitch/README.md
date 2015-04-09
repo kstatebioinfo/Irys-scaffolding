@@ -21,6 +21,13 @@ It can be run iteratively until all super-scaffolds have been found by
        this cmap as the query with the BNG consensus map as the reference and 
        using the x_map, r_cmap and the super-scaffold fasta as input for another 
        run of stitch.pl.
+
+If the user has a copy of `fa2cmap_multi.pl` (available from BioNano Genomics) in the `~/bin/fa2cmap_multi.pl` and the BNGCompare repo (available from https://raw.github.com/i5K-KINBRE-script-share/BNGCompare) in `~/BNGCompare` then the following steps can be used to automate iteration of stitch.
+
+1) Copy `run_compare.pl` into your assembly working directory with `cp ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/run_compare.pl assembly_working_directory`. 
+
+2) Update variables for project in "Project variables" section of `run_compare.pl`. Edit the new version to point to the best asssembly directory or the best assembly CMAP.
+
        
 ####Note: BioNano's refaligner was only built to take the in silico CMAP (created from the sequence assembly) as the reference and the BioNano assembled CMAP (assembled from BioNano molecule maps) as the query. This needs to be inverted before running stitch.pl. You can flip your XMAP by running the code below. Then use the `.flip` file with the `-x` flag and your original `_q.cmap` with the `-r` flag...
 
@@ -155,9 +162,13 @@ perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample
 
 UPDATES
 
+####stitch.pl Version 1.4.6
+
+Automatically skips creating contigs if no super scaffolds were created.
+
 ####stitch.pl Version 1.4.5 
 
-rejects scaffolding alignments if overlap is longer than 20,000 (bp)
+rejects scaffolding alignments if overlap is longer than the "-n, --neg_gap" argument (default = 20000 bp). This allows user to adjust minimum negative gap length allowed. 
 
 ####stitch.pl Version 1.4.4 
 

@@ -17,7 +17,7 @@ use Pod::Usage;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  stitch.pl Version 1.4.5                                #\n";
+print "#  stitch.pl Version 1.4.6                                #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 12/12/13                   #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -127,24 +127,25 @@ my $out_x_to_fasta=`perl ${dirname}/xmap_to_fasta.pl ${output_basename}_scaffold
 print "$out_x_to_fasta";
 if (-e "${output_basename}_data_summary.csv") {print "${output_basename}_data_summary.csv file Exists$!\n"; exit;}
 ###################################################################################
-##########    check fasta file for redundant super-scaffold names        ##########
-##########         this step only effects iterative assemblies           ##########
+##########      check fasta file for super-scaffolds (if non were        ##########
+##########               made skip contig AGP step                       ##########
 ###################################################################################
-#print "Checking super-scaffold fasta file for redundant super-scaffold headers. Unused sequences are still printed with original fasta headers...\n";
-#my $check_fasta=`perl ${dirname}/CheckHeaders.pl ${output_basename}_superscaffold.fasta`;
-#print "$check_fasta";
-##################################################################################
-#########                     create new AGP                            ##########
-##################################################################################
-print "Making new AGP and contig file for super-scaffolded fasta file...\n";
-my $make_agp=`perl ${dirname}/make_contigs_from_fasta.pl ${output_basename}_superscaffold.fasta`;
-print "$make_agp";
-##################################################################################
-#########              create a BNG compatible Bed file                  ##########
-##################################################################################
-print "Making new BED file for super-scaffolded fasta file...\n";
-my $make_bed=`perl ${dirname}/agp2bed.pl ${output_basename}_superscaffold.fasta_contig.agp`;
-print "$make_bed";
+my $first_line = `head -1 ${output_basename}_superscaffold.fasta`;
+if ( $first_line =~ />Super_scaffold_/)
+{
+    ###############################################################################
+    #########                     create new AGP                         ##########
+    ###############################################################################
+    print "Making new AGP and contig file for super-scaffolded fasta file...\n";
+    my $make_agp=`perl ${dirname}/make_contigs_from_fasta.pl ${output_basename}_superscaffold.fasta`;
+    print "$make_agp";
+    ###############################################################################
+    #########              create a BNG compatible Bed file              ##########
+    ###############################################################################
+    print "Making new BED file for super-scaffolded fasta file...\n";
+    my $make_bed=`perl ${dirname}/agp2bed.pl ${output_basename}_superscaffold.fasta_contig.agp`;
+    print "$make_bed";
+}
 ##################################################################################
 ##############  compress summary files and delete temp files    ##################
 ##################################################################################
