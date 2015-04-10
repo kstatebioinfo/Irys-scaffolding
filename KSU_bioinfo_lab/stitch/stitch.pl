@@ -17,7 +17,7 @@ use Pod::Usage;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  stitch.pl Version 1.4.6                                #\n";
+print "#  stitch.pl Version 1.4.7                                #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 12/12/13                   #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -103,7 +103,7 @@ print "$makekey"; # print errors
 ##################################################################################
 ##########   make fasta with original headers changed to to bionano cmap id)  ####
 ##################################################################################
-$scaffold_fasta =~ /(.*).fa/;
+my (${fasta_filename}, ${fasta_directories}, ${fasta_suffix}) = fileparse($scaffold_fasta,qr/\.[^.]*/); # directories has trailing slash
 print "Converting original fasta headers to headers that match bionano output...\n";
 my $out_number=`perl ${dirname}/number_fasta.pl $scaffold_fasta`;
 print "$out_number";
@@ -111,11 +111,11 @@ print "$out_number";
 ##################     filter xmap and create stitchmap         ##################
 ##################################################################################
 print "Making filtered XMAP...\n";
-my $filter=`perl ${dirname}/xmap_filter.pl $r_cmap ${1}_numbered_scaffold.fasta $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${output_basename}_key $neg_gap`;
+my $filter=`perl ${dirname}/xmap_filter.pl $r_cmap ${fasta_filename}_numbered_scaffold.fasta $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${output_basename}_key $neg_gap`;
 if ($filter =~ /No_scaffolds/)
 {
     print "Removing temp files...\n";
-    unlink "${1}_numbered_scaffold.fasta.index","${1}_numbered_scaffold.fasta";
+    unlink "${fasta_filename}_numbered_scaffold.fasta.index","${fasta_filename}_numbered_scaffold.fasta";
     die "No alignments produced superscaffolds therefore no super scaffold fasta was created\n";
 }
 print "$filter"; # print errors
@@ -123,7 +123,7 @@ print "$filter"; # print errors
 #########      create fasta file and report "stitching contigs"         ##########
 ##################################################################################
 print "Making super-scaffold fasta file with new super-scaffolds. Unused sequences are printed with original fasta headers...\n";
-my $out_x_to_fasta=`perl ${dirname}/xmap_to_fasta.pl ${output_basename}_scaffolds.stitchmap ${1}_numbered_scaffold.fasta ${output_basename}_key`;
+my $out_x_to_fasta=`perl ${dirname}/xmap_to_fasta.pl ${output_basename}_scaffolds.stitchmap ${fasta_filename}_numbered_scaffold.fasta ${output_basename}_key`;
 print "$out_x_to_fasta";
 if (-e "${output_basename}_data_summary.csv") {print "${output_basename}_data_summary.csv file Exists$!\n"; exit;}
 ###################################################################################
@@ -172,8 +172,9 @@ while (<WEAKPOINTS>)
     print SUMMARY;
 }
 close (WEAKPOINTS);
-unlink "${output_basename}_overlaps.csv","${output_basename}_weakpoints.csv","${output_basename}_report.csv","${1}_numbered_scaffold.fasta.index","${1}_numbered_scaffold.fasta";
-print "Done\n";
+unlink glob "${fasta_filename}_numbered_scaffold*";
+unlink "${output_basename}_overlaps.csv","${output_basename}_weakpoints.csv","${output_basename}_report.csv";
+print "Done running stitch\n";
 
 ##################################################################################
 ##############                  Documentation                   ##################

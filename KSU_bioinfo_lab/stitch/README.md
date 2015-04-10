@@ -162,6 +162,10 @@ perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample
 
 UPDATES
 
+####stitch.pl Version 1.4.7
+
+Fixed bug in handling of filenames (to delete intermediate fasta files)
+
 ####stitch.pl Version 1.4.6
 
 Automatically skips creating contigs if no super scaffolds were created.
