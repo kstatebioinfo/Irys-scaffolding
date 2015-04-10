@@ -108,16 +108,37 @@ unless (-d "$report_dir/align_in_silico_xmap")
 {
     die "Can't create $report_dir/align_in_silico_xmap/";
 }
-mkdir "$report_dir/super_scaffold";
-unless (-d "$report_dir/super_scaffold")
+my $in_silico_align_dir_path = "$best_dir/..";
+opendir (my $in_silico_align_dir, $in_silico_align_dir_path) or die "Can't open $in_silico_align_dir_path: $!";
+my $prefix;
+for my $file (readdir $in_silico_align_dir)
 {
-    die "Can't create $report_dir/super_scaffold/";
+    if ($file =~ /_filtered\.xmap/)
+    {
+        link ("$in_silico_align_dir_path/$file","$report_dir/align_in_silico_xmap/$file") or die "Can't link $in_silico_align_dir_path/$file to $report_dir/align_in_silico_xmap/$file : $!"; # make a hard link for the filtered XMAP file
+    }
+    elsif ($file =~ /\.xmap/)
+    {
+        $file =~ /(.*)\.xmap/; # grab the unfiltered XMAP file prefix
+        $prefix = $1;
+    }
 }
-mkdir "$report_dir/align_in_silico_super_scaffold_xmap";
-unless (-d "$report_dir/align_in_silico_super_scaffold_xmap")
+my @in_silico_aligns = glob "${prefix}*"
+for my $file (@in_silico_aligns)
 {
-    die "Can't create $report_dir/align_in_silico_super_scaffold_xmap/";
+    link ("$in_silico_align_dir_path/$file","$report_dir/align_in_silico_xmap/$file") or die "Can't link $in_silico_align_dir_path/$file to $report_dir/align_in_silico_xmap/$file : $!"; # make a hard link for the unfiltered XMAP file and all supporting files (required by IrysView)
 }
-my $compress = `cd ${best_dir}; tar -czvf ${project}.tar.gz $project`;
-print $compress;
+
+#mkdir "$report_dir/super_scaffold";
+#unless (-d "$report_dir/super_scaffold")
+#{
+#    die "Can't create $report_dir/super_scaffold/";
+#}
+#mkdir "$report_dir/align_in_silico_super_scaffold_xmap";
+#unless (-d "$report_dir/align_in_silico_super_scaffold_xmap")
+#{
+#    die "Can't create $report_dir/align_in_silico_super_scaffold_xmap/";
+#}
+#my $compress = `cd ${best_dir}; tar -czvf ${project}.tar.gz $project`;
+#print $compress;
 
