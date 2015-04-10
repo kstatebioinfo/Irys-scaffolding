@@ -164,7 +164,7 @@ UPDATES
 
 ####stitch.pl Version 1.4.7
 
-Fixed bug in handling of filenames (to delete intermediate fasta files)
+Fixed bug in halting if no super scaffolds are created and in handling of filenames (to delete intermediate fasta files)
 
 ####stitch.pl Version 1.4.6
 

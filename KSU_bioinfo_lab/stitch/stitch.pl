@@ -111,20 +111,26 @@ print "$out_number";
 ##################     filter xmap and create stitchmap         ##################
 ##################################################################################
 print "Making filtered XMAP...\n";
-my $filter=`perl ${dirname}/xmap_filter.pl $r_cmap ${fasta_filename}_numbered_scaffold.fasta $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${output_basename}_key $neg_gap`;
-if ($filter =~ /No_scaffolds/)
-{
-    print "Removing temp files...\n";
-    unlink "${fasta_filename}_numbered_scaffold.fasta.index","${fasta_filename}_numbered_scaffold.fasta";
-    die "No alignments produced superscaffolds therefore no super scaffold fasta was created\n";
-}
+my $filter=`perl ${dirname}/xmap_filter.pl $r_cmap ${fasta_directories}${fasta_filename}_numbered_scaffold.fasta $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${output_basename}_key $neg_gap`;
+#if ($filter =~ /No_scaffolds/)
+#{
+#    print "Removing temp files...\n";
+#    unlink "${fasta_directories}${fasta_filename}_numbered_scaffold.fasta.index","${fasta_directories}${fasta_filename}_numbered_scaffold.fasta";
+#    die "No alignments produced superscaffolds therefore no super scaffold fasta was created\n";
+#}
 print "$filter"; # print errors
 ##################################################################################
 #########      create fasta file and report "stitching contigs"         ##########
 ##################################################################################
 print "Making super-scaffold fasta file with new super-scaffolds. Unused sequences are printed with original fasta headers...\n";
-my $out_x_to_fasta=`perl ${dirname}/xmap_to_fasta.pl ${output_basename}_scaffolds.stitchmap ${fasta_filename}_numbered_scaffold.fasta ${output_basename}_key`;
+my $out_x_to_fasta=`perl ${dirname}/xmap_to_fasta.pl ${output_basename}_scaffolds.stitchmap ${fasta_directories}${fasta_filename}_numbered_scaffold.fasta ${output_basename}_key`;
 print "$out_x_to_fasta";
+if ($out_x_to_fasta !~ /Super_scaffold_.*: Scaffolding molecule = .*/)
+{
+    print "Removing temp files...\n";
+    unlink glob "${fasta_directories}${fasta_filename}_numbered_scaffold*";
+    die "No alignments produced superscaffolds therefore no super scaffold fasta was created\n";
+}
 if (-e "${output_basename}_data_summary.csv") {print "${output_basename}_data_summary.csv file Exists$!\n"; exit;}
 ###################################################################################
 ##########      check fasta file for super-scaffolds (if non were        ##########
@@ -172,7 +178,7 @@ while (<WEAKPOINTS>)
     print SUMMARY;
 }
 close (WEAKPOINTS);
-unlink glob "${fasta_filename}_numbered_scaffold*";
+unlink glob "${fasta_directories}${fasta_filename}_numbered_scaffold*";
 unlink "${output_basename}_overlaps.csv","${output_basename}_weakpoints.csv","${output_basename}_report.csv";
 print "Done running stitch\n";
 
