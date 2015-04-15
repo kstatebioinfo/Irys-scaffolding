@@ -19,8 +19,8 @@ use File::Basename; # enable manipulating of the full path
 ###############################################################################
 # my $dirname = dirname(__FILE__);
 my $fasta_in = $ARGV[0];
-my (${filename},${directories},${suffix}) = fileparse($fasta_in,'\..*'); #trailing slash
-my $fasta_out = "${directories}${filename}_temp.${suffix}";
+my (${filename},${directories},${suffix}) = fileparse($fasta_in,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
+my $fasta_out = "${directories}${filename}_temp${suffix}";
 my %super_scaffold_hash;
 ###############################################################################
 ##############                      Run                      ##################

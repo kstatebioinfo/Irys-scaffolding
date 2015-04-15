@@ -61,7 +61,7 @@ if ($two_enzyme)
 print "FASTA Enzyme : Nick density\n";
 for my $fasta (@ARGV)
 {
-    my (${filename}, ${directories}, ${suffix}) = fileparse($fasta,'\.[^.]+$'); # requires File::Basename and adds trailing slash to $directories
+    my (${filename}, ${directories}, ${suffix}) = fileparse($fasta,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
     ##################################################################
     ##############        Create cmap directory     ##################
     ##################################################################
@@ -92,7 +92,7 @@ for my $fasta (@ARGV)
     {
         if (($entry =~ /\.cmap$/) || ($entry =~ /_key\.txt$/))
         {
-            my (${cmap_filename}, ${cmap_directories}, ${cmap_suffix}) = fileparse($entry,'\.[^.]+$'); # requires File::Basename and adds trailing slash to $directories
+            my (${cmap_filename}, ${cmap_directories}, ${cmap_suffix}) = fileparse($entry,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
             my $moved_cmap = "${out_dir}/${cmap_filename}${cmap_suffix}";
             rename("${directories}$entry",$moved_cmap); # move cmaps and keys to a subdirectory
         }

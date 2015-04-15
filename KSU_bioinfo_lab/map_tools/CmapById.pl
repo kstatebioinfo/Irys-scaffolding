@@ -70,7 +70,7 @@ else
 
 }
 
-my (${filename}, ${directories}, ${suffix}) = fileparse($input_cmap,'\..*'); #grab parts of the filename without trailing slash
+my (${filename}, ${directories}, ${suffix}) = fileparse($input_cmapqr/\.[^.]*/); # directories has trailing slash includes dot in suffix
 unless ($out)
 {
     $out = "${directories}/${filename}_by_id.cmap"; # default output filename
