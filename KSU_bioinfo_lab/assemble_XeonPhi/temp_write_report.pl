@@ -22,20 +22,20 @@ use File::Basename; # enable manipulating of the full path
 #####################################################################
 #############################################
 ####  Default or Relaxed alignments
-my $alignment_parameters="default_alignment";
-#my $alignment_parameters="relaxed_alignment";
+#my $alignment_parameters="default_alignment";
+my $alignment_parameters="relaxed_alignment";
 #############################################
 # Full path of the directory of the best assembly without trailing slash (e.g. /home/bionano/bionano/Dros_psue_2014_012/default_t_100 )
-my $best_dir ="/home/bionano/bionano/Dros_psue_2014_012_test_2/default_t_100"; # no trailing slash
-my $fasta = "/home/bionano/fasta_and_cmap/Dros_psue_2014_012/contigs/15x_default_cutoff_choice_2.fasta";
-my $cmap = "/home/bionano/fasta_and_cmap/Dros_psue_2014_012/contigs/15x_default_cutoff_choice_2_BspQI.cmap";
-my $enzyme= "BspQI"; # space separated list that can include BspQI BbvCI BsrDI bseCI
+my $best_dir ="/home/bionano/bionano/Leis_mani_2014_049_final/strict_t_150"; # no trailing slash
+my $fasta = "/home/bionano/bionano/Leis_mani_2014_049_final/GCF_000227135_wrapped.fasta";
+my $cmap = "/home/bionano/bionano/Leis_mani_2014_049_final/GCF_000227135_wrapped_BbvCI.cmap";
+my $enzyme= "BbvCI"; # space separated list that can include BspQI BbvCI BsrDI bseCI
 my $f_con="20";
 my $f_algn="40";
 my $s_con="15";
 my $s_algn="90";
 my $T = 1e-8;
-my $project="Dros_psue_2014_012";
+my $project="Leis_mani_2014_049";
 #########################################################################
 ########################  End project variables  ########################
 #########################################################################
@@ -214,6 +214,37 @@ else
 {
     die "Error you are missing a key to your in silico reference CMAP in the same directory as $cmap. Create a new CMAP with ~/bin/fa2cmap_multi.pl and try again.\n";
 }
+###############################################################################
+#########                     create new AGP                         ##########
+###############################################################################
+my (${fasta_filename}, ${fasta_directories}, ${fasta_suffix}) = fileparse($fasta,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
+unless (-f "${fasta}_contig.agp")
+{
+    print "Making new AGP and contig file for FASTA file...\n";
+    my $make_agp=`perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/make_contigs_from_fasta.pl $fasta`;
+    #my $make_agp=`perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/make_contigs_from_fasta.pl ${output_basename}_superscaffold.fasta`;
+    print "$make_agp";
+}
+###############################################################################
+#########              create a BNG compatible contig BED file       ##########
+###############################################################################
+unless (-f "${fasta}_contig.bed")
+{
+    print "Making new BED file of contigs for FASTA file...\n";
+    my $make_contig_bed=`perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/agp2bed.pl ${fasta}_contig.agp`;
+    print "$make_contig_bed";
+}
+###############################################################################
+#########              create a BNG compatible GAP BED file          ##########
+###############################################################################
+unless (-f "${fasta}_gaps.bed")
+{
+    print "Making new BED file of gaps for super-scaffolded fasta file...\n";
+    my $make_gap_bed=`perl ~/Irys-scaffolding/KSU_bioinfo_lab/sv_detect/agp2_gap_bed.pl ${fasta}_contig.agp`;
+    print "$make_gap_bed";
+}
+my $get_beds = `cp ${fasta}_contig.bed ${fasta}_contig_gaps.bed $report_dir/in_silico_cmap`;
+print "$get_beds";
 ###########################################################
 #          Prepare: align_in_silico_xmap
 ###########################################################
@@ -228,12 +259,7 @@ opendir (my $in_silico_align_dir, $in_silico_align_dir_path) or die "Can't open 
 my $prefix;
 for my $file (readdir $in_silico_align_dir)
 {
-#    print "$file\n";
-    if ($file =~ /_filtered\.xmap/)
-    {
-        link ("$in_silico_align_dir_path/$file","$report_dir/align_in_silico_xmap/$file") or warn "Can't link $in_silico_align_dir_path/$file to $report_dir/align_in_silico_xmap/$file : $!"; # make a hard link for the filtered XMAP file
-    }
-    elsif ($file =~ /\.xmap/)
+    if ($file =~ /\.xmap/)
     {
         $file =~ /(.*)\.xmap/; # grab the unfiltered XMAP file prefix
         $prefix = $1;
@@ -316,8 +342,8 @@ if (-f $bng_compare_file)
 ###########################################################
 #    Print to report: Text for basic assembly and alignment
 ###########################################################
-print "Printing to report: Textfor basic assembly and alignment...\n\n";
-print $report "Further training and installation instructions for IrysView are available here: \nhttp://www.bnxinstall.com/training/docs/IrysViewSoftwareInstallationGuide.pdf\nhttp://www.bnxinstall.com/training/docs/IrysViewSoftwareTrainingGuide.pdf\n\nFor further information about your output refer to the included \"README.pdf\" file and the XMAP and CMAP file format specs in \"file format.zip\".\n\nAssembly of consensus cmap from BNG molecules\n________________________________________________________________________________________________________\nBioNano single molecule maps were filtered with a minimum length of ${minlen} (kb) and ${minsites} minimum labels. A p-value threshold for the BinNano assembler was set to a minimum of ${AssemblyT}. Assembly scripts were written and molecule maps were prepared using AssembleIrysXeonPhi.pl version ${AssembleIrysXeonPhi_version}. The BioNano tools RefAligner version ${refaligner_version} and Assembler Pipeline version ${pipeline_version} were used for alignment and assembly.\n\nCreation of in silico cmap from your fasta genome\n________________________________________________________________________________________________________\nYou FASTA file was in silico nicked for ${enzyme} label(s). Note that in silico maps are only created for FASTA sequences > 20 kb enough and with > 5 labels. \n\nAlignment of BNG consensus map to fasta genome\n________________________________________________________________________________________________________\n\nA stringency of ${T} was used for alignment with in silico cmaps as the anchor and BioNano consensus maps as the query.\n";
+print "Printing to report: Text for basic assembly and alignment...\n\n";
+print $report "Further training and installation instructions for IrysView are available here: \nhttp://www.bnxinstall.com/training/docs/IrysViewSoftwareInstallationGuide.pdf\nhttp://www.bnxinstall.com/training/docs/IrysViewSoftwareTrainingGuide.pdf\n\nFor further information about your output refer to the included \"README.pdf\" file and the XMAP and CMAP file format specs in \"file format.zip\".\n\nAssembly of consensus cmap from BioNano molecules\n________________________________________________________________________________________________________\nBioNano single molecule maps were filtered with a minimum length of ${minlen} (kb) and ${minsites} minimum labels. A p-value threshold for the BinNano assembler was set to a minimum of ${AssemblyT}. Assembly scripts were written and molecule maps were prepared using AssembleIrysXeonPhi.pl version ${AssembleIrysXeonPhi_version}. The BioNano tools RefAligner version ${refaligner_version} and Assembler Pipeline version ${pipeline_version} were used for alignment and assembly.\n\nCreation of in silico cmap from your fasta genome\n________________________________________________________________________________________________________\nYou FASTA file was in silico nicked for ${enzyme} label(s). Note that in silico maps are only created for FASTA sequences > 20 kb enough and with > 5 labels. \n\nAlignment of BioNano consensus map to fasta genome\n________________________________________________________________________________________________________\n\nA stringency of ${T} was used for alignment with in silico cmaps as the anchor and BioNano consensus maps as the query.\n\n";
 ###########################################################
 #     Check if Super scaffolds were created
 ###########################################################
@@ -336,12 +362,13 @@ elsif (scalar(@stitch_dir_paths) == 0)
     ###########################################################
     #          Prepare: compress files
     ###########################################################
-    print "Compressing files...\n\n";
-    my $compress = `cd ${best_dir}/.. ; tar -czvf ${project}.tar.gz $project`;
-    print $compress;
-    print "Done writing report.\n";
+#    print "Compressing files...\n\n";
+#    my $compress = `cd ${best_dir}/.. ; tar -czvf ${project}.tar.gz $project`;
+#    print $compress;
+#    print "Done writing report.\n";
     print "Finished and exiting because no super scaffolds were made.\n";
-    exit;
+#    exit;
+    goto FINISH;
 }
 else
 {
@@ -398,20 +425,25 @@ for my $file (@super_scaffold_files)
 }
 print "NOTE: pipeline_version = $pipeline_version and refaligner_version = $refaligner_version AssembleIrysXeonPhi_version = $AssembleIrysXeonPhi_version stitch_version = $stitch_version num_iterations = $num_iterations fasta_superscaffold_filename = $fasta_superscaffold_filename AssemblyT = $AssemblyT minlen = $minlen minsites = $minsites stitch_count = $stitch_count\n";
 ###########################################################
+#          Print to report: Super scaffolding text
+###########################################################
+print "Printing to report: Super scaffolding text...\n\n";
+print $report "Super-scaffolding of fasta genome using Bionano consensus map\n________________________________________________________________________________________________________\n\nFiles in the \"super_scaffold\" folder were output by stitch.pl version ${stitch_version} (at https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab/stitch). The program \"stitch.pl\" was run for ${num_iterations} iterations. BioNano genome maps were aligned as queries to the in silico maps. The XMAP alignment was inverted and used as input for \"stitch.pl\". Alignments were kept if alignment length was greater than ${f_algn}\% of the possible length and their confidence score was above ${f_con}.  In order to include good alignments in lower label density regions of the genome, alignments were also kept if alignment length was greater than ${s_algn}\% of the possible length and their confidence score was above ${s_con}. These filtered alignments were searched for BioNano genome maps that super scaffold sequence contigs. In your case ${stitch_count} super scaffolds were created and they are reflected in the ${fasta_superscaffold_filename}.fasta file. \n\nSequences that were not super scaffolded were added to this file with the same header as before.\n";
+###########################################################
 #          Prepare: compress files
 ###########################################################
+FINISH:
 print "Compressing files...\n\n";
 my $compress_log_file = "${best_dir}/..compress_log.txt";
 open (my $compress_log, ">", $compress_log_file) or die "Can't open $compress_log_file: $!";
 my $compress = `cd ${best_dir}/.. ; tar -czvf ${project}.tar.gz $project`;
 print $compress_log "$compress";
 ###########################################################
-#          Print to report: Text and File inventory
+#          Print to report: Text File inventory
 ###########################################################
-print "Printing to report: Text and File inventory...\n\n";
-print $report "Super-scaffolding of fasta genome using Bionano consensus map\n________________________________________________________________________________________________________\n\nFiles in the \"super_scaffold\" folder were output by stitch.pl version ${stitch_version} (at https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab/stitch). The program \"stitch.pl\" was run for ${num_iterations} iterations. BioNano genome maps were aligned as queries to the in silico maps. The XMAP alignment was inverted and used as input for \"stitch.pl\". Alignments were kept if alignment length was greater than ${f_algn}\% of the possible length and their confidence score was above ${f_con}.  In order to include good alignments in lower label density regions of the genome, alignments were also kept if alignment length was greater than ${s_algn}\% of the possible length and their confidence score was above ${s_con}. These filtered alignments were searched for BioNano genome maps that super scaffold sequence contigs. In your case ${stitch_count} super scaffolds were created and they are reflected in the ${fasta_superscaffold_filename}.fasta file. \n\nSequences that were not super scaffolded were added to this file with the same header as before.\n";
+print "Printing to report: File inventory...\n\n";
 my $file_inventory = `cd $report_dir ; ls *`;
-print $report "File inventory\n$file_inventory\n"; # Print File inventory
+print $report "File inventory\n________________________________________________________________________________________________________\n\n$file_inventory\n"; # Print File inventory
 print "Done writing report and preping files.\n";
 
 

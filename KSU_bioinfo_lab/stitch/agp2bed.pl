@@ -20,7 +20,7 @@ use File::Basename; # enable maipulating of the full path
 my $agp= $ARGV[0];
 open (AGP,'<',$agp) or die "can't open $agp\n";
 my ($basename, $directories, $suffix) = fileparse($agp,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
-my $bed_file = "${directories}${basename}bed";
+my $bed_file = "${directories}${basename}.bed";
 open (BED,'>',"$bed_file") or die "can't open $bed_file\n";
 my $current_scaffold_id ='';
 my $scaffold = 0;

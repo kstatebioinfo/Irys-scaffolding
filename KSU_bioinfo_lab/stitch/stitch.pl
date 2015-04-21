@@ -153,11 +153,17 @@ if ( $first_line =~ />Super_scaffold_/)
     my $make_agp=`perl ${dirname}/make_contigs_from_fasta.pl ${output_basename}_superscaffold.fasta`;
     print "$make_agp";
     ###############################################################################
-    #########              create a BNG compatible Bed file              ##########
+    #########              create a BNG compatible contig BED file       ##########
     ###############################################################################
-    print "Making new BED file for super-scaffolded fasta file...\n";
-    my $make_bed=`perl ${dirname}/agp2bed.pl ${output_basename}_superscaffold.fasta_contig.agp`;
-    print "$make_bed";
+    print "Making new BED file of contigs for super-scaffolded fasta file...\n";
+    my $make_contig_bed=`perl ${dirname}/agp2bed.pl ${output_basename}_superscaffold.fasta_contig.agp`;
+    print "$make_contig_bed";
+    ###############################################################################
+    #########              create a BNG compatible GAP BED file          ##########
+    ###############################################################################
+    print "Making new BED file of gaps for super-scaffolded fasta file...\n";
+    my $make_gap_bed=`perl ${dirname}/../sv_detect/agp2_gap_bed.pl ${output_basename}_superscaffold.fasta_contig.agp`;
+    print "$make_gap_bed";
 }
 ##################################################################################
 ##############  compress summary files and delete temp files    ##################
