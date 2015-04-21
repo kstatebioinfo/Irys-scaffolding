@@ -36,17 +36,24 @@ my ($assembly_directory,$genome,$reference,$project);
 
 my $man = 0;
 my $help = 0;
+my $version = 0;
 GetOptions (
-			  'help|?' => \$help, 
+			  'help|?' => \$help,
+              'version' => \$version,
 			  'man' => \$man,
 			  'a|assembly_dir:s' => \$assembly_directory,
               'g|genome:i' => \$genome,
               'r|ref:s' => \$reference,
-              'p|proj:s' => \$project
+              'p|proj:s' => \$project,
               )  
 or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
+if ($version)
+{
+    print "AssembleIrysXeonPhi.pl Version 1.0.0\n";
+    exit;
+}
 my $dirname = dirname(__FILE__);
 die "Option -a or --assembly_dir not specified.\n" unless $assembly_directory; # report missing required variables
 die "Option -p or --proj not specified.\n" unless $project; # report missing required variables
@@ -81,7 +88,7 @@ unless(mkdir $ref_directory)
 }
 my (${cmap_filename}, ${cmap_directories}, ${cmap_suffix}) = fileparse($reference,'\.[^.]+$'); # requires File::Basename and adds trailing slash to $directories and keeps dot in file extension
 my $cmap_linked= `ln -s \'$reference\' \'${ref_directory}/${cmap_filename}${cmap_suffix}\'`; # link reference cmap directories to final report directory
-print "cmap_$linked";
+print "$cmap_linked";
 my $cmap_key_linked= `ln -s \'${cmap_directories}${cmap_filename}_key.txt\' \'${ref_directory}/${cmap_filename}_key.txt\'`; # link reference cmap key to final report directory
 print "$cmap_key_linked";
 

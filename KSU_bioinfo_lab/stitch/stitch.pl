@@ -36,9 +36,11 @@ my $second_min_per_aligned=0; ## Default: No filter
 my $neg_gap = 20000; ## Default: Filter fails overlaps less than -20,000 (bp)
 my $man = 0;
 my $help = 0;
+my $version = 0;
 GetOptions (
 'help|?' => \$help,
 'man' => \$man,
+'version' => \$version,
 'r|r_cmap:s' => \$r_cmap,
 'x|xmap:s'  => \$xmap,
 'f|scaffold_fasta:s' => \$scaffold_fasta,
@@ -52,6 +54,11 @@ GetOptions (
 or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
+if ($version)
+{
+    print "stitch.pl Version 1.4.7\n";
+    exit;
+}
 ## convert percent aligned to decimal ##
 $first_min_per_aligned=$first_min_per_aligned/100;
 $second_min_per_aligned=$second_min_per_aligned/100;
