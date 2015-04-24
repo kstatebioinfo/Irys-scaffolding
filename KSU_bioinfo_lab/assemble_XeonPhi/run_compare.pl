@@ -21,16 +21,16 @@ use File::Basename; # enable manipulating of the full path
 ########################  Project variables  ########################
 #####################################################################
 # Full path of the directory of the best assembly without trailing slash (e.g. /home/bionano/bionano/Dros_psue_2014_012/default_t_100 )
-my $best_dir ="best assembly directory"; # no trailing slash
-my $fasta = "fasta full path";
-my $cmap = "reference cmap full path";
-my $enzyme= "enzyme or enzymes"; # space separated list that can include BspQI BbvCI BsrDI bseCI
+my $best_dir ="/home/bionano/bionano/Corv_corv_2015_001_de_novo/Datasets"; # no trailing slash
+my $fasta = "/home/bionano/fasta_and_cmap/Corvus_corone_reference/scaffolds/genome_HC_allpaths41687_v2.7.fasta";
+my $cmap = "/home/bionano/fasta_and_cmap/Corvus_corone_reference/scaffolds/genome_HC_allpaths41687_v2.7_BspQI.cmap";
+my $enzyme= "BspQI"; # space separated list that can include BspQI BbvCI BsrDI bseCI
 my $f_con="20";
 my $f_algn="40";
 my $s_con="15";
 my $s_algn="90";
 my $T = 1e-8;
-my $project="project_name";
+my $project="Corv_corv_2015_001";
 my $optional_assembled_cmap = ''; # add assembled cmap path here if it is not in the "refineFinal1" subdirectory within the "contigs" subdirectory of the best assembly directory
 #########################################################################
 ########################  End project variables  ########################
@@ -99,7 +99,7 @@ for my $stringency (@alignments)
     open (my $comparison_metrics, ">>", $comparison_metrics_file) or die "Can't open $comparison_metrics_file: $!";
     print $comparison_metrics "$stringency :\n";
     close($comparison_metrics);
-    my $xmap_alignments = `perl ~/BNGCompare/BNGCompare.pl -f $fasta -r $cmap -q ${genome_map_cmap} -x ${best_dir}/../${stringency}/${filename}_to_${genome_map_filename}.xmap`;
+    my $xmap_alignments = `perl ~/BNGCompare/BNGCompare.pl -f $fasta -r $cmap -q ${genome_map_cmap} -x ${best_dir}/../${stringency}/${filename}_to_${genome_map_filename}.xmap -o $comparison_metrics_file`;
     print $xmap_alignments;
     ###########################################################
     #                      Flip xmap

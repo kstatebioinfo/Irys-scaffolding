@@ -93,6 +93,7 @@ while (<CMAP_MOL>) #make array of molecule contigs and a hash of their lengths
         }
 	}
 }
+close CMAP_MOL;
 ###############################################################################
 ########## Load sequence fasta with headers converted to numbers ##############
 ############# this process uses a 1 base coordinate system ####################
@@ -127,6 +128,7 @@ while (<XMAP>) #make array of contigs from the customer and a hash of their leng
 
 	}
 }
+close XMAP;
 ###############################################################################
 ######               find original scaffold headers                  ##########
 ###############################################################################
@@ -146,6 +148,7 @@ while (<KEY>)
         }
     }
 }
+close KEY;
 ###############################################################################
 ####################### 1st pass over xmap             ########################
 ####################### filter xmap rows               ########################
