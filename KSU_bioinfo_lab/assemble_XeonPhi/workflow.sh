@@ -33,6 +33,8 @@ perl ~/bin/fa2cmap_multi.pl -v -i psuedomolecules/example_genomic.fna -e BspQI B
 # Step 2: prep and run the assembly
 ############################################
 
+## REMEMBER TO MOVE TO YOUR WORKING DIRECTORY EVEN IF IT HAS ALREADY BEEN CREATED !!!
+
 ## create directory in "~/bionano"
 mkdir ~/bionano/project_id ; cd ~/bionano/project_id
 

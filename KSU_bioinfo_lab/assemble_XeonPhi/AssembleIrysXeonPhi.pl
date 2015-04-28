@@ -60,7 +60,10 @@ my $dirname = dirname(__FILE__);
 die "Option -a or --assembly_dir not specified.\n" unless $assembly_directory; # report missing required variables
 die "Option -p or --proj not specified.\n" unless $project; # report missing required variables
 die "Option -g or --genome not specified.\n" unless $genome; # report missing required variables
-die "Option -r or --ref not specified.\n" unless $reference; # report missing required variables
+unless ($de_novo)
+{
+    die "Option -r or --ref not specified.\n" unless $reference; # report missing required variables
+}
 my $T = 0.00001/$genome;
 ###################################################################################
 ############          Generate BNX file summaries                ##################
@@ -82,70 +85,57 @@ print "$bnx_stats";
 ###################################################################################
 ############    Make reference CMAP available for final report   ##################
 ###################################################################################
-
-my $ref_directory = "${assembly_directory}/${project}/in_silico_cmap";
-unless(mkdir $ref_directory)
+unless ($de_novo)
 {
-    print "Warning unable to create $ref_directory. Directory exists\n";
+    my $ref_directory = "${assembly_directory}/${project}/in_silico_cmap";
+    unless(mkdir $ref_directory)
+    {
+        print "Warning unable to create $ref_directory. Directory exists\n";
+    }
+    my (${cmap_filename}, ${cmap_directories}, ${cmap_suffix}) = fileparse($reference,'\.[^.]+$'); # requires File::Basename and adds trailing slash to $directories and keeps dot in file extension
+    my $cmap_linked= `ln -s \'$reference\' \'${ref_directory}/${cmap_filename}${cmap_suffix}\'`; # link reference cmap directories to final report directory
+    print "$cmap_linked";
+    my $cmap_key_linked= `ln -s \'${cmap_directories}${cmap_filename}_key.txt\' \'${ref_directory}/${cmap_filename}_key.txt\'`; # link reference cmap key to final report directory
+    print "$cmap_key_linked";
 }
-my (${cmap_filename}, ${cmap_directories}, ${cmap_suffix}) = fileparse($reference,'\.[^.]+$'); # requires File::Basename and adds trailing slash to $directories and keeps dot in file extension
-my $cmap_linked= `ln -s \'$reference\' \'${ref_directory}/${cmap_filename}${cmap_suffix}\'`; # link reference cmap directories to final report directory
-print "$cmap_linked";
-my $cmap_key_linked= `ln -s \'${cmap_directories}${cmap_filename}_key.txt\' \'${ref_directory}/${cmap_filename}_key.txt\'`; # link reference cmap key to final report directory
-print "$cmap_key_linked";
-
 ###################################################################################
 ############          Rescaling molecules in BNX files         ##################
 ###################################################################################
-print "##################################################################################\n";
-print "Rescaling molecules in BNX files (formerly the adjusting stretch (bpp) step)...\n";
-print "##################################################################################\n";
-my $rescale_stretch=`perl ${dirname}/rescale_stretch.pl $assembly_directory $reference $T $project`;
-print "$rescale_stretch";
-
+if ($de_novo)
+{
+    print "##################################################################################\n";
+    print "Merging molecules in BNX files for de novo assembly...\n";
+    print "##################################################################################\n";
+    my $merge_bnx=`perl ${dirname}/rescale_stretch.pl $assembly_directory $T $project`;
+    print "$merge_bnx";
+}
+else
+{
+    print "##################################################################################\n";
+    print "Rescaling molecules in BNX files (formerly the adjusting stretch (bpp) step)...\n";
+    print "##################################################################################\n";
+    my $rescale_stretch=`perl ${dirname}/rescale_stretch.pl $assembly_directory $T $project $reference`;
+    print "$rescale_stretch";
+}
 ###################################################################################
 ############                Writing assembly scripts               ################
 ###################################################################################
 print "##################################################################################\n";
 print "Writing assembly scripts...\n";
 print "##################################################################################\n";
-my $writing_assemblies=`perl ${dirname}/assemble.pl $assembly_directory $reference $T $project $genome`;
-print "$writing_assemblies";
+unless ($de_novo)
+{
+    my $writing_assemblies=`perl ${dirname}/assemble.pl $assembly_directory $T $project $genome $reference`;
+    print "$writing_assemblies";
+}
+else
+{
+    my $writing_assemblies=`perl ${dirname}/assemble.pl $assembly_directory $T $project $genome`;
+    print "$writing_assemblies";
 
-###################################################################################
-###############  Run first molecule quality report and replace old bpp  ###########
-###################################################################################
-#print "##################################################################################\n";
-#print "Generating first Molecule Quality Reports...\n";
-#print "##################################################################################\n";
-#my $first_mqr=`perl ${dirname}/first_mqr.pl $bnx_dir $reference $T`;
-#print "$first_mqr";
-###################################################################################
-###############  Merge each split adjusted flowcells BNXs                    ######
-###################################################################################
-#print "##################################################################################\n";
-#print "Merging split, adjusted BNX files for each flowcell...\n";
-#print "##################################################################################\n";
-#my $second_mqr=`perl ${dirname}/merge_split_by_scan.pl $bnx_dir $reference $T`;
-#print "$second_mqr";
-###################################################################################
-############ Merge each BNX foreach flowcell and run second molecule quality ######
-############     report on merged file with and without BestRef.             ######
-###################################################################################
-#print "##################################################################################\n";
-#print "Merging the merged BNX for each flowcell. Generating second Molecule Quality Report for final merged BNX file...\n";
-#print "##################################################################################\n";
-#my $third_mqr=`perl ${dirname}/third_mqr.pl $bnx_dir $reference $T`;
-#print "$third_mqr";
-###################################################################################
-### Write assembly scripts with a range of p-value thresholds and minimum lengths##
-###################################################################################
-#print "##################################################################################\n";
-#print " Write assembly scripts with a range of p-value thresholds and minimum lengths...\n";
-#print "##################################################################################\n";
-#my $assemble=`perl ${dirname}/assemble.pl $bnx_dir $reference $T $dirname $project`;
-#print "$assemble";
-#print "Finished running AssembleIrysXeonPhi.pl\n";
+}
+
+print "Finished running AssembleIrysXeonPhi.pl\n";
 
 ##################################################################################
 ##############                  Documentation                   ##################
