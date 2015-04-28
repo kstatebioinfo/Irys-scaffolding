@@ -13,9 +13,11 @@ rescaling_factor_table <- read.table(args[1], header=TRUE)
 
 pdf(args[2], bg='white', width=15, height=5)
 
+rescaling_factor_max <- max(rescaling_factor_table$scale)
+rescaling_factor_min <- min(rescaling_factor_table$scale)
 rescaling_factor <- c(rescaling_factor_table$scale)
 
-plot (rescaling_factor, xaxt = "n", las = 2, ylim=c(0.98,1.02), xlab="Scan number", ylab="Rescaling factor",main="Single molecule map rescaling factor by scan for all flowcells")
+plot (rescaling_factor, xaxt = "n", las = 2, ylim=c(rescaling_factor_min,rescaling_factor_max), xlab="Scan number", ylab="Rescaling factor",main="Single molecule map rescaling factor by scan for all flowcells")
 
 lines(rescaling_factor, col=myblue)
 axis(1, at=1:args[3], labels=(rescaling_factor_table$scan))
