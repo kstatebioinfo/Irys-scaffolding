@@ -22,9 +22,6 @@ plot (rescaling_factor, xaxt = "n", las = 2, ylim=c(rescaling_factor_min,rescali
 lines(rescaling_factor, col=myblue)
 axis(1, at=1:args[3], labels=(rescaling_factor_table$scan))
 
-
-#abline(v=c(args[4]), untf = FALSE)
-
 for (t in 1:argscounts) {
     if (t>3){
         abline(v=c(args[t]), untf = FALSE, lty=2,col=myblue)
