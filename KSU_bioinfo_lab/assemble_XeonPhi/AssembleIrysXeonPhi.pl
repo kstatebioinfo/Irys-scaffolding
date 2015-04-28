@@ -37,6 +37,7 @@ my ($assembly_directory,$genome,$reference,$project);
 my $man = 0;
 my $help = 0;
 my $version = 0;
+my $de_novo = 0;
 GetOptions (
 			  'help|?' => \$help,
               'version' => \$version,
@@ -45,6 +46,7 @@ GetOptions (
               'g|genome:i' => \$genome,
               'r|ref:s' => \$reference,
               'p|proj:s' => \$project,
+              'd|de_novo' => \$de_novo
               )  
 or pod2usage(2);
 pod2usage(1) if $help;
