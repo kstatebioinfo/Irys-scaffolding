@@ -270,7 +270,7 @@ The minimum percent of the full potential length of the alignment allowed for th
 
 The minimum confidence score for alignments for the second round of filtering. This should be the less stringent, lowest, of the two scores.
 
-=item B<--f_algn, --sa>
+=item B<--s_algn, --sa>
 
 The minimum percent of the full potential length of the alignment allowed for the second round of filtering. This should be higher than the setting for the first round of filtering.
 

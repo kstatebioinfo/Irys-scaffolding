@@ -13,10 +13,10 @@
 ###############################################################################
 use strict;
 use warnings;
-#use File::Find::Rule;
-# use List::Util qw(max);
-# use List::Util qw(sum);
+use Term::ANSIColor;
 use File::Basename; # enable manipulating of the full path
+use Getopt::Long;
+use Pod::Usage;
 #####################################################################
 ########################  Project variables  ########################
 #####################################################################
@@ -26,16 +26,17 @@ my $alignment_parameters="default_alignment";
 #my $alignment_parameters="relaxed_alignment";
 #############################################
 # Full path of the directory of the best assembly without trailing slash (e.g. /home/bionano/bionano/Dros_psue_2014_012/default_t_100 )
-my $best_dir ="/home/bionano/bionano/Leis_mani_2014_049_final/strict_t_150"; # no trailing slash
-my $fasta = "/home/bionano/bionano/Leis_mani_2014_049_final/GCF_000227135_wrapped.fasta";
-my $cmap = "/home/bionano/bionano/Leis_mani_2014_049_final/GCF_000227135_wrapped_BbvCI.cmap";
-my $enzyme= "BbvCI"; # space separated list that can include BspQI BbvCI BsrDI bseCI
-my $f_con="20";
-my $f_algn="40";
-my $s_con="15";
-my $s_algn="90";
-my $T = 1e-8;
-my $project="Leis_mani_2014_049";
+my $best_dir =""; # no trailing slash (e.g. /home/bionano/bionano/Mona_scha_2014_021_de_novo/default_t_150)
+my $fasta = ""; # (e.g. /home/bionano/bionano/Trib_cast_0002_final/GCF_000227135_wrapped.fasta)
+my $cmap = ""; #(e.g. /home/bionano/bionano/Trib_cast_0002_final/GCF_000227135_wrapped_BbvCI.cmap)
+my $enzyme= ""; # space separated list that can include BspQI BbvCI BsrDI bseCI (e.g. BspQI)
+my $f_con="20"; # default value
+my $f_algn="40"; # default value
+my $s_con="15"; # default value
+my $s_algn="90"; # default value
+my $T = 1e-8; # default value
+my $neg_gap = 20000; # default value
+my $project=""; # no spaces, slashes or characters other than underscore (e.g. Trib_cast_0002)
 #########################################################################
 ########################  End project variables  ########################
 #########################################################################
@@ -56,7 +57,60 @@ my $refaligner_version=''; # Was 3520 at the time this code was written
 #########################################################################
 ##################  End optional project variables  #####################
 #########################################################################
-
+##################################################################################
+##############         Print informative message                ##################
+##################################################################################
+print "###########################################################\n";
+print colored ("#      WARNING: SCRIPT CURRENTLY UNDER DEVELOPMENT        #", 'bold white on_blue'), "\n";
+print "#  write_report.pl Version 1.0.0                          #\n";
+print "#                                                         #\n";
+print "#  Created by Jennifer Shelton 2/26/15                    #\n";
+print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
+print "#  perl write_report.pl -help # for usage/options         #\n";
+print "#  perl write_report.pl -man # for more details           #\n";
+print "###########################################################\n";
+#########################################################################
+########################  End project variables  ########################
+#########################################################################
+my ($de_novo);
+my $man = 0;
+my $help = 0;
+my $version = 0;
+GetOptions (
+    'help|?' => \$help,
+    'version' => \$version,
+    'man' => \$man,
+    'a_p|alignment_parameters:s' => \$alignment_parameters,
+    'b|best_dir:s' => \$best_dir,
+    'p|proj:s' => \$project,
+    'e|enzyme:s' => \$enzyme,
+    'f|fasta:s' => \$fasta,
+    'r|ref:s' => \$cmap,
+    'f_con|fc:f' => \$f_con,
+    'f_algn|fa:f' => \$f_algn,
+    's_con|sc:f' => \$s_con,
+    's_algn|sa:f' => \$s_algn,
+    't|p-value_T:f' => \$T,
+    'n|neg_gap:f' => \$neg_gap,
+    'd|de_novo' => \$de_novo
+)
+or pod2usage(2);
+pod2usage(1) if $help;
+pod2usage(-exitstatus => 0, -verbose => 2) if $man;
+if ($version)
+{
+    print "run_compare.pl Version 1.0.0\n";
+    exit;
+}
+my $dirname = dirname(__FILE__);
+die "Option -b or --best_dir not specified.\n" unless $best_dir; # report missing required variables
+die "Option -p or --proj not specified.\n" unless $project; # report missing required variables
+die "Option -e or --enzyme not specified.\n" unless $enzyme; # report missing required variables
+unless ($de_novo)
+{
+    die "Option -f or --fasta not specified.\n" unless $fasta; # report missing required variables
+    die "Option -r or --ref not specified.\n" unless $cmap; # report missing required variables
+}
 ###########################################################
 #      Get genome map _pipelineReport.txt file (fullpath)
 ###########################################################
@@ -105,22 +159,26 @@ else
 {
     $genome_map_cmap = $optional_assembled_cmap;
 }
-my (${genome_map_filename}, ${genome_map_directories}, ${genome_map_suffix}) = fileparse($genome_map_cmap,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
+my (${genome_map_filename}, ${genome_map_directories}, ${genome_map_suffix});
+if (-f $genome_map_cmap)
+{
+    (${genome_map_filename}, ${genome_map_directories}, ${genome_map_suffix}) = fileparse($genome_map_cmap,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
+}
 ###########################################################
 #          Sanity check project variables section
 ###########################################################
 print "Sanity checking project variables section...\n\n";
 unless (($assembly_optArguments_xml_file) || (($min_length)&&($min_labels)))
 {
-    die "write_report.pl is missing either a path to the best assembly's \"optArguments.xml\" file or details about the assembly's parameters needed to fill out the report. Please add either of these and retry."
+    die "write_report.pl cannot automatically find the path to the best assembly's \"optArguments.xml\" file or details about the assembly's parameters needed to fill out the report. Please make a copy of write_report.pl, add these to the \"Optional project variables\" section of write_report.pl and retry."
 }
 unless(( -f $fasta) && ( -f $cmap) && (-f $genome_map_cmap))
 {
-    die "File paths in the \"Project variables\" section of write_report.pl are not valid. Remember to copy the write_report.pl script into your assembly working directory and update other variables for project in \"Project variables\" section. To do this cd to the assembly working directory and \"cp ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/write_report.pl .\" and then edit the new version to point to the best assembly or the best assembly CMAP and the best alignment (Default or Relaxed).\n";
+    die "write_report.pl cannot automatically find the path to the best assembly's reference FASTA, reference in silico CMAP and/or the BioNano genome CMAP files needed to fill out the report. Remember to either copy the write_report.pl script into your assembly working directory and update other variables for project in \"Project variables\" section or add the equivalent flags and values to your command.\nTo do the former cd to the assembly working directory and \"cp ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/write_report.pl .\", then edit the new version to point to the best asssembly or the best assembly's reference FASTA, reference in silico CMAP, the best alignment (Default or Relaxed) etc and retry.\n";
 }
 unless($enzyme =~ /(BspQI|BbvCI|BsrDI|bseCI)/)
 {
-    die "Enzymes listed in the \"Project variables\" section of write_report.pl are not valid. Valid entries would be a space separated list that includes one or more of the following options \"BspQI BbvCI BsrDI bseCI\". Remember to copy the write_report.pl script into your assembly working directory and update other variables for project in \"Project variables\" section. To do this cd to the assembly working directory and \"cp ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/write_report.pl .\" and then edit the new version to point to the best assembly or the best assembly CMAP and the best alignment (Default or Relaxed).\n";
+    die "write_report.pl cannot find a valid list of enzymes used for molecule labeling or in silico labeling of the reference FASTA. Remember to either copy the write_report.pl script into your assembly working directory and update other variables for project in \"Project variables\" section or add the equivalent flags and values to your command.\nTo do the former cd to the assembly working directory and \"cp ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/write_report.pl .\", then edit the new version's \"Project variables\" section and retry.\n";
 }
 ###########################################################
 #          Check that report directory already exists
@@ -454,4 +512,140 @@ my $file_inventory = `cd $report_dir ; ls *`;
 print $report "\nFile inventory\n________________________________________________________________________________________________________\n\n$file_inventory\n"; # Print File inventory
 print "Done writing report and preping files.\n";
 
+##################################################################################
+##############                  Documentation                   ##################
+##################################################################################
+## style adapted from http://www.perlmonks.org/?node_id=489861
+__END__
+
+=head1 NAME
+
+write_report.pl - a script that compiles final assembly metrics, prepares output files and writes a report for the "best" assembly in all of the possible directories:'strict_t', 'default_t', 'relaxed_t', etc. These assemblies are created using Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/AssembleIrysXeonPhi.pl from https://github.com/i5K-KINBRE-script-share/Irys-scaffolding. The parameter `-b` is the directory with the "contigs" subdirectory created for the "best" assembly.
+
+Copy script into assembly working directory and update other variables for project in "Project variables" section or run original script by adding the equivalent flags and values to your command. To do the former cd to the assembly working directory and "cp ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/write_report.pl ." and then edit the new version to point to the best asssembly or the best assembly CMAP, etc.
+
+=head1 USAGE
+
+perl run_compare.pl [options]
+
+Documentation options:
+
+    -help    brief help message
+    -man	    full documentation
+
+Required options:
+
+    -b	     best assembly directory
+    -p	     project
+    -e	     enzyme
+
+Required options (unless de novo project):
+
+    -f	     scaffold (reference) FASTA
+    -r	     reference CMAP
+
+Required options (if de novo project):
+ 
+    -d	     add this flag if the project is de novo (has no refernce)
+
+Filtering options:
+
+    --f_con	 first minimum confidence score (default = 20)
+    --f_algn	 first minimum % of possible alignment (default = 40)
+    --s_con	 second minimum confidence score (default = 15)
+    --s_algn	 second minimum % of possible alignment (default = 90)
+    --n	         minimum negative gap length allowed (default = 20000 bp)
+    -T	         RefAligner p-value threshold (default = 1e-8)
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<-help>
+
+Print a brief help message and exits.
+
+=item B<-man>
+
+Prints the more detailed manual page with output details and examples and exits.
+
+=item B<-b, --best_dir>
+
+Full path of the user selected directory of the "best" assembly without trailing slash (e.g. /home/bionano/bionano/Dros_psue_2014_012/default_t_100 ).
+
+=item B<-p, --project>
+
+The project name with no spaces, slashes or characters other than underscore (e.g. Trib_cast_0002).
+
+=item B<-e, --enzyme>
+
+A space separated list of the enzymes used to label the molecules and to in silico nick the sequence-based FASTA file. They can include BspQI BbvCI BsrDI bseCI (e.g. BspQI). If multiple enzymes were used enclose the list with quotes (e.g. "BspQI BbvCI").
+
+=item B<-f, --fasta>
+
+The FASTA that will be super-scaffolded based on alignment to the IrysView assembly. It is preferable to use the scaffold FASTA rather than the contigs. Many contigs will not be long enough to align.
+
+=item B<-r, --r_cmap>
+
+The reference CMAP produced from your sequence FASTA file.
+
+=item B<-d, --de_novo>
+
+Add this flag to the command if a project is de novo (i.e. has no reference). Any step that requires a reference will then be skipped.
+
+=item B<--f_con, --fc>
+
+The minimum confidence score for alignments for the first round of filtering. This should be the most stringent, highest, of the two scores.
+
+=item B<--f_algn, --fa>
+
+The minimum percent of the full potential length of the alignment allowed for the first round of filtering. This should be lower than the setting for the second round of filtering.
+
+=item B<--s_con, --sc>
+
+The minimum confidence score for alignments for the second round of filtering. This should be the less stringent, lowest, of the two scores.
+
+=item B<--s_algn, --sa>
+
+The minimum percent of the full potential length of the alignment allowed for the second round of filtering. This should be higher than the setting for the first round of filtering.
+
+=item B<-n, --neg_gap>
+
+Allows user to adjust minimum negative gap length allowed (default = 20000 bp).
+
+=item B<-t, --p-value_T>
+
+The RefAligner p-value threshold (default = 1e-8).
+
+
+=back
+
+=head1 DESCRIPTION
+
+B<OUTPUT DETAILS:>
+
+The script outputs an XMAP with only molecules that scaffold contigs and an XMAP of all high quality alignments. Both XMAPs can be imported and viewed in the IrysView "comparisons" window if the original r.cmap and q.cmap are in the same folder when you import.
+
+The script also lists summary metrics in a csv file.
+
+In the same csv file, scaffolds that have alignments passing the user-defined length and confidence thresholds that align over less than 60% of the total length possible are listed. These may represent mis-assembled scaffolds.
+
+In the same csv file, high quality but overlaping alignments in a csv file are listed. These may be candidates for further assembly using the overlaping contigs and paired end reads.
+
+The script also creates a non-redundant (i.e. no scaffold is used twice) super-scaffold from a user-provided scaffold file and a filtered XMAP. If two scaffolds overlap on the superscaffold then a 100 "n" gap is used as a spacer between them. If adjacent scaffolds do not overlap on the super-scaffold than the distance between the begining and end of each scaffold reported in the XMAP is used as the gap length. If a scaffold has two high quality alignments the longest alignment is selected. If both alignments are equally long the alignment with the highest confidence is selected.
+
+The script also outputs contigs, an agp, and a bed file of contigs within superscaffolds from the final super-scaffold fasta file.
+
+
+B<QUICK START:>
+
+git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
+
+cd Irys-scaffolding/KSU_bioinfo_lab/stitch
+
+mkdir results
+
+perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
+
+=cut
 
