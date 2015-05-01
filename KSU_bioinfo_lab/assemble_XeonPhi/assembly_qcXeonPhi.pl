@@ -56,17 +56,29 @@ unless($de_novo) # if the project is not de novo then make no assembly with defa
 {
     push(@directories, 'default_t_default_noise');
 }
-
-open (my $qc_metrics,'>',"${assembly_directory}/Assembly_quality_metrics.csv") or die "Couldn't open ${assembly_directory}/Assembly_quality_metrics.csv!";
-print $qc_metrics "Assembly name,Number of BioNano genome map contigs,Total BioNano genome map length(Mb),Avg. BioNano genome map contig length(Mb),BioNano genome map contig N50(Mb),Total in silico genome map length(Mb),Total BioNano genome map length / in silico genome map length,Number BioNano genome map contigs aligned I,Total aligned length(Mb) I,Total aligned length / in silico genome map length I,Total Unique aligned length(Mb) I,Total unique aligned length / in silico genome map length I,Number BioNano genome map contigs aligned II,Total aligned length(Mb) II,Total aligned length / in silico genome map length II,Total unique aligned length(Mb) II,Total unique aligned length / in silico genome map length II\n";
+my $qc_metrics_file = "${assembly_directory}/Assembly_quality_metrics.csv";
+open (my $qc_metrics,'>',$qc_metrics_file) or die "Couldn't open $qc_metrics_file!";
+print $qc_metrics "Assembly name,Number of BioNano genome map contigs,Total BioNano genome map length(Mb),Avg. BioNano genome map contig length(Mb),BioNano genome map contig N50(Mb)";
+unless($de_novo)
+{
+    print $qc_metrics ",Total in silico genome map length(Mb),Total BioNano genome map length / in silico genome map length,Number BioNano genome map contigs aligned I,Total aligned length(Mb) I,Total aligned length / in silico genome map length I,Total Unique aligned length(Mb) I,Total unique aligned length / in silico genome map length I,Number BioNano genome map contigs aligned II,Total aligned length(Mb) II,Total aligned length / in silico genome map length II,Total unique aligned length(Mb) II,Total unique aligned length / in silico genome map length II\n";
+}
+else
+{
+    print $qc_metrics "\n";
+}
 
 ###############################################################################
 ##########            open all assembly directories           #################
 ###############################################################################
 my $Assembly_parameter_tests_file = "${assembly_directory}/Assembly_parameter_tests.csv";
-open ( my $Assembly_parameter_tests, ">", $Assembly_parameter_tests_file) or die "Can't open $Assembly_parameter_tests_file: $!";
+my $Assembly_parameter_tests;
 my $assembly_count =1;
-print $Assembly_parameter_tests "Number,Genome_map,Breadth_of_alignment,Total_alignment_length,Cumulative_length\n"; # print headers to csv file
+unless($de_novo)
+{
+    open ( my $Assembly_parameter_tests, ">", $Assembly_parameter_tests_file) or die "Can't open $Assembly_parameter_tests_file: $!";
+    print $Assembly_parameter_tests "Number,Genome_map,Breadth_of_alignment,Total_alignment_length,Cumulative_length\n"; # print headers to csv file
+}
 for my $assembly_dir (@directories)
 {
     if (-d "${assembly_directory}/${assembly_dir}/contigs")
@@ -214,7 +226,6 @@ for my $assembly_dir (@directories)
 
                 }
             }
-#            print "END LOOP B\n";
         }
         close($bioinfo_report);
         print $qc_metrics "\n";
@@ -223,23 +234,27 @@ for my $assembly_dir (@directories)
 ###############################################################################
 ##########                Plot assembly metrics               #################
 ###############################################################################
-close ($Assembly_parameter_tests);
-my $Assembly_parameter_tests_plot = "${assembly_directory}/Assembly_parameter_tests.pdf";
-my $title = "Assembly metrics for selection of best $project assembly";
+unless ($de_novo)
+{
+    close ($Assembly_parameter_tests);
+}
+close($qc_metrics);
+open ($qc_metrics,'<',$qc_metrics_file) or die "Couldn't open $qc_metrics_file!";
 ########## Check that any informatics report included output in the final iteration (check that the assembly did not fail) (if so line count will be greater than 2)
-open ( $Assembly_parameter_tests, "<", $Assembly_parameter_tests_file) or die "Can't open $Assembly_parameter_tests_file: $!";
-my $Assembly_parameter_line_count = 0;
-while (<$Assembly_parameter_tests>)
+my $qc_metrics_line_count = 0;
+while (<$qc_metrics>)
 {
     if (eof)
     {
-        $Assembly_parameter_line_count = $. ;
+        $qc_metrics_line_count = $. ;
     }
 }
 unless($de_novo)
 {
-    if ($Assembly_parameter_line_count > 2)
+    if ($qc_metrics_line_count > 2)
     {
+        my $Assembly_parameter_tests_plot = "${assembly_directory}/Assembly_parameter_tests.pdf";
+        my $title = "Assembly metrics for selection of best $project assembly";
         my $assembly_plot_out = `Rscript ${dirname}/graph_assemblies.R $Assembly_parameter_tests_file $Assembly_parameter_tests_plot $genome '$title'`;
         print $assembly_plot_out;
     }
@@ -250,7 +265,7 @@ unless($de_novo)
 }
 else
 {
-    if ($Assembly_parameter_line_count > 1)
+    if ($qc_metrics_line_count > 1)
     {
         #add graph of de novo assemblies here
 #        my $assembly_plot_out = `Rscript ${dirname}/graph_assemblies.R $Assembly_parameter_tests_file $Assembly_parameter_tests_plot $genome '$title'`;
