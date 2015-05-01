@@ -152,14 +152,20 @@ AssembleIrysXeonPhi.pl - a package of scripts run on the Beocat SGE cluster. The
 perl AssembleIrysXeonPhi.pl [options]
 
  Documentation options:
+ 
    -help    brief help message
    -man	    full documentation
+ 
  Required options:
+ 
     -a	     the assembly working directory for a project
     -g	     genome size in Mb
     -r	     reference CMAP
     -p	     project name for all assemblies
-  
+ 
+ Optional options:
+ 
+    -d	     add this flag if the project is de novo (has no refernce)
    
 =head1 OPTIONS
 
@@ -189,6 +195,11 @@ The full path to the reference genome CMAP.
 =item B<-p, --project>
  
 The project id. This will be used to name all assemblies
+ 
+=item B<-d, --de_novo>
+
+Add this flag to the command if a project is de novo (i.e. has no reference). Any step that requires a reference will then be skipped.
+
 
 =back
 
