@@ -103,7 +103,7 @@ The `~/sample_assembly_working_directory/Esch_coli_1_2015_000/MapStatsHistograms
 
 The `~/sample_assembly_working_directory/Esch_coli_1_2015_000/bnx_rescaling_factors.pdf` file shows rescaling factors for each scan of a BNX file. This output will vary depending on the machine and IrysChip version used. It is also influenced by how similar the label motifs are between the samples runs on the Irys and the samples used to assembly the sequence-based reference. On your machine you may notice a prdictable pattern for high quality BNX files. An example of one such a pattern is shown below:
 
-![alttext](https://github.com/kstatebioinfo/stitch_paper/raw/master/figures/Supplemental_1_bpp_per_scan.pdf)
+![alttext](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/bpp_per_scan.png)
 
 The assembly script `~/sample_assembly_working_directory/assembly_commands.sh` is written with all but four assembly commands commented out. If after running this command no satisfactory assemblies were created, uncomment assemblies with higher and/or lower minimum molecule map length and the best assembly p-value threshold. Also comment out the assemblies that have already run and save your script. Rerun the altered script to see if the new parameters improve the assembly.
 
@@ -136,6 +136,10 @@ perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/assembly_qcXeonPhi.pl -
 ```
 
 The ultimate goal is often to produce consensus genome maps that can be used to guide sequence-based haploid reference genome assembly. While single molecule maps can be used to reconstruct haplotypes, genome assembly involves collapsing polymorphisms arbitrarily into a consensus reference genome. Therefore the cumulative length of ideal consensus genome maps should equal the estimated haploid genome length. Additionally, 100% of the consensus genome maps would align non-redundantly to 100% of the in silico maps. In practice, the best BioNano assembly is selected based on similarity to the estimated haploid genome length and minimal alignment redundancy to the reference in silico maps. The greater the difference between "Breadth of alignment coverage" and "Length of total alignment" the greater the alignment redundancy.
+
+For example, in the graph below the Strict-T assembly was the best of the assemblies because it has a cumulative size close to 200 Mb, the estimated size of that genome, and a small difference between non-redundant aligned length or "Breadth of alignment coverage", and the "Length of total alignment".
+
+![alttext](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/Assembly_metrics.png)
 
 Take a look at the `~/sample_assembly_working_directory/Assembly_parameter_tests.pdf` file to see the results for this assembly.
 
