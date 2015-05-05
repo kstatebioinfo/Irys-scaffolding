@@ -101,7 +101,7 @@ Explore the output of this script in the `~/sample_assembly_working_directory/` 
 
 The `~/sample_assembly_working_directory/Esch_coli_1_2015_000/MapStatsHistograms.pdf` file contains information about the molecule maps > 100 kb. This information includes molecule map N50 and cumulative length, number of maps, molecule map signal-to-noise ratio (SNR), molecule map intensity, average label SNR per molecule map and average label intensity per molecule map.
 
-The `~/sample_assembly_working_directory/Esch_coli_1_2015_000/bnx_rescaling_factors.pdf` file shows rescaling factors for each scan of a BNX file. This output will vary depending on the machine and IrysChip version used. It is also influenced by how similar the label motifs are between the samples runs on the Irys and the samples used to assembly the sequence-based reference. On your machine you may notice a prdictable pattern for high quality BNX files. An example of one such a pattern is shown below:
+The `~/sample_assembly_working_directory/Esch_coli_1_2015_000/bnx_rescaling_factors.pdf` file shows rescaling factors for each scan of a BNX file. This output will vary depending on the machine and IrysChip version used. It is also influenced by how similar the label motifs are between the samples runs on the Irys and the samples used to assembly the sequence-based reference. On your machine you may notice a predictable pattern for high quality BNX files. An example of one such a pattern is shown below:
 
 ![alttext](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/bpp_per_scan.png)
 
