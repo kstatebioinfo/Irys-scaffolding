@@ -126,7 +126,7 @@ nohup bash ~/sample_assembly_working_directory/assembly_commands.sh &> ~/sample_
 Read about the software in this section:
 
 ```
-perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/assembly_qcXeonPhi.pl
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/assembly_qcXeonPhi.pl -help
 ```
 
 Check the quality of your assemblies with `assembly_qcXeonPhi.pl`.

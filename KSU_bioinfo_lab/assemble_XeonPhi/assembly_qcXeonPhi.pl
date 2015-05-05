@@ -72,11 +72,11 @@ else
 ##########            open all assembly directories           #################
 ###############################################################################
 my $Assembly_parameter_tests_file = "${assembly_directory}/Assembly_parameter_tests.csv";
-my $Assembly_parameter_tests;
 my $assembly_count =1;
+my $Assembly_parameter_tests;
 unless($de_novo)
 {
-    open ( my $Assembly_parameter_tests, ">", $Assembly_parameter_tests_file) or die "Can't open $Assembly_parameter_tests_file: $!";
+    open ( $Assembly_parameter_tests, ">", $Assembly_parameter_tests_file) or die "Can't open $Assembly_parameter_tests_file: $!";
     print $Assembly_parameter_tests "Number,Genome_map,Breadth_of_alignment,Total_alignment_length,Cumulative_length\n"; # print headers to csv file
 }
 for my $assembly_dir (@directories)
@@ -87,35 +87,43 @@ for my $assembly_dir (@directories)
         #####            pull QC metrics from CMAP             ############
         ###################################################################
     #    /home/bionano/bionano/Gram_nega_2014_055/strict_t_150/contigs/Gram_nega_2014_055_strict_t_150_refineFinal1
-        my $cmap = glob("${assembly_directory}/${assembly_dir}/contigs/*_refineFinal1/*_REFINEFINAL1.cmap"); # BioNano genome map assembly CMAP
+        my @cmap = glob("${assembly_directory}/${assembly_dir}/contigs/*_refineFinal1/*_REFINEFINAL1.cmap"); # BioNano genome map assembly CMAP
         my $cmap_length;
-        if ($cmap)
+        for my $cmap (@cmap)
         {
-            my $cmap_stats_out = `perl ${dirname}/../map_tools/cmap_stats.pl -c $cmap`;
-            if ($cmap_stats_out !~ /cmap N50:/)
+            if (-f $cmap)
             {
-                print "The $assembly_dir assembly may be in progress, skipping this assembly.\n\n";
-                next;
+                my $cmap_stats_out = `perl ${dirname}/../map_tools/cmap_stats.pl -c $cmap`;
+                if ($cmap_stats_out !~ /cmap N50:/)
+                {
+                    print "The $assembly_dir assembly may be in progress, skipping this assembly.\n\n";
+                    next;
+                }
+                $cmap_stats_out =~ /.*Total cmap length: (.*) \(Mb\).*/;
+                $cmap_length = $1;
             }
-            $cmap_stats_out =~ /.*Total cmap length: (.*) \(Mb\).*/;
-            $cmap_length = $1;
         }
         ###################################################################
         #####            pull QC metrics from XMAP             ############
         ###################################################################
         #    /home/bionano/bionano/Gram_nega_2014_055/strict_t_150/contigs/Gram_nega_2014_055_strict_t_150_refineFinal1/alignref_final/GRAM_NEGA_2014_055_STRICT_T_150_REFINEFINAL1.xmap
-        my $xmap = glob("${assembly_directory}/${assembly_dir}/contigs/*_refineFinal1/alignref/*_REFINEFINAL1.xmap"); # in silico genome map to BioNano genome map XMAP
-#        my $xmap = "${assembly_directory}/${assembly_dir}/contigs/*_refineFinal1/alignref_final/*_REFINEFINAL1.xmap"; # in silico genome map to BioNano genome map XMAP
         unless ($de_novo) # an xmap should exist if a project is not de novo)
         {
-            my $xmap_stats_out = `perl ${dirname}/../map_tools/xmap_stats.pl -x $xmap`;
-            $xmap_stats_out =~ /Breadth of alignment coverage = (.*) \(Mb\)\nTotal alignment length = (.*) \(Mb\)/;
-            my $breadth = $1;
-            my $total_aligned_length = $2;
-            ###################################################################
-            #####      print QC metrics from CMAP and XMAP         ############
-            ###################################################################
-            print $Assembly_parameter_tests "${assembly_count},${assembly_dir},${breadth},${total_aligned_length},${cmap_length}\n";
+            my @xmap = glob("${assembly_directory}/${assembly_dir}/contigs/*_refineFinal1/alignref/*_REFINEFINAL1.xmap"); # in silico genome map to BioNano genome map XMAP
+            for my $xmap (@xmap)
+            {
+                if (-f $xmap)
+                {
+                    my $xmap_stats_out = `perl ${dirname}/../map_tools/xmap_stats.pl -x $xmap`;
+                    $xmap_stats_out =~ /Breadth of alignment coverage = (.*) \(Mb\)\nTotal alignment length = (.*) \(Mb\)/;
+                    my $breadth = $1;
+                    my $total_aligned_length = $2;
+                    ##########################################################
+                    #####      print QC metrics from CMAP and XMAP    ########
+                    ##########################################################
+                    print $Assembly_parameter_tests "${assembly_count},${assembly_dir},${breadth},${total_aligned_length},${cmap_length}\n";
+                }
+            }
         }
         ++$assembly_count;
     }
