@@ -9,8 +9,6 @@ We will be using the script "AssembleT.pl" to organize our working directory and
 
 As you work through this lab your should read about the software are using by generating and reading the help menus.  
 
-To find out more about the parameters for "AssembleT.pl" run "perl ~/transcriptome-and-genome-assembly/KSU_bioinfo_lab/AssembleT/AssembleT.pl -man" or visit its manual at https://github.com/i5K-KINBRE-script-share/transcriptome-and-genome-assembly/tree/master/KSU_bioinfo_lab/AssembleT/AssembleT_MANUAL.md.
-
 ###Step 1: Clone the Git repositories 
 
 ```
@@ -145,6 +143,11 @@ Read about the software in this section:
 ```
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/run_compare.pl -help
 ```
+
+`run_compare.pl` is a script that compiles assembly metrics and runs Stitch for the "best" assembly in all of the possible directories:'strict_t', 'default_t',
+'relaxed_t', etc. 
+
+Stitch filters alignment XMAP files by confidence and the percent of the maximum potential length of the alignment. The first settings for confidence and the minimum percent of the full potential length of the alignment should be set to include the range that the researcher decides represent high quality alignments after viewing raw XMAPs. Some alignments have lower than optimal confidence scores because of low label density or short sequence-based scaffold length. The second set of filters should have a user-defined lower minimum confidence score, but a much higher percent of the maximum potential length of the alignment in order to capture these alignments. Resultant filtered XMAPs should be examined in IrysView to see that the alignments agree with what the user would manually select. Stitch finds the best super-scaffolding alignments each run. It is run iteratively by `run_compare.pl` until all super-scaffolds have been found.
 
 We will start with the default filtering parameters for confidence scores (`--f_con` and `--s_con`) and percent of possible alignment thresholds (`--f_algn` and `--s_algn`). Generally we start with default parameters and then test more or less strict options if our first results are not satisfactory.
 
