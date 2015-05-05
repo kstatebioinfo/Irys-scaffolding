@@ -148,7 +148,7 @@ for my $stringency (@alignments)
     ###########################################################
     #                      Flip xmap
     ###########################################################
-    my $flip =  `perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/flip_xmap.pl ${best_dir}/../${stringency}/${filename}_to_${genome_map_filename}.xmap ${best_dir}/../${stringency}/${genome_map_filename}_to_${filename}`;
+    my $flip =  `perl ${dirname}/../stitch/flip_xmap.pl ${best_dir}/../${stringency}/${filename}_to_${genome_map_filename}.xmap ${best_dir}/../${stringency}/${genome_map_filename}_to_${filename}`;
     print $flip;
     ###########################################################
     #                 Get flipped metrics
@@ -167,13 +167,13 @@ for my $stringency (@alignments)
     {
         print "Unable to create $stitch_dir\n";
     }
-    my $stitch_out =  `perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/stitch.pl -r ${best_dir}/../${stringency}/${filename}_to_${genome_map_filename}_q.cmap -x ${best_dir}/../${stringency}/${genome_map_filename}_to_${filename}.flip -f $fasta -o $stitch_dir/${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_1 --f_con ${f_con} --f_algn ${f_algn} --s_con ${s_con} --s_algn ${s_algn}`;
+    my $stitch_out =  `perl ${dirname}/../stitch/stitch.pl -r ${best_dir}/../${stringency}/${filename}_to_${genome_map_filename}_q.cmap -x ${best_dir}/../${stringency}/${genome_map_filename}_to_${filename}.flip -f $fasta -o $stitch_dir/${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_1 --f_con ${f_con} --f_algn ${f_algn} --s_con ${s_con} --s_algn ${s_algn}`;
     my $agp_list_file = "$best_dir/../$stringency/agp_list.txt";
     open (my $agp_list, ">", $agp_list_file) or die "Can't open $agp_list_file: $!";
     ###########################################################
     #              Make filtered xmap
     ###########################################################
-    my $make_filtered = `perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/get_passing_xmap.pl -f $best_dir/../${stringency}/stitch1/${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_1_all_filtered.xmap -o ${best_dir}/../${stringency}/${filename}_to_${genome_map_filename}.xmap`;
+    my $make_filtered = `perl ${dirname}/../stitch/get_passing_xmap.pl -f $best_dir/../${stringency}/stitch1/${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_1_all_filtered.xmap -o ${best_dir}/../${stringency}/${filename}_to_${genome_map_filename}.xmap`;
     print $make_filtered;
     ###########################################################
     #    Remove stitch directory if no scaffolds were made
@@ -224,12 +224,12 @@ for my $stringency (@alignments)
         ###########################################################
         #                       Flip xmap
         ###########################################################
-        my $iter_flip_align = `perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/flip_xmap.pl ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${genome_map_filename}.xmap ${out_dir}${genome_map_filename}_to_${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}`;
+        my $iter_flip_align = `perl ${dirname}/../stitch/flip_xmap.pl ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${genome_map_filename}.xmap ${out_dir}${genome_map_filename}_to_${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}`;
         print $iter_flip_align;
         ###########################################################
         #                      Call stitch
         ###########################################################
-        my $iter_stitch_out = `perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/stitch.pl -r ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${genome_map_filename}_q.cmap -x ${out_dir}${genome_map_filename}_to_${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}.flip -f ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold.fasta -o ${out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${stitch_num} --f_con ${f_con} --f_algn ${f_algn} --s_con ${s_con} --s_algn ${s_algn}`;
+        my $iter_stitch_out = `perl ${dirname}/../stitch/stitch.pl -r ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${genome_map_filename}_q.cmap -x ${out_dir}${genome_map_filename}_to_${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}.flip -f ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold.fasta -o ${out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${stitch_num} --f_con ${f_con} --f_algn ${f_algn} --s_con ${s_con} --s_algn ${s_algn}`;
         ###########################################################
         #    Remove stitch directory if no scaffolds were made
         ###########################################################
@@ -243,7 +243,7 @@ for my $stringency (@alignments)
             ###########################################################
             my $superscaffold_metrics =  `perl ~/BNGCompare/N50.pl ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold.fasta $comparison_metrics_file`;
             print $superscaffold_metrics;
-            my $collapse_agp = `perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/collapse_agp.pl -a $agp_list_file`;
+            my $collapse_agp = `perl ${dirname}/../stitch/collapse_agp.pl -a $agp_list_file`;
             print $collapse_agp;
             ###########################################################
             #                 Remove intermediate directories

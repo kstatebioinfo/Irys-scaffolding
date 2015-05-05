@@ -258,7 +258,7 @@ if (-f $assembly_pipelineReport_txt_file)
 #      Get custom software version (AssembleIrysXeonPhi)
 ###########################################################
 print "Getting custom software version (AssembleIrysXeonPhi)...\n\n";
-my $AssembleIrysXeonPhi_version = `perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/AssembleIrysXeonPhi.pl -version`;
+my $AssembleIrysXeonPhi_version = `perl ${dirname}/../assemble_XeonPhi/AssembleIrysXeonPhi.pl -version`;
 $AssembleIrysXeonPhi_version =~ /AssembleIrysXeonPhi.pl Version ([0-9.]+)\n/;
 $AssembleIrysXeonPhi_version = $1;
 ###########################################################
@@ -299,7 +299,7 @@ unless($de_novo)
     unless (-f "${fasta}_contig.agp")
     {
         print "Making new AGP and contig file for FASTA file...\n";
-        my $make_agp=`perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/make_contigs_from_fasta.pl $fasta`;
+        my $make_agp=`perl ${dirname}/../stitch/make_contigs_from_fasta.pl $fasta`;
         #my $make_agp=`perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/make_contigs_from_fasta.pl ${output_basename}_superscaffold.fasta`;
         print "$make_agp";
     }
@@ -309,7 +309,7 @@ unless($de_novo)
     unless (-f "${fasta}_contig.bed")
     {
         print "Making new BED file of contigs for FASTA file...\n";
-        my $make_contig_bed=`perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/agp2bed.pl ${fasta}_contig.agp`;
+        my $make_contig_bed=`perl ${dirname}/../stitch/agp2bed.pl ${fasta}_contig.agp`;
         print "$make_contig_bed";
     }
     ###############################################################################
@@ -318,7 +318,7 @@ unless($de_novo)
     unless (-f "${fasta}_gaps.bed")
     {
         print "Making new BED file of gaps for super-scaffolded FASTA file...\n";
-        my $make_gap_bed=`perl ~/Irys-scaffolding/KSU_bioinfo_lab/sv_detect/agp2_gap_bed.pl ${fasta}_contig.agp`;
+        my $make_gap_bed=`perl ${dirname}/../sv_detect/agp2_gap_bed.pl ${fasta}_contig.agp`;
         print "$make_gap_bed";
     }
     my $get_beds = `cp ${fasta}_contig.bed ${fasta}_contig_gaps.bed $report_dir/in_silico_cmap`;
@@ -472,7 +472,7 @@ else
 #      Prepare:Get stitch version and parameters
 ###########################################################
 print "Getting custom software version and parameters (stitch)...\n\n";
-my $stitch_version = `perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/stitch.pl -version`;
+my $stitch_version = `perl ${dirname}/../stitch/stitch.pl -version`;
 $stitch_version =~ /stitch.pl Version ([0-9.]+)\n/;
 $stitch_version = $1;
 my $stitch_count;
