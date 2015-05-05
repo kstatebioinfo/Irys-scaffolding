@@ -80,11 +80,8 @@ my $dirname = dirname(__FILE__);
 die "Option -b or --best_dir not specified.\n" unless $best_dir; # report missing required variables
 die "Option -p or --proj not specified.\n" unless $project; # report missing required variables
 die "Option -e or --enzyme not specified.\n" unless $enzyme; # report missing required variables
-
 die "Option -f or --fasta not specified.\n" unless $fasta; # report missing required variables
 die "Option -r or --ref not specified.\n" unless $cmap; # report missing required variables
-
-
 ###########################################################
 #            Get genome map CMAP file (fullpath)
 ###########################################################
@@ -213,7 +210,7 @@ for my $stringency (@alignments)
         my $previous_stitch= ${stitch_num} - 1;
         my $old_out_dir="${best_dir}/../${stringency}/stitch${previous_stitch}/";
         #Make CMAP
-        my $make_cmap = `perl ~/bin/fa2cmap_multi.pl -v -i ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold.fasta -e ${enzyme}`;
+        my $make_cmap = `perl ${dirname}/third-party/fa2cmap_multi.pl -v -i ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold.fasta -e ${enzyme}`;
 #        print $make_cmap;
         ###########################################################
         #                       Align scripts

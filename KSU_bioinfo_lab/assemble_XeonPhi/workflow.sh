@@ -27,7 +27,7 @@ perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/nick_density.pl psuedomolecule
 mv psuedomolecules/cmaps/example_genomic_BspQI* suedomolecules/
 
 ## Else if dual nicking with BspQI and BbvCI is required run:
-perl ~/bin/fa2cmap_multi.pl -v -i psuedomolecules/example_genomic.fna -e BspQI BbvCI
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/third-party/fa2cmap_multi.pl -v -i psuedomolecules/example_genomic.fna -e BspQI BbvCI
 
 ############################################
 # Step 2: prep and run the assembly

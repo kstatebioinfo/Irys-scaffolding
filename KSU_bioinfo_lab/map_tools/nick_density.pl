@@ -58,7 +58,7 @@ if ($two_enzyme)
 {
     @enzymes = qw/BspQI BbvCI/;
 }
-print "FASTA Enzyme : Nick density\n";
+print "FASTA Enzyme : Nick density (nicks/100kb)\n";
 for my $fasta (@ARGV)
 {
     my (${filename}, ${directories}, ${suffix}) = fileparse($fasta,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
