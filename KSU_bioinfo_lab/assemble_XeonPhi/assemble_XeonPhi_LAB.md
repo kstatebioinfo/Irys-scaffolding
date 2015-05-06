@@ -29,7 +29,7 @@ Make a working directory by making a copy of the `sample_assembly_working_direct
 cp -r ~/Irys-scaffolding/KSU_bioinfo_lab/sample_assembly_working_directory ~
 ```
 
-###Step 3: Check label density
+###Step 3: Check nick density
 
 Read about the software in this section:
 
@@ -39,7 +39,7 @@ perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/nick_density.pl -help
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/third-party/fa2cmap_multi.pl -help
 ```
 
-Nick the genome and check label density (can add the --two_enzyme  flag to skip all but BspQI and BbvCI which are the two most commonly used enzymes)
+In silico nick the genome FASTA and check nick density (to save time you can add the --two_enzyme  flag to skip all but BspQI and BbvCI which are the two most commonly used enzymes if neither of these works re-run checking all possible enzymes)
 
 ```
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/nick_density.pl ~/sample_assembly_working_directory/fasta_and_cmap/NC_010473_mock_scaffolds.fna
