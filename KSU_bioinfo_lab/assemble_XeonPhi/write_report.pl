@@ -123,10 +123,13 @@ if (-f $optional_assembly_pipelineReport_txt)
 else
 {
     ## Else check if "_pipelineReport.txt" file exists in the best assembly directory ##
-    my $possible_assembly_pipelineReport_txt = glob ("${best_dir}/*_pipelineReport.txt");
-    if (-f "$possible_assembly_pipelineReport_txt")
+    my @possible_assembly_pipelineReport_txt = glob ("${best_dir}/*_pipelineReport.txt");
+    for my $possible_assembly_pipelineReport_txt (@possible_assembly_pipelineReport_txt)
     {
-        $assembly_pipelineReport_txt_file = $possible_assembly_pipelineReport_txt;
+        if (-f "$possible_assembly_pipelineReport_txt")
+        {
+            $assembly_pipelineReport_txt_file = $possible_assembly_pipelineReport_txt;
+        }
     }
 }
 ###########################################################
@@ -142,9 +145,12 @@ else
 {
     ## Else check if optArguments.xml exists in the best assembly directory ##
     my @possible_assembly_optArguments_xml = glob ("${best_dir}/*_optArguments\.xml"); # BioNano assembler automatically copies the xml file so there may be two identical copies here
-    if (-f "$possible_assembly_optArguments_xml[0]") # take the first copy if it exists
+    for my $possible_assembly_optArguments_xml (@possible_assembly_optArguments_xml)
     {
-        $assembly_optArguments_xml_file = $possible_assembly_optArguments_xml[0];
+        if (-f "$possible_assembly_optArguments_xml") # take the first copy if it exists
+        {
+            $assembly_optArguments_xml_file = $possible_assembly_optArguments_xml;
+        }
     }
 }
 ###########################################################
@@ -153,7 +159,11 @@ else
 my $genome_map_cmap;
 unless($optional_assembled_cmap)
 {
-    $genome_map_cmap = glob "${best_dir}/contigs/*_refineFinal1/*_REFINEFINAL1.cmap";
+    my @genome_map_cmaps = glob("${best_dir}/contigs/*_refineFinal1/*_REFINEFINAL1.cmap");
+    for my $genome_map_cmap_candidate (@genome_map_cmaps)
+    {
+        $genome_map_cmap = $genome_map_cmap_candidate;
+    }
 }
 else
 {
