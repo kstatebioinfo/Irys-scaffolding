@@ -13,7 +13,7 @@ As you work through this lab your should read about the software are using by ge
 
 The following workflow requires that you install BioNano scripts and executables in `~/scripts` and `~/tools` directories respectively. Follow the Linux installation instructions in the "2.5.1 IrysSolve server RefAligner and Assembler" section of http://www.bnxinstall.com/training/docs/IrysViewSoftwareInstallationGuide.pdf.
 
-When this is done install the KSU custion software using the code below:
+When this is done install the KSU custom software using the code below:
 
 ```
 cd ~
