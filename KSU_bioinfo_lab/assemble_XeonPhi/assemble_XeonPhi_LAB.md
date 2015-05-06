@@ -7,7 +7,9 @@ If you would like a quick primer on basic linux commands try these 10 minute les
 
 We will be using A BNX file of single molecule maps generated on the BioNano Irys genome mapping system from Escherichia coli genomic DNA. We will prep these raw molecule maps and write and run a series of assemblies for them. We will then find the best assembly and use this to super scaffold and compare with a fragmented copy of the Escherichia coli str. K-12 substr. DH10B genome and summarize our final assembly metrics and alignments. 
 
-As you work through this lab your should read about the software are using by generating and reading the help menus.  
+As you work through this lab your should read about the software are using by generating and reading the help menus. 
+
+Try the `-man` flag instead of the `-help` flag for a more detailed description of the program (you type `q` and enter to exit from a manual screen).
 
 ###Step 1: Clone the Git repositories 
 
@@ -145,7 +147,7 @@ Take a look at the `~/sample_assembly_working_directory/Assembly_parameter_tests
 
 The file `~/sample_assembly_working_directory/Assembly_parameter_tests.csv` has additional details about each assembly that can be used if there is no clear best assembly after reviewing `~/sample_assembly_working_directory/Assembly_parameter_tests.pdf`.
 
-###Step 7: Compare your best assembly to your reference in silico maps
+###Step 8: Compare your best assembly to your reference in silico maps
 
 Read about the software in this section:
 
@@ -164,7 +166,7 @@ We will start with the default filtering parameters for confidence scores (`--f_
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/run_compare.pl -b ~/sample_assembly_working_directory/strict_t_150 -p Esch_coli_1_2015_000 -e BspQI -f ~/sample_assembly_working_directory/fasta_and_cmap/NC_010473_mock_scaffolds.fna -r ~/sample_assembly_working_directory/fasta_and_cmap/cmaps/NC_010473_mock_scaffolds_BspQI.cmap
 ```
 
-###Step 8: Choose your best alignment parameters and summarize your results
+###Step 9: Choose your best alignment parameters and summarize your results
 
 Read about the software in this section:
 
