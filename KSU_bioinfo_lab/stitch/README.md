@@ -1,3 +1,6 @@
+####Note: Learn to use `stitch.pl` with a current E. coli dataset (https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_LAB.md). 
+The assemble_XeonPhi pipeline will **automatically iterate** `stitch.pl` until no new super scaffolds are created. The pipeline can begin with raw data (i.e. a `Datasets` directory with BNX files from IrysView) and take you through assembly and stitching. Alternately, take your assembly output and start with Step 7 to simply run `stitch.pl` through all iterations and analyze and summarize your assembled BioNano genome maps.
+
 SCRIPT 
 
 **stitch.pl -**
@@ -106,7 +109,7 @@ OPTIONS
                round of filtering. This should be the less stringent, lowest,
                of the two scores.
 
-       --f_algn, --sa
+       --s_algn, --sa
                The minimum percent of the full potential length of the
                alignment allowed for the second round of filtering. This
                should be higher than the setting for the first round of
