@@ -1,0 +1,7 @@
+# CMAP = /home/bionano/sample_assembly_working_directory/fasta_and_cmap/NC_010473_mock_scaffolds_BspQI.cmap
+# filter: Minimum Labels = 5
+# filter: Minimum Size (Kb) = 20
+CompntId	CompntName	CompntLength
+1	scaffold 1	2336133
+2	scaffold 2	1684760
+3	scaffold 3	660227

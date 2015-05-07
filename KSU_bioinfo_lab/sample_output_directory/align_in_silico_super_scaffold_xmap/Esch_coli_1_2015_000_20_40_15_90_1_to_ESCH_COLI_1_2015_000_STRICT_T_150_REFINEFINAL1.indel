@@ -1,0 +1,16 @@
+# hostname=phihost
+# $ cd /home/bionano/Irys-scaffolding; /home/bionano/tools/RefAligner -i /home/bionano/sample_assembly_working_directory/strict_t_150/contigs/Esch_coli_1_2015_000_strict_t_150_refineFinal1/ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1.cmap -ref /home/bionano/sample_assembly_working_directory/strict_t_150/../default_alignment/stitch1/Esch_coli_1_2015_000_20_40_15_90_1_superscaffold_BspQI.cmap -o /home/bionano/sample_assembly_working_directory/strict_t_150/../default_alignment/stitch1/Esch_coli_1_2015_000_20_40_15_90_1_to_ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1 -res 2.9 -FP 0.8 -FN 0.08 -sf 0.20 -sd 0.10 -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -T 1e-08 -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 1 -hash -hashdelta 50 -mres 1e-3 -insertThreads 4 -nosplit 2 -biaswt 0 -indel -rres 1.2 -f -maxmem 256
+# CompileDir= /home/users/vdergachev/tools/tools.3480.3520/3480 SVNversion=3520 $Header: http://svn.bnm.local:81/svn/Informatics/RefAligner/branches/3480/RefAligner.cpp 3514 2015-01-17 20:43:27Z tanantharaman $
+# FLAGS: USE_SSE=1 USE_AVX=1 USE_MIC=0 USE_PFLOAT=1 USE_RFLOAT=1 DEBUG=1 VERB=1
+# SMAP File Version:	0.0
+# Reference Maps From:	/home/bionano/sample_assembly_working_directory/strict_t_150/../default_alignment/stitch1/Esch_coli_1_2015_000_20_40_15_90_1_to_ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1_r.cmap
+# Query Maps From:	/home/bionano/sample_assembly_working_directory/strict_t_150/../default_alignment/stitch1/Esch_coli_1_2015_000_20_40_15_90_1_to_ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1_q.cmap
+# Xmap Entries From:	/home/bionano/sample_assembly_working_directory/strict_t_150/../default_alignment/stitch1/Esch_coli_1_2015_000_20_40_15_90_1_to_ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1.xmap
+#h SmapEntryID	QryContigID	RefcontigID1	RefcontigID2	QryStartPos	QryEndPos	RefStartPos	RefEndPos	Orientation	Confidence	Type	XmapID1	XmapID2
+#f int        	int        	int         	int         	float      	float    	float      	float    	string     	float 	string 	int	int
+1	1	1	1	2057864.0	2124292.4	43113.5	53330.0	+	5.15	insertion_56211I3D0	1	1
+2	1	2	2	1952039.5	1923222.0	62229.0	64835.5	-	10.82	insertion_26211I4D0	3	3
+3	1	2	2	1681454.6	1634198.7	305196.0	315804.0	-	39.07	insertion_36647I4D1	3	3
+4	1	2	2	1374532.2	1367425.4	573796.0	693502.0	-	70.59	deletion_112599I1D12	3	3
+5	1	2	2	817695.0	780844.0	1242392.0	1264030.0	-	93.51	insertion_15213I2D0	3	3
+6	1	2	2	709625.4	698779.1	1334471.0	1395635.0	-	84.30	deletion_50317I0D10	3	3
