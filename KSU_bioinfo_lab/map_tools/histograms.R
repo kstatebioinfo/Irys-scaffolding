@@ -52,22 +52,22 @@ text(1,2,c, pos=4, cex=1.5)
 text(1,1,d, pos=4, cex=1.5)
 #points(rep(1,4),1:4, pch=15)
 
-plot( p1, col=c(myblue),main="Length",xlab="Molecule map lengths (kb)",ylab="Count", xaxt="n")  # first histogram
+plot( p1, col=c(myblue),main="Molecule Map Length",xlab="Per molecule map length (kb)",ylab="Count", xaxt="n")  # first histogram
 at <- seq(from = 0, to = max(lengths$Lengths), by = 100)
 axis(side = 1, at = at)
-plot( p2, col=c(myblue),main="Average Molecule Map Intensity",xlab="Molecule map average intensities",ylab="Count", xaxt="n")  # first histogram
+plot( p2, col=c(myblue),main="Average Molecule Map Intensity",xlab="Per molecule map average backbone intensity",ylab="Count", xaxt="n")  # first histogram
 at <- seq(from = 0, to = max(mol_intensities$Mol_intensities), by = 0.1)
 axis(side = 1, at = at)
-plot( p3, col=c(myblue),main="Average Molecule Map SNR",xlab="Molecule map average SNRs (SNRs above 50 not shown)",ylab="Count", xaxt="n")  # first histogram
+plot( p3, col=c(myblue),main="Average Molecule Map SNR",xlab="Per molecule map average backbone SNR (SNRs above 50 not shown)",ylab="Count", xaxt="n")  # first histogram
 at <- seq(from = 0, max(mol_snrs$Mol_SNRs), by = 1)
 axis(side = 1, at = at)
-plot( p4, col=c(myblue),main="Number of labels",xlab="Molecule map average number of labels (molecules with 200 or more labels not shown)",ylab="Count", xaxt="n")  # first histogram
+plot( p4, col=c(myblue),main="Number of Labels",xlab="Per molecule map number of labels (molecules with 200 or more labels not shown)",ylab="Count", xaxt="n")  # first histogram
 at <- seq(from = 0, to = max(mol_NumberofLabels$Mol_NumberofLabels), by = 10)
 axis(side = 1, at = at)
-plot( p5, col=c(myblue),main="Per molecule map average label SNR",xlab="Molecule map average label SNR", ylab="Count", xaxt="n")  # first histogram
+plot( p5, col=c(myblue),main="Average Label SNR",xlab="Per molecule map average label SNR", ylab="Count", xaxt="n")  # first histogram
 at <- seq(from = 0, to = max(mean_label_snr$Label_MeanSNR), by = 2)
 axis(side = 1, at = at)
-plot( p6, col=c(myblue),main="Per molecule map average label intensity",xlab="Molecule map average label intensity",ylab="Count", xaxt="n")  # first histogram
+plot( p6, col=c(myblue),main="Average Label Intensity",xlab="Per molecule map average label intensity",ylab="Count", xaxt="n")  # first histogram
 at <- seq(from = 0, to = max(mean_label_intensity$Label_MeanIntensity), by = 0.02)
 axis(side = 1, at = at)
 
