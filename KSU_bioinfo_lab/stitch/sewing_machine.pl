@@ -172,11 +172,11 @@ for my $stringency (@alignments)
     ###########################################################
     #                 Get most metrics
     ###########################################################
-    my $comparison_metrics_file = "${out}/${filename}_BNGCompare.csv";
-    open (my $comparison_metrics, ">>", $comparison_metrics_file) or die "Can't open $comparison_metrics_file: $!";
+    my $comparison_metrics_temp_file = "${out}/${filename}_BNGCompare_temp.csv";
+    open (my $comparison_metrics, ">>", $comparison_metrics_temp_file) or die "Can't open $comparison_metrics_temp_file: $!";
     print $comparison_metrics "$stringency :\n";
     close($comparison_metrics);
-    my $xmap_alignments = `perl ~/BNGCompare/BNGCompare.pl -f $fasta -r $reference_maps -q ${genome_map_cmap} -x ${out}/${stringency}/${filename}_to_${genome_map_filename}.xmap -o $comparison_metrics_file`;
+    my $xmap_alignments = `perl ~/BNGCompare/BNGCompare.pl -f $fasta -r $reference_maps -q ${genome_map_cmap} -x ${out}/${stringency}/${filename}_to_${genome_map_filename}.xmap -o $comparison_metrics_temp_file`;
     print $xmap_alignments;
     ###########################################################
     #                      Flip xmap
@@ -186,7 +186,7 @@ for my $stringency (@alignments)
     ###########################################################
     #                 Get flipped metrics
     ###########################################################
-    my $flip_align =  `perl ~/BNGCompare/xmap_stats.pl -x ${out}/${stringency}/${genome_map_filename}_to_${filename}.flip -o $comparison_metrics_file`;
+    my $flip_align =  `perl ~/BNGCompare/xmap_stats.pl -x ${out}/${stringency}/${genome_map_filename}_to_${filename}.flip -o $comparison_metrics_temp_file`;
     print "$flip_align";
     ###########################################################
     #                       Stitch1
@@ -274,7 +274,7 @@ for my $stringency (@alignments)
             ###########################################################
             #                 Get super scaffold metrics
             ###########################################################
-            my $superscaffold_metrics =  `perl ~/BNGCompare/N50.pl ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold.fasta $comparison_metrics_file`;
+            my $superscaffold_metrics =  `perl ~/BNGCompare/N50.pl ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold.fasta $comparison_metrics_temp_file`;
             print $superscaffold_metrics;
             my $collapse_agp = `perl ${dirname}/../stitch/collapse_agp.pl -a $agp_list_file`;
             print $collapse_agp;
@@ -310,6 +310,67 @@ for my $stringency (@alignments)
         
     }
 }
+###########################################################
+#                 Refine BNGCompare file
+###########################################################
+my $comparison_metrics_file = "${out}/${filename}_BNGCompare.csv";
+open (my $comparison_metrics_final, ">", $comparison_metrics_file) or die "Can't open $comparison_metrics_file: $!";
+my $comparison_metrics_temp_file = "${out}/${filename}_BNGCompare_temp.csv";
+open (my $comparison_metrics, "<", $comparison_metrics_temp_file) or die "Can't open $comparison_metrics_temp_file: $!";
+my $seen_line = 0;
+my $xmap_line;
+while (<$comparison_metrics>)
+{
+    if (/,XMAP name,Breadth of alignment coverage for CMAP \(Mb\),Length of total alignment for CMAP \(Mb\)/)
+    {
+        next;
+    }
+    if (/,File Name,N50/)
+    {
+        next;
+    }
+    if (/XMAP alignment/)
+    {
+        ++$seen_line;
+        if (($seen_line == 1) || ($seen_line == 3))
+        {
+            
+            s/XMAP alignment/XMAP alignment lengths relative to the in silico maps/;
+            $xmap_line = $_;
+            next;
+            
+        }
+        if (($seen_line == 2) || ($seen_line == 4))
+        {
+            
+            s/XMAP alignment/XMAP alignment lengths relative to the genome maps/;
+            $xmap_line = "$xmap_line"."$_";
+            next;
+        }
+        
+    }
+    elsif (/Genome fasta/)
+    {
+        if (($seen_line == 2) || ($seen_line == 4))
+        {
+            s/Genome fasta/Super scaffold genome FASTA/;
+            print $comparison_metrics_final "$_";
+            print $comparison_metrics_final ",XMAP name,Breadth of alignment coverage for CMAP (Mb),Length of total alignment for CMAP (Mb)\n";
+            print $comparison_metrics_final "$xmap_line";
+            next;
+        }
+        else
+        {
+            s/Genome fasta/Genome FASTA/;
+            print $comparison_metrics_final " ,File Name,N50 (Mb),Number of Contigs,Cumulative Length (Mb)\n";
+            print $comparison_metrics_final "$_";
+            next;
+        }
+    }
+    print $comparison_metrics_final "$_";
+}
+close ($comparison_metrics_final);
+close ($comparison_metrics);
 
 print "Done iterating stitch and generating comparisons of BioNano genome maps and in silico maps\n";
 
