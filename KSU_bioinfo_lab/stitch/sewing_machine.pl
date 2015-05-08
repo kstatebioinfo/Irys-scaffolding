@@ -314,66 +314,11 @@ for my $stringency (@alignments)
 #                 Refine BNGCompare file
 ###########################################################
 my $comparison_metrics_file = "${out}/${filename}_BNGCompare.csv";
-open (my $comparison_metrics_final, ">", $comparison_metrics_file) or die "Can't open $comparison_metrics_file: $!";
 my $comparison_metrics_temp_file = "${out}/${filename}_BNGCompare_temp.csv";
-open (my $comparison_metrics, "<", $comparison_metrics_temp_file) or die "Can't open $comparison_metrics_temp_file: $!";
-my $seen_line = 0;
-my $xmap_line;
-while (<$comparison_metrics>)
-{
-    if (/,XMAP name,Breadth of alignment coverage for CMAP \(Mb\),Length of total alignment for CMAP \(Mb\)/)
-    {
-        next;
-    }
-    if (/,File Name,N50/)
-    {
-        next;
-    }
-    if (/XMAP alignment/)
-    {
-        ++$seen_line;
-        if (($seen_line == 1) || ($seen_line == 3))
-        {
-            
-            s/XMAP alignment/XMAP alignment lengths relative to the in silico maps/;
-            $xmap_line = $_;
-            next;
-            
-        }
-        if (($seen_line == 2) || ($seen_line == 4))
-        {
-            
-            s/XMAP alignment/XMAP alignment lengths relative to the genome maps/;
-            $xmap_line = "$xmap_line"."$_";
-            next;
-        }
-        
-    }
-    elsif (/Genome fasta/)
-    {
-        if (($seen_line == 2) || ($seen_line == 4))
-        {
-            s/Genome fasta/Super scaffold genome FASTA/;
-            print $comparison_metrics_final "$_";
-            print $comparison_metrics_final ",XMAP name,Breadth of alignment coverage for CMAP (Mb),Length of total alignment for CMAP (Mb)\n";
-            print $comparison_metrics_final "$xmap_line";
-            next;
-        }
-        else
-        {
-            s/Genome fasta/Genome FASTA/;
-            print $comparison_metrics_final " ,File Name,N50 (Mb),Number of Contigs,Cumulative Length (Mb)\n";
-            print $comparison_metrics_final "$_";
-            next;
-        }
-    }
-    print $comparison_metrics_final "$_";
-}
-close ($comparison_metrics_final);
-close ($comparison_metrics);
+my $refineCSV = `perl ~/BNGCompare/refine_comparison.pl $comparison_metrics_temp_file $comparison_metrics_file`;
+print "$refineCSV ";
 
 print "Done iterating stitch and generating comparisons of BioNano genome maps and in silico maps\n";
-
 #################################################################################
 ##############                  Documentation                   #################
 #################################################################################
