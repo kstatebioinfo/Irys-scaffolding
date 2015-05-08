@@ -26,7 +26,6 @@ my $alignment_parameters="default_alignment";
 #my $alignment_parameters="relaxed_alignment";
 #############################################
 # Full path of the directory of the best assembly without trailing slash (e.g. /home/bionano/bionano/Dros_psue_2014_012/default_t_100 )
-my $best_dir =""; # no trailing slash (e.g. /home/bionano/bionano/Mona_scha_2014_021_de_novo/default_t_150)
 my $fasta = ""; # (e.g. /home/bionano/bionano/Trib_cast_0002_final/GCF_000227135_wrapped.fasta)
 my $cmap = ""; #(e.g. /home/bionano/bionano/Trib_cast_0002_final/GCF_000227135_wrapped_BbvCI.cmap)
 my $enzyme= ""; # space separated list that can include BspQI BbvCI BsrDI bseCI (e.g. BspQI)
@@ -37,6 +36,11 @@ my $s_algn="90"; # default value
 my $T = 1e-8; # default value
 my $neg_gap = 20000; # default value
 my $project=""; # no spaces, slashes or characters other than underscore (e.g. Trib_cast_0002)
+# Use either both "$out" and "$genome_maps":
+my $genome_maps = ''; # add assembled cmap path here if it is not in the "refineFinal1" subdirectory within the "contigs" subdirectory of the best assembly directory
+my $out =''; # no trailing slash (e.g. /home/bionano/bionano/Trib_cast_0002_final)
+# Or "$best_dir":
+my $best_dir =''; # no trailing slash (e.g. /home/bionano/bionano/Trib_cast_0002_final)
 #########################################################################
 ########################  End project variables  ########################
 #########################################################################
@@ -47,13 +51,13 @@ my $project=""; # no spaces, slashes or characters other than underscore (e.g. T
 my $optional_assembled_cmap = ''; # add assembled cmap path here if it is not in the "refineFinal1" subdirectory within the "contigs" subdirectory of the best assembly's parent directory
 my $optional_assembly_optArguments_xml = ''; # optional path to the best assembly's "optArguments.xml" file (if not within the best assembly's parent directory)
 ## If the "optArguments.xml" file is NOT within the best assembly's parent directory and you have no "optArguments.xml" file you must specify best assembly parameters below ##
-my $minlen = ''; # Minumum molecule length allowed in the sort_bnx section of the best assembly's "optArguments.xml" file (often = 150 )
-my $minsites = ''; # Minumum number of labels per single molecule map allowed in the sort_bnx section of the best assembly's "optArguments.xml" file (often = 8 )
-my $AssemblyT = ''; # p-value threshold for the BioNano assembler during the initial pair wise alignment stage
+my $minlen = 'UNKNOWN'; # Minumum molecule length allowed in the sort_bnx section of the best assembly's "optArguments.xml" file (often = 150 )
+my $minsites = 'UNKNOWN'; # Minumum number of labels per single molecule map allowed in the sort_bnx section of the best assembly's "optArguments.xml" file (often = 8 )
+my $AssemblyT = 'UNKNOWN'; # p-value threshold for the BioNano assembler during the initial pair wise alignment stage
 my $optional_assembly_pipelineReport_txt = ''; # optional path to the best assembly's "_pipelineReport.txt" file (if not within the best assembly's parent directory)
 ## If the "_pipelineReport.txt" file is NOT within the best assembly's parent directory and you have no "_pipelineReport.txt" file you must specify best assembly parameters below ##
-my $pipeline_version=''; # Was 3464 at the time this code was written
-my $refaligner_version=''; # Was 3520 at the time this code was written
+my $pipeline_version='UNKNOWN'; # Was 3464 at the time this code was written
+my $refaligner_version='UNKNOWN'; # Was 3520 at the time this code was written
 #########################################################################
 ##################  End optional project variables  #####################
 #########################################################################
@@ -81,7 +85,6 @@ GetOptions (
     'version' => \$version,
     'man' => \$man,
     'a_p|alignment_parameters:s' => \$alignment_parameters,
-    'b|best_dir:s' => \$best_dir,
     'p|proj:s' => \$project,
     'e|enzyme:s' => \$enzyme,
     'f|fasta:s' => \$fasta,
@@ -92,7 +95,10 @@ GetOptions (
     's_algn|sa:f' => \$s_algn,
     't|p-value_T:f' => \$T,
     'n|neg_gap:f' => \$neg_gap,
-    'd|de_novo' => \$de_novo
+    'd|de_novo' => \$de_novo,
+    'o|out_dir:s' => \$out,
+    'g|genome_maps:s' => \$genome_maps,
+    'b|best_dir:s' => \$best_dir
 )
 or pod2usage(2);
 pod2usage(1) if $help;
@@ -103,7 +109,10 @@ if ($version)
     exit;
 }
 my $dirname = dirname(__FILE__);
-die "Option -b or --best_dir not specified.\n" unless $best_dir; # report missing required variables
+unless (($best_dir) || (($out) && ($genome_maps)))
+{
+    die "Either specify option -b / --best_dir or both options -o / --out_dir and -g / --genome_maps.\n"; # report missing required variables
+}
 die "Option -p or --proj not specified.\n" unless $project; # report missing required variables
 die "Option -e or --enzyme not specified.\n" unless $enzyme; # report missing required variables
 unless ($de_novo)
@@ -122,13 +131,16 @@ if (-f $optional_assembly_pipelineReport_txt)
 }
 else
 {
-    ## Else check if "_pipelineReport.txt" file exists in the best assembly directory ##
-    my @possible_assembly_pipelineReport_txt = glob ("${best_dir}/*_pipelineReport.txt");
-    for my $possible_assembly_pipelineReport_txt (@possible_assembly_pipelineReport_txt)
+    if (${best_dir})
     {
-        if (-f "$possible_assembly_pipelineReport_txt")
+        ## Else check if "_pipelineReport.txt" file exists in the best assembly directory ##
+        my @possible_assembly_pipelineReport_txt = glob ("${best_dir}/*_pipelineReport.txt");
+        for my $possible_assembly_pipelineReport_txt (@possible_assembly_pipelineReport_txt)
         {
-            $assembly_pipelineReport_txt_file = $possible_assembly_pipelineReport_txt;
+            if (-f "$possible_assembly_pipelineReport_txt")
+            {
+                $assembly_pipelineReport_txt_file = $possible_assembly_pipelineReport_txt;
+            }
         }
     }
 }
@@ -143,13 +155,16 @@ if (-f $optional_assembly_optArguments_xml)
 }
 else
 {
-    ## Else check if optArguments.xml exists in the best assembly directory ##
-    my @possible_assembly_optArguments_xml = glob ("${best_dir}/*_optArguments\.xml"); # BioNano assembler automatically copies the xml file so there may be two identical copies here
-    for my $possible_assembly_optArguments_xml (@possible_assembly_optArguments_xml)
+    if (${best_dir})
     {
-        if (-f "$possible_assembly_optArguments_xml") # take the first copy if it exists
+        ## Else check if optArguments.xml exists in the best assembly directory ##
+        my @possible_assembly_optArguments_xml = glob ("${best_dir}/*_optArguments\.xml"); # BioNano assembler automatically copies the xml file so there may be two identical copies here
+        for my $possible_assembly_optArguments_xml (@possible_assembly_optArguments_xml)
         {
-            $assembly_optArguments_xml_file = $possible_assembly_optArguments_xml;
+            if (-f "$possible_assembly_optArguments_xml") # take the first copy if it exists
+            {
+                $assembly_optArguments_xml_file = $possible_assembly_optArguments_xml;
+            }
         }
     }
 }
@@ -159,10 +174,13 @@ else
 my $genome_map_cmap;
 unless($optional_assembled_cmap)
 {
-    my @genome_map_cmaps = glob("${best_dir}/contigs/*_refineFinal1/*_REFINEFINAL1.cmap");
-    for my $genome_map_cmap_candidate (@genome_map_cmaps)
+    if (${best_dir})
     {
-        $genome_map_cmap = $genome_map_cmap_candidate;
+        my @genome_map_cmaps = glob("${best_dir}/contigs/*_refineFinal1/*_REFINEFINAL1.cmap");
+        for my $genome_map_cmap_candidate (@genome_map_cmaps)
+        {
+            $genome_map_cmap = $genome_map_cmap_candidate;
+        }
     }
 }
 else
@@ -173,6 +191,25 @@ my (${genome_map_filename}, ${genome_map_directories}, ${genome_map_suffix});
 if (-f $genome_map_cmap)
 {
     (${genome_map_filename}, ${genome_map_directories}, ${genome_map_suffix}) = fileparse($genome_map_cmap,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
+}
+###########################################################
+#                Get/create output directory
+###########################################################
+unless($out)
+{
+    my @outs = glob("${best_dir}/..");
+    for my $path (@outs)
+    {
+        $out = $path;
+    }
+    
+}
+else
+{
+    unless (-d $out)
+    {
+        mkdir($out) or die "Can't create $out: $!";
+    }
 }
 ###########################################################
 #          Sanity check project variables section
@@ -201,7 +238,7 @@ unless($enzyme =~ /(BspQI|BbvCI|BsrDI|bseCI)/)
 ###########################################################
 #          Check that report directory already exists
 ###########################################################
-my $report_dir = "$best_dir/../$project";
+my $report_dir = "${out}/$project";
 unless (-d "$report_dir")
 {
     if ($de_novo)
@@ -216,7 +253,7 @@ unless (-d "$report_dir")
 ###########################################################
 #          Create text file for report
 ###########################################################
-my $report_file = "${best_dir}/../report.txt";
+my $report_file = "${out}/report.txt";
 open (my $report, ">", $report_file) or die "Can't open $report_file: $!";
 
 ###########################################################
@@ -342,7 +379,7 @@ unless($de_novo)
     {
         die "Can't create $report_dir/align_in_silico_xmap/";
     }
-    my $in_silico_align_dir_path = "${best_dir}/../${alignment_parameters}";
+    my $in_silico_align_dir_path = "${out}/${alignment_parameters}";
     opendir (my $in_silico_align_dir, $in_silico_align_dir_path) or die "Can't open $in_silico_align_dir_path: $!";
     my $prefix;
     for my $file (readdir $in_silico_align_dir)
@@ -385,54 +422,30 @@ unless($de_novo)
     #          Prepare: CSV file
     ###########################################################
     print "Preparing final BNGCompare.csv file...\n\n";
-    my $bng_compare_file = glob ("${best_dir}/../*_BNGCompare.csv");
+    my $bng_compare_file = glob ("${out}/*_BNGCompare.csv");
+    my (${bng_compare_filename}, ${bng_compare_directories}, ${bng_compare_suffix}) = fileparse($bng_compare_file,qr/\.[^.]*/); # directories has trailing slash and suffix includes dot in suffix
+    my $final_bng_compare_file = "${bng_compare_directories}${bng_compare_filename}_final.csv";
+    open (my $final_bng_compare, ">", $final_bng_compare_file) or die "Can't open $final_bng_compare_file: $!";
     my @metrics;
-    my $final_bng_compare_file;
     if (-f $bng_compare_file)
     {
         open (my $bng_compare, "<", $bng_compare_file) or die "Can't open $bng_compare_file: $!";
         my $first_section = 1;
         while (<$bng_compare>)
         {
-            chomp;
+#            chomp;
             if (/^relaxed_alignment/)
             {
                 $first_section = 0;
             }
             if (($alignment_parameters eq "default_alignment") && ($first_section == 1))
             {
-                push (@metrics,$_);
+                print $final_bng_compare "$_";
             }
             elsif (($alignment_parameters eq "relaxed_alignment") && ($first_section == 0))
             {
-                push (@metrics,$_);
+                print $final_bng_compare "$_";
             }
-        }
-        my (${bng_compare_filename}, ${bng_compare_directories}, ${bng_compare_suffix}) = fileparse($bng_compare_file,qr/\.[^.]*/); # directories has trailing slash and suffix includes dot in suffix
-        $final_bng_compare_file = "${bng_compare_directories}${bng_compare_filename}_final.csv";
-        open (my $final_bng_compare, ">", $final_bng_compare_file) or die "Can't open $final_bng_compare_file: $!";
-        print $final_bng_compare "$metrics[1],Percent of CMAP covered by alignment\n";
-        ## Get percent aligned for Reference
-        my ($breadth_of_align_fasta) = (split (/\,/, $metrics[2]))[2];
-        my ($length_fasta) = (split (/\,/, $metrics[5]))[4];
-        my $percent_aligned_fasta = ($breadth_of_align_fasta/$length_fasta)*100;
-        $metrics[2] =~ s/^XMAP alignment/XMAP alignment lengths relative to the in silico maps/;
-        print $final_bng_compare "$metrics[2],$percent_aligned_fasta\n";
-        ## Get percent aligned for Query
-        my ($breadth_of_align_query) = (split (/\,/, $metrics[9]))[2];
-        my ($length_query) = (split (/\,/, $metrics[7]))[4];
-        my $percent_aligned_query = ($breadth_of_align_query/$length_query)*100;
-        $metrics[9] =~ s/^XMAP alignment/XMAP alignment lengths relative to the genome maps/;
-        print $final_bng_compare "$metrics[9],$percent_aligned_query\n";
-        print $final_bng_compare "$metrics[4]\n";
-        $metrics[5] =~ s/^Genome fasta/Genome FASTA/;
-        print $final_bng_compare "$metrics[5]\n";
-        print $final_bng_compare "$metrics[6]\n";
-        print $final_bng_compare "$metrics[7]\n";
-        if (($metrics[12]) && ($metrics[12] =~ /superscaffold/)) # test that a superscaffolding line exists in _BNGCompare.csv
-        {
-            $metrics[12] =~ s/^Genome fasta/Super scaffold FASTA/;
-            print $final_bng_compare "$metrics[12]\n";
         }
     }
 }
@@ -457,7 +470,7 @@ else
 #     Check if Super scaffolds were created
 ###########################################################
 print "Checking if Super scaffolds were created...\n\n";
-my @stitch_dir_paths = glob "${best_dir}/../${alignment_parameters}/stitch*"; # glob returns no trailing slash
+my @stitch_dir_paths = glob "${out}/${alignment_parameters}/stitch*"; # glob returns no trailing slash
 my $stitch_dir_path;
 my $num_iterations;
 if (scalar(@stitch_dir_paths) == 1)
@@ -476,7 +489,7 @@ elsif (scalar(@stitch_dir_paths) == 0)
 }
 else
 {
-    die "You have more than one stitch directory in ${best_dir}/../${alignment_parameters}/ delete any failed directories and any intermediate directories leaving only the final iteration to add any new superscaffolds and rerun this script. This should have been done when you ran run_compare.pl.\n";
+    die "You have more than one stitch directory in ${out}/${alignment_parameters}/ delete any failed directories and any intermediate directories leaving only the final iteration to add any new superscaffolds and rerun this script. This should have been done when you ran run_compare.pl.\n";
 }
 ###########################################################
 #      Prepare:Get stitch version and parameters
@@ -538,9 +551,9 @@ print $report "Super-scaffolding of fasta genome using Bionano consensus map\n__
 ###########################################################
 FINISH:
 print "Compressing files...\n\n";
-my $compress_log_file = "${best_dir}/..compress_log.txt";
+my $compress_log_file = "${out}/compress_log.txt";
 open (my $compress_log, ">", $compress_log_file) or die "Can't open $compress_log_file: $!";
-my $compress = `cd ${best_dir}/.. ; tar -czvf ${project}.tar.gz $project`;
+my $compress = `cd ${out} ; tar -czvf ${project}.tar.gz $project`;
 print $compress_log "$compress";
 ###########################################################
 #          Print to report: Text File inventory
@@ -573,7 +586,8 @@ Documentation options:
 
 Required options:
 
-    -b	     best assembly directory
+    -o	     output directory
+    -g	     genome map CMAP file
     -p	     project
     -e	     enzyme
 
@@ -581,6 +595,10 @@ Required options (unless de novo project):
 
     -f	     scaffold (reference) FASTA
     -r	     reference CMAP
+ 
+Required options (for assemble_XeonPhi pipeline):
+
+    -b	     best assembly directory (replaces -o and -g)
 
 Required options (if de novo project):
  
@@ -608,10 +626,14 @@ Print a brief help message and exits.
 
 Prints the more detailed manual page with output details and examples and exits.
 
-=item B<-b, --best_dir>
+=item B<-o, --out_dir>
 
-Full path of the user selected directory of the "best" assembly without trailing slash (e.g. /home/bionano/bionano/Dros_psue_2014_012/default_t_100 ).
+Path of the user selected output directory without trailing slash (e.g. -o ~/stitch_out ).
 
+=item B<-g, --genome_maps>
+
+Path of the CMAP file containing genome maps assembled from single molecule maps (e.g. -g ~/Irys-scaffolding/KSU_bioinfo_lab/sample_output_directory/BioNano_consensus_cmap/ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1.cmap ).
+ 
 =item B<-p, --project>
 
 The project name with no spaces, slashes or characters other than underscore (e.g. Trib_cast_0002).
@@ -627,6 +649,10 @@ The FASTA that will be super-scaffolded based on alignment to the IrysView assem
 =item B<-r, --r_cmap>
 
 The reference CMAP produced from your sequence FASTA file.
+ 
+=item B<-b, --best_dir>
+
+Path of the user selected directory of the "best" assembly without trailing slash (e.g. ~/Esch_coli_1_2015_000/default_t_100 ). This parameter replaces -o and -g when using the assemble_XeonPhi pipeline.
 
 =item B<-d, --de_novo>
 
