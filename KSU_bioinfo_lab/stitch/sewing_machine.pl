@@ -71,7 +71,7 @@ GetOptions (
     'n|neg_gap:f' => \$neg_gap,
     'o|out_dir:s' => \$out,
     'g|genome_maps:s' => \$genome_maps,
-    'b|best_dir:s' => \$best_dir,
+    'b|best_dir:s' => \$best_dir
 )
 or pod2usage(2);
 pod2usage(1) if $help;

@@ -152,18 +152,17 @@ The file `~/sample_assembly_working_directory/Assembly_parameter_tests.csv` has 
 Read about the software in this section:
 
 ```
-perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/run_compare.pl -help
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/sewing_machine.pl -help
 ```
 
-`run_compare.pl` is a script that compiles assembly metrics and runs Stitch for the "best" assembly in all of the possible directories:'strict_t', 'default_t',
-'relaxed_t', etc. 
+`sewing_machine.pl` is a script that compiles assembly metrics and runs Stitch for the "best" assembly in all of the possible directories:'strict_t', 'default_t','relaxed_t', etc. 
 
 Stitch filters alignment XMAP files by confidence and the percent of the maximum potential length of the alignment. The first settings for confidence and the minimum percent of the full potential length of the alignment should be set to include the range that the researcher decides represent high quality alignments after viewing raw XMAPs. Some alignments have lower than optimal confidence scores because of low label density or short sequence-based scaffold length. The second set of filters should have a user-defined lower minimum confidence score, but a much higher percent of the maximum potential length of the alignment in order to capture these alignments. Resultant filtered XMAPs should be examined in IrysView to see that the alignments agree with what the user would manually select. Stitch finds the best super-scaffolding alignments each run. It is run iteratively by `run_compare.pl` until all super-scaffolds have been found.
 
 We will start with the default filtering parameters for confidence scores (`--f_con` and `--s_con`) and percent of possible alignment thresholds (`--f_algn` and `--s_algn`). Generally we start with default parameters and then test more or less strict options if our first results are not satisfactory.
 
 ```
-perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/run_compare.pl -b ~/sample_assembly_working_directory/strict_t_150 -p Esch_coli_1_2015_000 -e BspQI -f ~/sample_assembly_working_directory/fasta_and_cmap/NC_010473_mock_scaffolds.fna -r ~/sample_assembly_working_directory/fasta_and_cmap/cmaps/NC_010473_mock_scaffolds_BspQI.cmap
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/sewing_machine.pl -b ~/sample_assembly_working_directory/strict_t_150 -p Esch_coli_1_2015_000 -e BspQI -f ~/sample_assembly_working_directory/fasta_and_cmap/NC_010473_mock_scaffolds.fna -r ~/sample_assembly_working_directory/fasta_and_cmap/cmaps/NC_010473_mock_scaffolds_BspQI.cmap
 ```
 
 ###Step 9: Choose your best alignment parameters and summarize your results
