@@ -1,5 +1,6 @@
-![Alt text](https://raw.github.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/scaffolding.png)
 ##Sewing Machine pipeline: iteratively super scaffold genome FASTA files with BioNano genome maps using `stitch.pl`
+
+<a href="url"><img src="https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/pipelines_for_bionano_data_wide.png" align="left" width="348" ></a>
 
 All of the scripts you will need to complete this lab as well as the sample datasets will be copied to your computer as you follow the instructions below. You should type or paste the text in the beige code block into your terminal as you follow along with the instructions below. If you are not used to commandline, practice with real data is one of the best ways to learn.
 
@@ -8,6 +9,8 @@ If you would like a quick primer on basic linux commands try these 10 minute les
 We will be using a CMAP file of genome maps assembled from single molecule maps. The molecule maps were genrated from Escherichia coli genomic DNA. We will also be using a CMAP file of in silico maps and a FASTA file (both of which represent a fragmented copy of the Escherichia coli str. K-12 substr. DH10B genome).
 
 The sewing machine pipeline will align the genome maps and the in silico maps using both a default and relaxed set of alignment parameters. These alignments will be used by `stitch.pl` to superscaffold the fragmented E. coli str. K-12 substr. DH10B genome.
+
+![Alt text](https://raw.github.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/scaffolding.png)
 
 Before inferring super scaffolds from XMAP alignment files, `stitch.pl` filters low quality alignments by confidence score.
 
