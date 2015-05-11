@@ -1,6 +1,6 @@
 SUMMARY
 
-**AssembleIrys.pl -** Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters. Runs on the Beocat SGE cluster.
+**AssembleIrysCluster.pl -** Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters. Runs on the Beocat SGE cluster.
 
 Workflow diagram
 ![Alt text](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_SGE_cluster/bionano%20assembly%20workflow.png)
@@ -15,7 +15,7 @@ Workflow diagram
     
 USAGE
     
-    perl AssembleIrys.pl -g <genome size in Mb> -r <reference CMAP> -b <directory with BNX files> -p <project name>
+    perl AssembleIrysCluster.pl -g <genome size in Mb> -r <reference CMAP> -b <directory with BNX files> -p <project name>
     
 DEPENDENCIES
 
