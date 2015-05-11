@@ -14,8 +14,6 @@ The K-INBRE Bioinformatics Core has created easy to use pipelines for BioNano mo
 
 All pipelines have sample datasets and tutorials. Pipelines take you from either raw data received from your mapping facility or assembled genome maps to finished analysis. 
 
-
-
 No experience with command line is necessary before using these scripts but a free Beocat account is.
 
 ##Sewing Machine pipeline: iteratively super scaffold genome FASTA files with BioNano genome maps using `stitch.pl`
@@ -26,7 +24,7 @@ The sewing machine pipeline iteratively super scaffolds genome FASTA files with 
 
 The assemble XeonPhi pipeline preps raw molecule maps and writes and runs a series of assemblies for them. Then the user selects the best assembly and uses this to super scaffold the refernce FASTA genome file and summarize the final assembly metrics and alignments.
 
-The basic steps ar to first merge multiple BNXs from a single directory and plot single molecule map quality metrics. Then Rescale single molecule maps and plot rescaling factor per scan (adjusting stretch scan by scan) if reference is available. Writes scripts for assemblies with a range of parameters. 
+The basic steps are to first merge multiple BNXs from a single directory and plot single molecule map quality metrics. Then Rescale single molecule maps and plot rescaling factor per scan (adjusting stretch scan by scan) if reference is available. Writes scripts for assemblies with a range of parameters. 
 
 This pipeline uses the same basic workflow as AssembleIrys.pl and AssembleIrysCluster.pl but it runs a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. Customization may be required to run the BioNano Assembler on a different machine.
 
