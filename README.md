@@ -95,6 +95,51 @@ perl  ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/CmapById.pl -c sample_data/sa
 
 **flip.pl -** This utility script reads from a list of maps to flip from a txt file (one CMAP id per line) and creates a CMAP with the requested flips.
 
+### stitch/stitch.pl
+
+**stitch.pl -**  a package of scripts that analyze IrysView output (i.e. XMAPs). The script filters XMAPs
+       by confidence and the percent of the maximum potential length of the alignment and generates summary
+       stats of the more stringent alignments. The first settings for confidence and the minimum percent of
+       the full potential length of the alignment should be set to include the range that the researcher
+       decides represent high quality alignments after viewing raw XMAPs. Some alignments have lower than
+       optimal confidence scores because of low label density or short sequence-based scaffold length. The
+       second set of filters should have a user-defined lower minimum confidence score, but a much higher
+       percent of the maximum potential length of the alignment in order to capture these alignments.
+       Resultant XMAPs should be examined in IrysView to see that the alignments agree with what the user
+       would manually select.
+
+stitch.pl finds the best super-scaffolding alignments each run. It can be run iteratively until all
+       super-scaffolds have been found by creating a new cmap from the output super-scaffold fasta, aligning
+       this cmap as the query with the BNG consensus map as the reference and using the x_map, r_cmap and
+       the super-scaffold fasta as input for another run of stitch.pl. See [KSU_bioinfo_lab/stitch](https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab/stitch) for more details.
+
+![Alt text](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/stitch/Fig_3_detailed_stitch_steps.png)
+
+**Steps of the stitch.pl algorithm.** Consensus genome maps (blue) are shown aligned to in silico maps (green). Alignments are indicated with grey lines. CMAP orientation for in silico maps is indicated with a ”+” or ”-” for positive or negative orientation respectively. (A) The in silico maps are used as the reference. (B) The alignment is inverted and used as input for stitch.pl. (C) The alignments are filtered based on alignment length (purple) relative to total possible alignment length (black) and confidence. Here assuming all alignments have high confidence scores and the minimum percent aligned is 40% two alignments fail for aligning over less than 40% of the potential alignment length for that alignment. (D) Filtering produces an XMAP of high quality alignments with short (local) alignments removed. (E) High quality scaffolding alignments are filtered for longest and highest confidence alignment for each in silico map. The third alignment (unshaded) is filtered because the second alignment is the longest alignment for in silico map 2. (F) Passing alignments are used to super scaffold (captured gaps indicated in dark green). (G) Stitch is iterated and additional super scaffolding alignments are found using second best scaffolding alignments. (H) Iteration takes advantage of cases where in silico maps scaffold consensus genome maps as in silico map 2 does. Stitch is run iteratively until all super scaffolding alignments are found.
+
+
+
+DEPENDENCIES
+
+       git - see http://git-scm.com/book/ch1-4.html for instructions
+       BioPerl - see http://www.bioperl.org/wiki/Installing_BioPerl 
+       
+       Requires BNGCompare from https://github.com/i5K-KINBRE-script-share/BNGCompare in your home
+       directory. Also requires RefAligner. Install BioNano scripts and
+       executables in `~/scripts` and `~/tools` directories respectively. Follow the Linux installation
+       instructions in the "2.5.1 IrysSolve server RefAligner and Assembler" section of
+       http://www.bnxinstall.com/training/docs/IrysViewSoftwareInstallationGuide.pdf to install
+       RefAligner.
+ 
+USAGE
+
+See README for more details https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/stitch/README.md
+
+**Test with sample datasets**
+
+See tutorial lab to run the sewing machine pipeline with sample data https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/stitch/sewing_machine_LAB.md.
+
+
 ### assemble_SGE_cluster/AssembleIrysCluster.pl 
 
 **NOTE:** AssembleIrysCluster.pl is no longer supported. This workflow has been replaced by `AssembleIrysCluster.pl`.  `AssembleIrysCluster.pl` runs on a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. See the following tutorials for details on the new workflow: 
@@ -120,7 +165,7 @@ Workflow diagram
     
 USAGE
     
-    perl AssembleIrys.pl -g [genome size in Mb] -r [reference CMAP] -b [directory with BNX files] -p [project name]
+    perl AssembleIrysCluster.pl -g [genome size in Mb] -r [reference CMAP] -b [directory with BNX files] -p [project name]
     
 DEPENDENCIES
 
@@ -128,64 +173,6 @@ DEPENDENCIES
     Perl module XML::Simple. This can be installed using CPAN http://search.cpan.org/~grantm/XML-Simple-2.20/lib/XML/Simple.pm;
     Perl module Data::Dumper. This can be installed using CPAN http://search.cpan.org/~smueller/Data-Dumper-2.145/Dumper.pm;
     
-    
-### stitch/stitch.pl
-
-**stitch.pl -**  a package of scripts that analyze IrysView output (i.e. XMAPs). The script filters XMAPs
-       by confidence and the percent of the maximum potential length of the alignment and generates summary
-       stats of the more stringent alignments. The first settings for confidence and the minimum percent of
-       the full potential length of the alignment should be set to include the range that the researcher
-       decides represent high quality alignments after viewing raw XMAPs. Some alignments have lower than
-       optimal confidence scores because of low label density or short sequence-based scaffold length. The
-       second set of filters should have a user-defined lower minimum confidence score, but a much higher
-       percent of the maximum potential length of the alignment in order to capture these alignments.
-       Resultant XMAPs should be examined in IrysView to see that the alignments agree with what the user
-       would manually select.
-
-stitch.pl finds the best super-scaffolding alignments each run. It can be run iteratively until all
-       super-scaffolds have been found by creating a new cmap from the output super-scaffold fasta, aligning
-       this cmap as the query with the BNG consensus map as the reference and using the x_map, r_cmap and
-       the super-scaffold fasta as input for another run of stitch.pl. See [KSU_bioinfo_lab/stitch](https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab/stitch) for more details.
-
-       
-![Alt text](https://raw.github.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/scaffolding.png)
-
-
-DEPENDENCIES
-
-       git - see http://git-scm.com/book/ch1-4.html for instructions
-       bioperl - see http://www.bioperl.org/wiki/Installing_BioPerl (the scripts will run without BioPerl it is only required only to create a super-scaffold FASTA)
-       
-
-USAGE
-
-       perl analyze_irys_output.pl [options]
-
-        Documentation options:
-          -help    brief help message
-          -man     full documentation
-        Required options:
-          -r        reference CMAP
-          -x        comparison XMAP
-          -f        scaffold FASTA
-          -o        basename for the output files
-        Filtering options:
-          --f_con       first minimum confidence score
-          --f_algn      first minimum % of possible alignment
-          --s_con       second minimum confidence score
-          --s_algn      second minimum % of possible alignment
-
-**Test with sample datasets**
-```
-git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
-
-cd Irys-scaffolding/KSU_bioinfo_lab/stitch
-
-mkdir results
-
-perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
-```
-
 ### assembly_qc.pl 
 
 **assembly_qc.pl -** a script that compiles assembly metrics for assemblies in all of the possible directories:'strict_t', 'default_t', 'relaxed_t', 'strict_t/strict_ml', 'strict_t/relaxed_ml', 'default_t/strict_ml', 'default_t/relaxed_ml', 'relaxed_t/strict_ml', and 'relaxed_t/relaxed_ml'. The assemblies are created using assemble_SGE_cluster/AssembleIrysCluster.pl from https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab. The parameter `-b` should be the same th same as the `-b` parameter used for the assembly script (same with the `-p` parameter). It is the directory with the BNX files used for assembly.
@@ -198,13 +185,15 @@ perl ~/Irys-scaffolding/KSU_bioinfo_lab/assembly_qc.pl -b ~/sample_data -p My_pr
 
 These scripts were created to generate BED files of gaps in sequence-based assemblies and to run sv_detect from BioNano as a standalone pipeline but the scripts may be redundant now with the new IrysView release. If we find that they are they will be removed.
 
-### CURRENTLY UNSUPPORTED PROGRAMS:
+# CURRENTLY UNSUPPORTED PROGRAMS:
+
+Scripts in the `Irys-scaffolding/KSU_bioinfo_lab/script_archive` directory are former versions of workflows that are currently not supported.
 
 ###assemble/AssembleIrys.pl
 
 SUMMARY
 
-**AssembleIrys.pl -** Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters. This script uses the same workflow as AssembleIrysCluster.pl but it runs on local Linux machines. This script has not been updated to account for frequent changes in Bionano output format. See **AssembleIrysCluster.pl** for fequently updated scripts.
+**AssembleIrys.pl -** Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters. This script uses the same workflow as AssembleIrysCluster.pl but it runs on local Linux machines. This script has not been updated to account for frequent changes in Bionano output format. See **AssembleIrysXeonPhi.pl** for fequently updated scripts.
 
 ### analyze_irys_output/analyze_irys_output.pl
 
