@@ -75,6 +75,7 @@ Usage:
         -T           RefAligner p-value threshold (default = 1e-8)
 
 Options:
+
     -help   Print a brief help message and exits.
 
     -man    Prints the more detailed manual page with output details and
