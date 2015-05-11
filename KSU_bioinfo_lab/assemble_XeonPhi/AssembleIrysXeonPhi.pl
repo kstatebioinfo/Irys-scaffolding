@@ -145,7 +145,7 @@ __END__
 
 =head1 NAME
 
-AssembleIrysXeonPhi.pl - the package of scripts preps raw molecule maps and writes and runs a series of assemblies for them. Then the user selects the best assembly and uses this to super scaffold the refernce FASTA genome file and summarize the final assembly metrics and alignments.
+AssembleIrysXeonPhi.pl - the package of scripts preps raw molecule maps and writes and runs a series of assemblies for them. Then the user selects the best assembly and uses this to super scaffold the reference FASTA genome file and summarize the final assembly metrics and alignments.
 
 The basic steps are to first merge multiple BNXs from a single directory and plot single molecule map quality metrics. Then Rescale single molecule maps and plot rescaling factor per scan (adjusting stretch scan by scan) if reference is available. Writes scripts for assemblies with a range of parameters.
 
@@ -172,7 +172,7 @@ perl AssembleIrysXeonPhi.pl [options]
  
  Optional options:
  
-    -d	     add this flag if the project is de novo (has no refernce)
+    -d	     add this flag if the project is de novo (has no reference)
    
 =head1 OPTIONS
 
@@ -228,12 +228,6 @@ MapStatsHistograms.pdf - This file can be evaluated to check molecule map qualit
 
 B<Test with sample datasets:>
 
-git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
-
-# no test dataset is available yet but here is an example of a command
- 
-perl Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrysXeonPhi.pl -g  -a  -r  -p Test_project_name > testing_log.txt
- 
-bash assembly_commands.sh
+See tutorial lab to run the assemble XeonPhi pipeline with sample data https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_LAB.md.
 
 =cut
