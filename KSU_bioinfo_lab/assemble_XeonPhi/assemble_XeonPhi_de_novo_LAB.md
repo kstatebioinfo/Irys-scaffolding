@@ -1,5 +1,5 @@
 
-##"Raw data-to-finished assembly and assembly analysis" pipeline for BioNano molecule maps for de novo projects
+##"Raw data-to-finished de novo assembly and assembly analysis" pipeline for BioNano molecule maps
 
 <a href="url"><img src="https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/pipelines_for_bionano_data_wide.png" align="left" width="348" ></a>
 
