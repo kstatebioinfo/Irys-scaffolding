@@ -8,6 +8,9 @@ This pipeline uses the same basic workflow as AssembleIrys.pl and AssembleIrysCl
 
 See tutorial lab to run the assemble XeonPhi pipeline with sample data https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_LAB.md.
 
+For de novo projects see this tutorial lab to run the assemble XeonPhi pipeline with sample data
+https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_de_novo_LAB.md
+
 **New features (relative to AssembleIrys.pl and AssembleIrysCluster.pl):**
 
 Automatically adjust optArguments file and number of iterations to match genome size
