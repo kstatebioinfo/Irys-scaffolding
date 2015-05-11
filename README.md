@@ -14,7 +14,7 @@ The K-INBRE Bioinformatics Core has created easy to use pipelines for BioNano mo
 
 All pipelines have sample datasets and tutorials. Pipelines take you from either raw data received from your mapping facility or assembled genome maps to finished analysis. 
 
-No experience with command line is necessary before using these scripts but a free Beocat account is.
+No experience with command line is necessary before using these scripts.
 
 ##Sewing Machine pipeline: iteratively super scaffold genome FASTA files with BioNano genome maps using `stitch.pl`
 
