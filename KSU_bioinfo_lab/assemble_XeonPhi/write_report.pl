@@ -48,7 +48,6 @@ my $best_dir =''; # no trailing slash (e.g. /home/bionano/bionano/Trib_cast_0002
 #########################################################################
 ####################  Optional project variables  #######################
 #########################################################################
-my $optional_assembled_cmap = ''; # add assembled cmap path here if it is not in the "refineFinal1" subdirectory within the "contigs" subdirectory of the best assembly's parent directory
 my $optional_assembly_optArguments_xml = ''; # optional path to the best assembly's "optArguments.xml" file (if not within the best assembly's parent directory)
 ## If the "optArguments.xml" file is NOT within the best assembly's parent directory and you have no "optArguments.xml" file you must specify best assembly parameters below ##
 my $minlen = 'UNKNOWN'; # Minumum molecule length allowed in the sort_bnx section of the best assembly's "optArguments.xml" file (often = 150 )
@@ -172,7 +171,7 @@ else
 #            Get genome map CMAP file (fullpath)
 ###########################################################
 my $genome_map_cmap;
-unless($optional_assembled_cmap)
+unless($genome_maps)
 {
     if (${best_dir})
     {
@@ -185,7 +184,7 @@ unless($optional_assembled_cmap)
 }
 else
 {
-    $genome_map_cmap = $optional_assembled_cmap;
+    $genome_map_cmap = $genome_maps;
 }
 my (${genome_map_filename}, ${genome_map_directories}, ${genome_map_suffix});
 if (-f $genome_map_cmap)
@@ -241,14 +240,9 @@ unless($enzyme =~ /(BspQI|BbvCI|BsrDI|bseCI)/)
 my $report_dir = "${out}/$project";
 unless (-d "$report_dir")
 {
-    if ($de_novo)
-    {
-        mkdir $report_dir;
-    }
-    else
-    {
-        die "Exiting because $report_dir does not exist\n";
-    }
+
+    mkdir $report_dir;
+    print "Creating output directory because $report_dir does not exist\n";
 }
 ###########################################################
 #          Create text file for report
@@ -402,7 +396,7 @@ unless($de_novo)
     print "Preparing structural variant calls...\n\n";
     my $sv_directory = glob "${best_dir}/contigs/*refineFinal1_sv/merged_smaps";
     my $sv_calls_worked = glob "${best_dir}/contigs/*refineFinal1_sv/merged_smaps/*_merged.bed"; # This file should exist if structural variants were found
-    if (-d "$sv_directory")
+    if (($sv_directory) && (-d "$sv_directory"))
     {
         if ( -f "$sv_calls_worked")
         {
