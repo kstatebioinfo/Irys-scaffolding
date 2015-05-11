@@ -289,12 +289,6 @@ The script also outputs contigs, an agp, and a bed file of contigs within supers
 
 B<Test with sample datasets:>
 
-git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
-
-cd Irys-scaffolding/KSU_bioinfo_lab/stitch
-
-mkdir results
-
-perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
+Follow instructions at https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/stitch/sewing_machine_LAB.md. 
 
 =cut
