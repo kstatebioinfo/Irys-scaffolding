@@ -145,7 +145,14 @@ __END__
 
 =head1 NAME
 
-AssembleIrysXeonPhi.pl - a package of scripts run on the Beocat SGE cluster. They adjust the bases per pixel (bpp) by scan for each flowcell BNX file and then merge each flowcell into a single BNX file. Quality by flowcell is poltted in a CSV file "flowcell_summary.csv." Potential issues are reported in the output (e.g if the bpp does not return to ~500 after adjustment). The script creates optArgument.xml files and commands to run assemblies with strict, relaxed, and default p-value thresholds. The best of these along with the best p-value threshold (-T) should be used to run strict and relaxed assemblies with varing minimum lengths. Second assembly commands for each first assembly are written to the assembly_commands.sh script. They must be uncommented to run.
+AssembleIrysXeonPhi.pl - the package of scripts preps raw molecule maps and writes and runs a series of assemblies for them. Then the user selects the best assembly and uses this to super scaffold the refernce FASTA genome file and summarize the final assembly metrics and alignments.
+
+The basic steps are to first merge multiple BNXs from a single directory and plot single molecule map quality metrics. Then Rescale single molecule maps and plot rescaling factor per scan (adjusting stretch scan by scan) if reference is available. Writes scripts for assemblies with a range of parameters.
+
+This pipeline uses the same basic workflow as AssembleIrys.pl and AssembleIrysCluster.pl but it runs a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. Customization may be required to run the BioNano Assembler on a different machine.
+
+See tutorial lab to run the assemble XeonPhi pipeline with sample data https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_LAB.md.
+
 
 =head1 USAGE
 
