@@ -1,11 +1,17 @@
-![alttext](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/XeonPhibionano_assembly_workflow.png)
+
 ##"Raw data-to-finished assembly and assembly analysis" pipeline for BioNano molecule maps for de novo projects
+
+<a href="url"><img src="https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/pipelines_for_bionano_data_wide.png" align="left" width="348" ></a>
 
 All of the scripts you will need to complete this lab as well as the sample datasets will be copied to your computer as you follow the instructions below. You should type or paste the text in the beige code block into your terminal as you follow along with the instructions below. If you are not used to commandline, practice with real data is one of the best ways to learn.
 
 If you would like a quick primer on basic linux commands try these 10 minute lessons from Software Carpentry http://software-carpentry.org/v4/shell/index.html. 
 
 We will be using a BNX file of single molecule maps generated on the BioNano Irys genome mapping system from Escherichia coli genomic DNA. We will write and run a series of assemblies for them. We will then find the best assembly and summarize our final assembly metrics. 
+
+The basic steps of the assemble_XeonPhi pipeline for de novo projects are A) The Irys produces TIFF files that are converted into BNX text files of molecule maps. B) Each IrysChip produces one BNX file for each of two flowcells. C) Each BNX file in the `bnx/` subdirectory of the `-a` assembly working directory is merged and molecule map quality metrics are summarized and plotted. D) Base assembly code is determined based on estimated genome size with Default Noise parameters. E) The first assemblies are run with a variety of p-value thresholds (at least one assembly is also run with defult noise parameters). F) The best of the first assemblies (red oval) is chosen and a version of this assembly is produced with a variety of minimum molecule length filters.
+
+![alttext](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/XeonPhi_assembly_workflow_de_novo.png)
 
 As you work through this lab your should read about the software are using by generating and reading the help menus. 
 
