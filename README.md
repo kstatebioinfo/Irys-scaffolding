@@ -16,29 +16,31 @@ All pipelines have sample datasets and tutorials. Pipelines take you from either
 
 No experience with command line is necessary before using these scripts.
 
-##Sewing Machine pipeline: iteratively super scaffold genome FASTA files with BioNano genome maps using `stitch.pl`
+##Pipeline 1: Sewing Machine pipeline: iteratively super scaffold genome FASTA files with BioNano genome maps using `stitch.pl`
 
 The sewing machine pipeline iteratively super scaffolds genome FASTA files with BioNano genome maps using `stitch.pl` and the BioNano tool `RefAligner` until no new super scaffolds can be produced. The pipeline runs alignments with both default and relaxed parameters. These alignments are then used by `stitch.pl` to superscaffold a fragmented genome FASTA. See tutorial lab to run the sewing machine pipeline with sample data https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/stitch/sewing_machine_LAB.md.
 
-##"Raw data-to-finished assembly and assembly analysis" pipeline for BioNano molecule maps with a sequence-based genome FASTA
+##Pipeline 2: "Raw data-to-finished assembly and assembly analysis" pipeline for BioNano molecule maps with a sequence-based genome FASTA
 
 The assemble XeonPhi pipeline preps raw molecule maps and writes and runs a series of assemblies for them. Then the user selects the best assembly and uses this to super scaffold the reference FASTA genome file and summarize the final assembly metrics and alignments.
 
 The basic steps are to first merge multiple BNXs from a single directory and plot single molecule map quality metrics. Then rescale single molecule maps and plot rescaling factor per scan if reference is available. The rescaling step is analogous to the former "adjusting stretch scan by scan step". Next it writes scripts for assemblies with a range of parameters. After assemblies finish assembly metrics are generated and the best results are analyzed.
 
-This pipeline uses the same basic workflow as AssembleIrys.pl and AssembleIrysCluster.pl but it runs a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. Customization may be required to run the BioNano `Assembler` on a different machine.
+This pipeline uses the same basic workflow as AssembleIrys.pl and AssembleIrysCluster.pl but it runs on a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. Customization may be required to run the BioNano `Assembler` on a different machine.
 
 See tutorial lab to run the assemble XeonPhi pipeline with sample data https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_LAB.md.
 
-##"Raw data-to-finished de novo assembly and assembly analysis" pipeline for BioNano molecule maps
+##Pipeline 3: "Raw data-to-finished de novo assembly and assembly analysis" pipeline for BioNano molecule maps
 
 The assemble XeonPhi de novo pipeline preps raw molecule maps and writes and runs a series of assemblies for them. Then the user selects the best assembly then summarizes the final assembly metrics.
 
 The basic steps are to first merge multiple BNXs from a single directory and plot single molecule map quality metrics. Next it writes scripts for assemblies with a range of parameters. After assemblies finish assembly metrics are generated and the best results are analyzed.
 
-This pipeline uses the same basic workflow as AssembleIrys.pl and AssembleIrysCluster.pl but it runs a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. Customization may be required to run the BioNano `Assembler` on a different machine.
+This pipeline uses the same basic workflow as AssembleIrys.pl and AssembleIrysCluster.pl but it runs on a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. Customization may be required to run the BioNano `Assembler` on a different machine.
 
 See tutorial lab to run the assemble XeonPhi pipeline with sample data https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_de_novo_LAB.md. 
+
+#Other material and scripts for BioNano data
 
 ###intro_material
 
@@ -55,24 +57,24 @@ Examples of how work with BioNano software from the KSU Bioinformatics Core.
         
 ### map_tools 
 
-**cmap_stats.pl -** Script outputs count of cmaps, cummulative lengths of cmaps and N50 of cmaps. Tested on CMAP File Version: 0.1.
+**cmap_stats.pl -** Script outputs count of cmaps, cumulative lengths of cmaps and N50 of cmaps. Tested on CMAP File Version: 0.1.
 
 ```
-perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/cmap_stats.pl -c sample_data/sample.cmap
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/cmap_stats.pl -c ~/Irys-scaffolding/KSU_bioinfo_lab/sample_output_directory/BioNano_consensus_cmap/ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1.cmap
 ```
 
 **xmap_stats.pl -** Script outputs breadth of alignment coverage and total aligned length from an xmap. Tested on XMAP File Version: 0.1. "Breadth of alignment coverage" is the number of bases covered by aligned maps. This is equivalent to "Total Unique Aligned Len(Mb)". "Total alignment length is the total length of the alignment. This is equivalent to "Total Aligned Len(Mb)".
 
 ```
-perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/xmap_stats.pl -x sample_data/sample.xmap
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/xmap_stats.pl -x ~/Irys-scaffolding/KSU_bioinfo_lab/sample_output_directory/align_in_silico_xmap/NC_010473_mock_scaffolds_to_ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1.xmap
 ```
 
-**bnx_stats.pl** - Script outputs count of molecule maps in BNX files, cummulative lengths of molecule maps and N50 of molecule maps. Script also outputs a PDF with these metrics as well as histograms of molecule map quality metrics. Tested on BNX File Version 1.0 however it should work on Version 1.2. The user inputs a list of BNX files or a glob as the final arguments to script. Users can filter results by min molecule length in kb using the `-l` flag. Things to add include switching between QC and cleaning.
+**bnx_stats.pl** - Script outputs count of molecule maps in BNX files, cumulative lengths of molecule maps and N50 of molecule maps. Script also outputs a PDF with these metrics as well as histograms of molecule map quality metrics. Tested on BNX File Version 1.0 and Version 1.2. The user inputs a list of BNX files or a glob as the final arguments to script. Users can filter results by min molecule length in kb using the `-l` flag. Things to add include switching between QC and cleaning.
  
 Script has no options other than help menus and min length currently but it was designed to be adapted into a molecule cleaning script similar to prinseq or fastx. Feel free to fork this and add your own filters.
 
 ```
-perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/bnx_stats.pl -l 150 sample_data/Molecules*.bnx
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/bnx_stats.pl -l 150 /home/bionano/Irys-scaffolding/KSU_bioinfo_lab/sample_output_directory/Datasets/*/*/Molecules.bnx
 ```
 
 **hybridScaffold_finish_fasta.pl** - Script creates new FASTA files including new hybrid sequences output by hybridScaffold and all sequences that were not used by hybridScaffold with their original headers. Also outputs a text file list of the headers for sequences that were used to make the new hybrid sequences.
@@ -95,9 +97,15 @@ perl  ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/CmapById.pl -c sample_data/sa
 
 ### assemble_SGE_cluster/AssembleIrysCluster.pl 
 
+**NOTE:** AssembleIrysCluster.pl is no longer supported. This workflow has been replaced by `AssembleIrysCluster.pl`.  `AssembleIrysCluster.pl` runs on a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. See the following tutorials for details on the new workflow: 
+
+https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_LAB.md
+
+https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_de_novo_LAB.md
+
 SUMMARY
 
-**AssembleIrysCluster.pl -** Adjusts stretch by scan. Merges BNXs and writes scripts for assemblies with a range of parameters. This script uses the same workflow as AssembleIrys.pl but it runs on the Beocat SGE cluster.
+**AssembleIrysCluster.pl -** Adjusts stretch by scan. Merges BNXs and writes scripts for assemblies with a range of parameters. This script uses the same workflow as AssembleIrys.pl but it runs on the Beocat SGE cluster. 
 
 Workflow diagram
 ![Alt text](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_SGE_cluster/bionano%20assembly%20workflow.png)
