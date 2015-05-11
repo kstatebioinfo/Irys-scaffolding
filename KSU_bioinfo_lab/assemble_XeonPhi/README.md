@@ -51,45 +51,52 @@ perl AssembleIrys.pl -g [genome size in Mb] -r [reference CMAP] -a [the assembly
 
 ```
 Usage:
-perl AssembleIrysXeonPhi.pl [options]
+    perl AssembleIrysXeonPhi.pl [options]
 
-Documentation options:
+     Documentation options:
 
--help    brief help message
--man     full documentation
+       -help    brief help message
+       -man     full documentation
 
-Required options:
+     Required options:
 
--a       the assembly working directory for a project
--g       genome size in Mb
--r       reference CMAP
--p       project name for all assemblies
+        -a       the assembly working directory for a project
+        -g       genome size in Mb
+        -r       reference CMAP
+        -p       project name for all assemblies
+
+     Optional options:
+
+        -d       add this flag if the project is de novo (has no refernce)
 
 Options:
+    -help   Print a brief help message and exits.
 
--help   Print a brief help message and exits.
+    -man    Prints the more detailed manual page with output details and
+            exits.
 
--man    Prints the more detailed manual page with output details and
-exits.
+    -a, --assembly_dir
+            The assembly working directory for a project. This should
+            include the subdirectory "bnx" (any BNX in this directory will
+            be used in assembly). Use absolute not relative paths. Do not
+            use a trailing "/" for this directory.
 
--a, --assembly_dir
-The assembly working directory for a project. This should
-include the subdirectory "bnx" (any BNX in this directory will
-be used in assembly). Use absolute not relative paths. Do not
-use a trailing "/" for this directory.
+    -g, --genome
+            The estimated size of the genome in Mb.
 
--g, --genome
-The estimated size of the genome in Mb.
+    -r, --ref
+            The full path to the reference genome CMAP.
 
--r, --ref
-The full path to the reference genome CMAP.
+    -p, --project
+            The project id. This will be used to name all assemblies
 
--p, --project
-The project id. This will be used to name all assemblies
-
+    -d, --de_novo
+            Add this flag to the command if a project is de novo (i.e. has
+            no reference). Any step that requires a reference will then be
+            skipped.
 ```
 
 DEPENDENCIES
 
-Perl and R
+Perl, R and BioPerl
 
