@@ -1,6 +1,6 @@
-#NOTE: AssembleIrysCluster.pl is no longer supported. 
+#NOTE: AssembleIrysCluster.pl is no longer supported. This workflow has been replaced by AssembleIrysXeonPhi.pl.
 
-This workflow has been replaced by AssembleIrysXeonPhi.pl. AssembleIrysXeonPhi.pl runs on a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. See the following tutorials for details on the new workflow:
+`AssembleIrysXeonPhi.pl` runs on a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. See the following tutorials for details on the new workflow:
 
 https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_LAB.md
 
