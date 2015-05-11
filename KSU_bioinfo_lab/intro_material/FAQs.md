@@ -3,6 +3,10 @@ Irys-scaffolding FAQs
 
 ###What methods does your group use to improve genome assemblies with BioNano molecule maps?
 
+The sewing machine pipeline iteratively super scaffolds genome FASTA files with BioNano genome maps using stitch.pl and the BioNano tool RefAligner until no new super scaffolds can be produced. The pipeline runs alignments with both default and relaxed parameters. These alignments are then used by stitch.pl to superscaffold a fragmented genome FASTA. See tutorial lab to run the sewing machine pipeline with sample data https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/stitch/sewing_machine_LAB.md.
+
+###What methods does your group use to assemble BioNano molecule maps and improve existing genome sequence assemblies?
+
 We use `AssembleIrysXeonPhi.pl`. The assemble XeonPhi script preps raw molecule maps and writes and runs a series of assemblies for them. Then the user selects the best assembly and uses this to super scaffold the reference FASTA genome file and summarize the final assembly metrics and alignments.
 
 The basic steps of our workflow are to first merge multiple BNXs from a single directory and plot single molecule map quality metrics. Then rescale single molecule maps and plot rescaling factor per scan if reference is available. The rescaling step is analogous to the former "adjusting stretch scan by scan step". Next it writes scripts for assemblies with a range of parameters. After assemblies finish assembly metrics are genrated and the best results are analyzed.
