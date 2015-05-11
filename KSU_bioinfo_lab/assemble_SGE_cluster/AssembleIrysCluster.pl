@@ -13,10 +13,13 @@ use warnings;
 use File::Basename; # enable manipulating of the full path
 use Getopt::Long;
 use Pod::Usage;
+use Term::ANSIColor;
 ##################################################################################
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
+print colored ("#          WARNING: SCRIPT CURRENTLY UNSUPPORTED          #", 'bold white on_blue'), "\n";
+print colored ("# SEE: https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab/assemble_XeonPhi  #", 'bold white on_blue'), "\n";        #", 'bold white on_blue'), "\n";
 print "#  AssembleIrysCluster.pl Version 1.6.1                   #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 1/27/14                    #\n";
