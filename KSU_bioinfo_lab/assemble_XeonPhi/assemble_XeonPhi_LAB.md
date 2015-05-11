@@ -6,9 +6,9 @@ All of the scripts you will need to complete this lab as well as the sample data
 
 If you would like a quick primer on basic linux commands try these 10 minute lessons from Software Carpentry http://software-carpentry.org/v4/shell/index.html. 
 
-![alttext](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/XeonPhibionano_assembly_workflow.png)
-
 We will be using a BNX file of single molecule maps generated on the BioNano Irys genome mapping system from Escherichia coli genomic DNA. We will prep these raw molecule maps and write and run a series of assemblies for them. We will then find the best assembly and use this to super scaffold and compare with a fragmented copy of the Escherichia coli str. K-12 substr. DH10B genome and summarize our final assembly metrics and alignments. 
+
+![alttext](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/XeonPhibionano_assembly_workflow.png)
 
 As you work through this lab your should read about the software are using by generating and reading the help menus. 
 
