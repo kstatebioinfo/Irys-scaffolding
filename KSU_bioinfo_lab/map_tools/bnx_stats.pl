@@ -39,10 +39,12 @@ my $input_bnx;
 my $man = 0;
 my $help = 0;
 my $min_length_kb = 0;
+my $min_num_labels = 0;
 GetOptions (
     'help|?' => \$help,
     'man' => \$man,
     'l|min_length_kb:s' => \$min_length_kb,
+    'n|min_num_labels:s' => \$min_num_labels
 )
 or pod2usage(2);
 pod2usage(1) if $help;
@@ -132,7 +134,11 @@ for my $input_bnx (@ARGV)
                     next;
                 }
                 my $Lengthkb = $Length/1000; # use length data (removed int)
-                if ($Lengthkb < $min_length_kb) #skip molecule map if min length if greater than length of current molecule map
+                if ($Lengthkb < $min_length_kb) #skip molecule map if min length greater than length of current molecule map
+                {
+                    next;
+                }
+                if ($NumberofLabels < $min_num_labels) #skip molecule map if min number of labels is greater than current number of labels for this molecule map
                 {
                     next;
                 }
@@ -258,6 +264,10 @@ Prints the more detailed manual page with output details and examples and exits.
 
 Minimum molecule length in kb. Molecules shorter than this are not analyzed. Currently this script does not produce filtered BNX files so this value will cause reports to include only molecule maps longer than the value but will not change the BNX file (Default = 0).
 
+=item B<-n, --min_num_labels>
+
+Minimum number of labels per molecule map. Molecules with fewer labels than this are not analyzed. Currently this script does not produce filtered BNX files so this value will cause reports to include only molecule maps with a label count equal to or greater than the value but will not change the BNX file (Default = 0).
+ 
 =back
 
 =head1 DESCRIPTION
