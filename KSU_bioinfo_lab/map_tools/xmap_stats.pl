@@ -43,6 +43,7 @@ GetOptions (
 or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
+die "Option -x or --input_xmap not specified.\n" unless $input_xmap; # report missing required variables
 
 ###############################################################################
 ##############              run                              ##################
@@ -88,6 +89,14 @@ while (<$xmap>)
             $breadth += $end_cov - $start_cov;
         }
     }
+}
+if (!$breadth)
+{
+    $breadth = 0;
+}
+if (!$total_length)
+{
+    $total_length = 0;
 }
 $breadth = $breadth/1000000;
 $total_length = $total_length/1000000;

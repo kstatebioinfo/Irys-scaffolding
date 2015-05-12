@@ -1,6 +1,14 @@
+#NOTE: AssembleIrysCluster.pl is no longer supported. This workflow has been replaced by AssembleIrysXeonPhi.pl.
+
+`AssembleIrysXeonPhi.pl` runs on a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. See the following tutorials for details on the new workflow:
+
+https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_LAB.md
+
+https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_de_novo_LAB.md
+
 SUMMARY
 
-**AssembleIrys.pl -** Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters. Runs on the Beocat SGE cluster.
+**AssembleIrysCluster.pl -** Adjusts stretch by scan. Merges BNXs and initiate assemblies with a range of parameters. Runs on the Beocat SGE cluster.
 
 Workflow diagram
 ![Alt text](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_SGE_cluster/bionano%20assembly%20workflow.png)
@@ -15,7 +23,7 @@ Workflow diagram
     
 USAGE
     
-    perl AssembleIrys.pl -g <genome size in Mb> -r <reference CMAP> -b <directory with BNX files> -p <project name>
+    perl AssembleIrysCluster.pl -g <genome size in Mb> -r <reference CMAP> -b <directory with BNX files> -p <project name>
     
 DEPENDENCIES
 

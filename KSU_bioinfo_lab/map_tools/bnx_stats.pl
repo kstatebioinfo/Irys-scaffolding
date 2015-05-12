@@ -25,7 +25,7 @@ use Pod::Usage;
 print "###########################################################\n";
 print colored ("#             NOTE: SCRIPT ASSUMES DATA WITH              #", 'bold white on_blue'), "\n";
 print colored ("#     BACKBONE & A SINGLE CHANNEL OF LABEL INFORMATION    #", 'bold white on_blue'), "\n";
-print "#   bnx_stats.pl Version 1.0                              #\n";
+print "#   bnx_stats.pl Version 1.1                              #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 01/15/15                   #\n";
 print "#  github.com/i5K-KINBRE-script-share                     #\n";
@@ -39,15 +39,22 @@ my $input_bnx;
 my $man = 0;
 my $help = 0;
 my $min_length_kb = 0;
+my $min_num_labels = 0;
 GetOptions (
     'help|?' => \$help,
     'man' => \$man,
     'l|min_length_kb:s' => \$min_length_kb,
+    'n|min_num_labels:s' => \$min_num_labels
 )
 or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 my $dirname = dirname(__FILE__);
+if (scalar(@ARGV) == 0)
+{
+    die "No BNX flies were selected.\n";
+}
+
 ###############################################################################
 ##############                Subroutines                    ##################
 ###############################################################################
@@ -127,7 +134,11 @@ for my $input_bnx (@ARGV)
                     next;
                 }
                 my $Lengthkb = $Length/1000; # use length data (removed int)
-                if ($Lengthkb < $min_length_kb) #skip molecule map if min length if greater than length of current molecule map
+                if ($Lengthkb < $min_length_kb) #skip molecule map if min length greater than length of current molecule map
+                {
+                    next;
+                }
+                if ($NumberofLabels < $min_num_labels) #skip molecule map if min number of labels is greater than current number of labels for this molecule map
                 {
                     next;
                 }
@@ -137,8 +148,14 @@ for my $input_bnx (@ARGV)
                 print $temp_bnx_lengths "$Lengthkb\n";
                 
                 print $temp_mol_intensities "$AvgIntensity\n";
-                print $temp_mol_snrs "$SNR\n";
-                print $temp_mol_NumberofLabels "$NumberofLabels\n";
+                unless ($SNR > 50)
+                {
+                    print $temp_mol_snrs "$SNR\n";
+                }
+                unless ($NumberofLabels > 200)
+                {
+                    print $temp_mol_NumberofLabels "$NumberofLabels\n";
+                }
                 #########################################################################
                 ##############              Label SNR line             ##################
                 #########################################################################
@@ -191,11 +208,13 @@ print "Number of molecule maps: $bnx_count\n";
 ###############################################################################
 print "Graphing data...\n";
 
-my $graph_data = `Rscript ${dirname}/histograms.R temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_snrs.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab 'Molecule map N50: $current_length (kb)' 'Cumulative length of molecule maps: $total_length (Mb)' 'Number of molecule maps: $bnx_count'`;
+my $graph_data = `Rscript ${dirname}/histograms.R temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_snrs.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab 'Summary metrics for molecule maps > $min_length_kb kb within all BNX files' 'Molecule map N50: $current_length (kb)' 'Cumulative length of molecule maps: $total_length (Mb)' 'Number of molecule maps: $bnx_count'`;
 print "$graph_data\n";
-unlink qw/temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_snrs.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab Rplots.pdf/;
+unlink qw/temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab Rplots.pdf temp_bnx_mol_snrs.tab/;
 
-print "Done\n";
+
+
+print "Done graphing BNX QC metrics\n";
 ###############################################################################
 ##############                  Documentation                ##################
 ###############################################################################
@@ -207,6 +226,10 @@ __END__
 bnx_stats.pl - Script outputs count of molecule maps in BNX files, cumulative lengths of molecule maps and N50 of molecule maps. Script also outputs a PDF with these metrics as well as histograms of molecule map quality metrics. Tested on BNX File Version 1.0 however it should work on Version 1.2 as well. The user inputs a list of BNX files or a glob as the final arguments to script. Things to add include filtering by min molecule length and switching between QC and cleaning.
  
 Script has no options other than help menus currently but it was designed to be adapted into a molecule cleaning script similar to prinseq or fastx. Feel free to fork this and add your own filters.
+
+=head1 UPDATES: 
+ 
+bnx_stats.pl Version 1.1 - rescaled the x-axis for graphs to better fit data and added filters for rare but very large values of "Number of Labels" and "Molecule SNR" so that the bulk of the data could be visualized.
  
 =head1 DEPENDENCIES
  
@@ -241,6 +264,10 @@ Prints the more detailed manual page with output details and examples and exits.
 
 Minimum molecule length in kb. Molecules shorter than this are not analyzed. Currently this script does not produce filtered BNX files so this value will cause reports to include only molecule maps longer than the value but will not change the BNX file (Default = 0).
 
+=item B<-n, --min_num_labels>
+
+Minimum number of labels per molecule map. Molecules with fewer labels than this are not analyzed. Currently this script does not produce filtered BNX files so this value will cause reports to include only molecule maps with a label count equal to or greater than the value but will not change the BNX file (Default = 0).
+ 
 =back
 
 =head1 DESCRIPTION

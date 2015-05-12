@@ -3,21 +3,21 @@
 **cmap_stats.pl -** Script outputs count of cmaps, cummulative lengths of cmaps and N50 of cmaps. Tested on CMAP File Version: 0.1.
 
 ```
-perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/cmap_stats.pl -c sample_data/sample.cmap
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/cmap_stats.pl -c ~/Irys-scaffolding/KSU_bioinfo_lab/sample_output_directory/BioNano_consensus_cmap/ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1.cmap
 ```
 
 **xmap_stats.pl -** Script outputs breadth of alignment coverage and total aligned length from an xmap. Tested on XMAP File Version: 0.1. "Breadth of alignment coverage" is the number of bases covered by aligned maps. This is equivalent to "Total Unique Aligned Len(Mb)". "Total alignment length is the total length of the alignment. This is equivalent to "Total Aligned Len(Mb)".
 
 ```
-perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/xmap_stats.pl -x sample_data/sample.xmap
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/xmap_stats.pl -x ~/Irys-scaffolding/KSU_bioinfo_lab/sample_output_directory/align_in_silico_xmap/NC_010473_mock_scaffolds_to_ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1.xmap
 ```
 
-**bnx_stats.pl - **Script outputs count of molecule maps in BNX files, cummulative lengths of molecule maps and N50 of molecule maps. Script also outputs a PDF with these metrics as well as histograms of molecule map quality metrics. Tested on BNX File Version 1.0 however it should work on Version 1.2. The user inputs a list of BNX files or a glob as the final arguments to script. Users can filter results by min molecule length in kb using the `-l` flag. Things to add include switching between QC and cleaning.
+**bnx_stats.pl -** Script outputs count of molecule maps in BNX files, cummulative lengths of molecule maps and N50 of molecule maps. Script also outputs a PDF with these metrics as well as histograms of molecule map quality metrics. Tested on BNX File Version 1.0 however it should work on Version 1.2. The user inputs a list of BNX files or a glob as the final arguments to script. Users can filter results by min molecule length in kb using the `-l` flag. Things to add include switching between QC and cleaning.
  
 Script has no options other than help menus and min length currently but it was designed to be adapted into a molecule cleaning script similar to prinseq or fastx. Feel free to fork this and add your own filters.
 
 ```
-perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/bnx_stats.pl -l 150 sample_data/Molecules*.bnx
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/map_tools/bnx_stats.pl -l 150 /home/bionano/Irys-scaffolding/KSU_bioinfo_lab/sample_output_directory/Datasets/*/*/Molecules.bnx
 ```
 
 **hybridScaffold_finish_fasta.pl** - Script creates new FASTA files including new hybrid sequences output by hybridScaffold and all sequences that were not used by hybridScaffold with their original headers. Also outputs a text file list of the headers for sequences that were used to make the new hybrid sequences.

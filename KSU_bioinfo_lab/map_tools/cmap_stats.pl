@@ -41,6 +41,7 @@ GetOptions (
 or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
+die "Option -c or --input_cmap not specified.\n" unless $input_cmap; # report missing required variables
 ###############################################################################
 ##############              run                              ##################
 ###############################################################################
@@ -78,6 +79,15 @@ foreach(my $j=0; $fraction>$total_length/2; $j++) #until $fraction is greater th
 {
     $current_length=$lengths[$j];
     $fraction -= $current_length; # subtract current length from $fraction
+}
+# Set lengths to 0 if not found
+if (!$current_length)
+{
+    $current_length = 0;
+}
+if (!$total_length)
+{
+    $total_length = 0;
 }
 $current_length = $current_length/1000000;
 $total_length = $total_length/1000000;

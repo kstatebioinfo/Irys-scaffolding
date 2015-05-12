@@ -31,7 +31,7 @@ while (<FLIP>)
 ##################################################################################
 ##############                   create output files            ##################
 ##################################################################################
-my (${filename}, ${directories}, ${suffix}) = fileparse($cmap,'\..*');
+my (${filename}, ${directories}, ${suffix}) = fileparse($cmap,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
 my $out =  "${directories}${filename}_flip.cmap";
 print "${directories}${filename}_flip.cmap\n";
 open (OUT_CMAP, '>',$out) or die "Can't open $out!\n";

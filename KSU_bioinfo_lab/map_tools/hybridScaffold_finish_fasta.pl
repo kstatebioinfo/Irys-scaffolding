@@ -112,7 +112,7 @@ print "count = $count\n";
 ##               genome_post_HYBRID_SCAFFOLD FASTA file                      ##
 ###############################################################################
 
-my (${filename}, ${directories}, ${suffix}) = fileparse($orig_fasta_file,'\..*'); # directories has trailing slash
+my (${filename}, ${directories}, ${suffix}) = fileparse($orig_fasta_file,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
 my $db = Bio::DB::Fasta->new("$orig_fasta_file");
 my $out_file_temp = "${directories}${filename}_genome_post_HYBRID_SCAFFOLD_temp.fasta";
 my $seq_out = Bio::SeqIO->new('-file' => ">$out_file_temp",'-format' => 'fasta');		#Create new fasta outfile object.

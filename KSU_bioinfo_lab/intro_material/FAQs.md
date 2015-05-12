@@ -1,6 +1,20 @@
 Irys-scaffolding FAQs
 =====================
 
+###What methods does your group use to improve genome assemblies with BioNano molecule maps?
+
+The sewing machine pipeline iteratively super scaffolds genome FASTA files with BioNano genome maps using stitch.pl and the BioNano tool RefAligner until no new super scaffolds can be produced. The pipeline runs alignments with both default and relaxed parameters. These alignments are then used by stitch.pl to superscaffold a fragmented genome FASTA. See tutorial lab to run the sewing machine pipeline with sample data https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/stitch/sewing_machine_LAB.md.
+
+###What methods does your group use to assemble BioNano molecule maps and improve existing genome sequence assemblies?
+
+We use `AssembleIrysXeonPhi.pl`. The assemble XeonPhi script preps raw molecule maps and writes and runs a series of assemblies for them. Then the user selects the best assembly and uses this to super scaffold the reference FASTA genome file and summarize the final assembly metrics and alignments.
+
+The basic steps of our workflow are to first merge multiple BNXs from a single directory and plot single molecule map quality metrics. Then rescale single molecule maps and plot rescaling factor per scan if reference is available. The rescaling step is analogous to the former "adjusting stretch scan by scan step". Next it writes scripts for assemblies with a range of parameters. After assemblies finish assembly metrics are genrated and the best results are analyzed.
+
+See tutorial lab to run the assemble XeonPhi pipeline with sample data https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_LAB.md.
+
+For de novo projects see this tutorial lab to run the assemble XeonPhi pipeline with sample data https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_de_novo_LAB.md
+
 ###How can I take a single map contig from the BNG consensus map, convert it into a cmap and then map it against a the in silico map of a single scaffold? 
 
 So both an in silico and a BioNano CMAP file are tab delimited files. Any line that does not start with a `#` (a comment line) will begin with a CMAP ID as the first field. You can use `CmapById.pl` to grab any individual map using one or more CMAP IDs. Read more about CmapById.pl here: https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/tree/master/KSU_bioinfo_lab/map_tools
@@ -40,7 +54,7 @@ perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/make_key.pl <fasta> <output_basen
 
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/number_fasta.pl <fasta>
 
-perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/number_fasta.pl xmap_filter.pl <q.cmap> <numbered fasta> <output_basename.flip> <output_basename> <min confidence> <min % aligned> <second min confidence> <second min % aligned> <fasta_key_file>
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/xmap_filter.pl <q.cmap> <numbered fasta> <output_basename.flip> <output_basename> <min confidence> <min % aligned> <second min confidence> <second min % aligned> <fasta_key_file>
 
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/get_passing_xmap.pl -f <filtered_fliped_xmap> -o <original_xmap>
 ```
@@ -94,9 +108,9 @@ You can find the observed bpp by aligning molecule maps to your ref and finding 
 
 ###Are the scripts you are using for a customer's assembly the ones in your github account (Irys scaffolding). If so, should we also try to run it on our server? 
 
-For small to medium genomes (generally this means genomes < 1 Gb) we assemble using AssembleIrysCluster.pl. AssembleIrysCluster.pl and the version we used will be described in your report if we used it on your data. For large genomes (or datasets that are taking too long to run on our cluster) we assemble using the Irys Solve Cloud (although we will have an update about this topic soon).
+For small to medium genomes (generally this means genomes < 1 Gb) we assemble use the workflow and scripts described in https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_LAB.md and https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/assemble_XeonPhi_de_novo_LAB.md. AssembleIrysCluster.pl and the version we used will be described in your report if we used it on your data. For large genomes (or datasets that are taking too long to run on our cluster) we assemble using the Irys Solve Cloud (although we will have an update about this topic soon).
 
-AssembleIrysCluster.pl was developed to run on our cluster and would probably not be easy to use on a different cluster. We will be rewritting this over the next few weeks but I am not sure yet whether the new pipeline will be easier to use elsewhere or not.
+AssembleIrysXeonPhi.pl was developed to run on our a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. Customization may be required to run the BioNano Assembler on a different machine.
 
 All of our other tools (stitch.pl, cmap_stats.pl, xmap_stats.pl, bnx_stats.pl, etc.) were designed to be portable.
 

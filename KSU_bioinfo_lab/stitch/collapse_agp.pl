@@ -60,7 +60,7 @@ while (<AGP_LIST>)
 close (AGP_LIST);
 @agps = reverse(@agps);
 my $input_agp = $agps[0];
-my ($basename, $directories, $suffix) = fileparse($input_agp,'\..*'); # break appart filenames
+my ($basename, $directories, $suffix) = fileparse($input_agp,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
 my $output_agp = "${directories}${basename}_temp_merged.agp";
 open (my $output, ">", $output_agp) or die "Can't open $output_agp: $!";
 print $output "##agp-version   2.0\n";

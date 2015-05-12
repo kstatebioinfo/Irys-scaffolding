@@ -62,7 +62,7 @@ while (<$filtered_xmap>)
         $passed{$pass}=1;
     }
 }
-my ($basename, $directories, $suffix) = fileparse($original_xmap_file,'\..*'); # break appart filenames
+my ($basename, $directories, $suffix) = fileparse($original_xmap_file,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
 my $output_xmap_file = "${directories}${basename}_filtered.xmap";
 open (my $output_xmap, ">", $output_xmap_file) or die "Can't open $output_xmap_file: $!";
 

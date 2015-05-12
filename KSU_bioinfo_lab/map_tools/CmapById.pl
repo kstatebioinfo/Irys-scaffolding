@@ -42,6 +42,9 @@ GetOptions (
 or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
+die "Option -c or --input_cmap not specified.\n" unless $input_cmap; # report missing required variables
+die "Option -i or --cmap_ids not specified.\n" unless $cmap_ids; # report missing required variables
+die "Option -o or --out not specified.\n" unless $out; # report missing required variables
 ###############################################################################
 ##############              run                              ##################
 ###############################################################################
@@ -67,7 +70,7 @@ else
 
 }
 
-my (${filename}, ${directories}, ${suffix}) = fileparse($input_cmap,'\..*'); #grab parts of the filename without trailing slash
+my (${filename}, ${directories}, ${suffix}) = fileparse($input_cmapqr/\.[^.]*/); # directories has trailing slash includes dot in suffix
 unless ($out)
 {
     $out = "${directories}/${filename}_by_id.cmap"; # default output filename

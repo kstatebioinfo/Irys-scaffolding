@@ -1,11 +1,11 @@
 #!/usr/bin/perl
-##################################################################################
+#################################################################################
 #
 #	USAGE: perl stitch.pl [options]
 #
 #  Created by jennifer shelton
 #
-##################################################################################
+#################################################################################
 use strict;
 use warnings;
 use File::Basename; # enable maipulating of the full path
@@ -13,11 +13,11 @@ use File::Basename; # enable maipulating of the full path
 # use List::Util qw(sum);
 use Getopt::Long;
 use Pod::Usage;
-##################################################################################
-##############         Print informative message                ##################
-##################################################################################
+#################################################################################
+##############         Print informative message               ##################
+#################################################################################
 print "###########################################################\n";
-print "#  stitch.pl Version 1.4.5                                #\n";
+print "#  stitch.pl Version 1.4.7                                #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 12/12/13                   #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -25,9 +25,9 @@ print "#  perl stitch.pl -help # for usage/options               #\n";
 print "#  perl stitch.pl -man # for more details                 #\n";
 print "###########################################################\n";
 
-##################################################################################
-##############           get arguments and set defaults         ##################
-##################################################################################
+#################################################################################
+##############           get arguments and set defaults        ##################
+#################################################################################
 my ($r_cmap,$xmap,$scaffold_fasta,$output_basename); # Required
 my $first_min_confidence=0; ## Default: No filter
 my $first_min_per_aligned=0; ## Default: No filter
@@ -36,29 +36,36 @@ my $second_min_per_aligned=0; ## Default: No filter
 my $neg_gap = 20000; ## Default: Filter fails overlaps less than -20,000 (bp)
 my $man = 0;
 my $help = 0;
+my $version = 0;
 GetOptions (
-'help|?' => \$help,
-'man' => \$man,
-'r|r_cmap:s' => \$r_cmap,
-'x|xmap:s'  => \$xmap,
-'f|scaffold_fasta:s' => \$scaffold_fasta,
-'o|output_basename:s' => \$output_basename,
-'f_con|fc:f' => \$first_min_confidence,
-'f_algn|fa:f' => \$first_min_per_aligned,
-'s_con|sc:f' => \$second_min_confidence,
-'s_algn|sa:f' => \$second_min_per_aligned,
-'n|neg_gap:f'=> \$neg_gap
+    'help|?' => \$help,
+    'man' => \$man,
+    'version' => \$version,
+    'r|r_cmap:s' => \$r_cmap,
+    'x|xmap:s'  => \$xmap,
+    'f|scaffold_fasta:s' => \$scaffold_fasta,
+    'o|output_basename:s' => \$output_basename,
+    'f_con|fc:f' => \$first_min_confidence,
+    'f_algn|fa:f' => \$first_min_per_aligned,
+    's_con|sc:f' => \$second_min_confidence,
+    's_algn|sa:f' => \$second_min_per_aligned,
+    'n|neg_gap:f'=> \$neg_gap
 )
 or pod2usage(2);
 pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
+if ($version)
+{
+    print "stitch.pl Version 1.4.7\n";
+    exit;
+}
 ## convert percent aligned to decimal ##
 $first_min_per_aligned=$first_min_per_aligned/100;
 $second_min_per_aligned=$second_min_per_aligned/100;
 my $dirname = dirname(__FILE__);
-##################################################################################
-##############                correct xmap order                ##################
-##################################################################################
+#################################################################################
+##############                correct xmap order               ##################
+#################################################################################
 print "Correcting xmap order ...\n";
 open (XMAP, "<", $xmap) or die "Can't open $xmap: $!";
 my $sort_xmap = "${output_basename}_sort.xmap";
@@ -82,7 +89,7 @@ while (<XMAP>) #make array of contigs from the customer and a hash of their leng
         
 	}
 }
-###################
+#################################################################################
 my @a = ([1,2], [3,4]);
 my @xmap_table_sorted = sort {
     
@@ -94,60 +101,60 @@ my @xmap_table_sorted = sort {
 print SORT_XMAP (join("\t", @$_), "\n") for @xmap_table_sorted;
 close (SORT_XMAP);
 $xmap = $sort_xmap;
-##################################################################################
-##############    make key (original headers to bionano cmap id)    ##############
-##################################################################################
+#################################################################################
+##############    make key (original headers to bionano cmap id)   ##############
+#################################################################################
 print "Making key for original fasta headers...\n";
 my $makekey=`perl ${dirname}/make_key.pl $scaffold_fasta ${output_basename}`;
 print "$makekey"; # print errors
-##################################################################################
-##########   make fasta with original headers changed to to bionano cmap id)  ####
-##################################################################################
-$scaffold_fasta =~ /(.*).fa/;
+#################################################################################
+##########   make fasta with original headers changed to to bionano cmap id) ####
+#################################################################################
+my (${fasta_filename}, ${fasta_directories}, ${fasta_suffix}) = fileparse($scaffold_fasta,qr/\.[^.]*/); # directories has trailing slash
 print "Converting original fasta headers to headers that match bionano output...\n";
 my $out_number=`perl ${dirname}/number_fasta.pl $scaffold_fasta`;
 print "$out_number";
-##################################################################################
-##################     filter xmap and create stitchmap         ##################
-##################################################################################
+#################################################################################
+##################     filter xmap and create stitchmap        ##################
+#################################################################################
 print "Making filtered XMAP...\n";
-my $filter=`perl ${dirname}/xmap_filter.pl $r_cmap ${1}_numbered_scaffold.fasta $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${output_basename}_key $neg_gap`;
-if ($filter =~ /No_scaffolds/)
+my $filter=`perl ${dirname}/xmap_filter.pl $r_cmap ${fasta_directories}${fasta_filename}_numbered_scaffold.fasta $xmap $output_basename $first_min_confidence $first_min_per_aligned $second_min_confidence $second_min_per_aligned ${output_basename}_key $neg_gap`;
+print "$filter"; # print errors
+#################################################################################
+#########      create fasta file and report "stitching contigs"        ##########
+#################################################################################
+print "Making super-scaffold fasta file with new super-scaffolds. Unused sequences are printed with original fasta headers...\n";
+my $out_x_to_fasta=`perl ${dirname}/xmap_to_fasta.pl ${output_basename}_scaffolds.stitchmap ${fasta_directories}${fasta_filename}_numbered_scaffold.fasta ${output_basename}_key`;
+print "$out_x_to_fasta";
+if ($out_x_to_fasta !~ /Super_scaffold_.*: Scaffolding molecule = .*/)
 {
     print "Removing temp files...\n";
-    unlink "${1}_numbered_scaffold.fasta.index","${1}_numbered_scaffold.fasta";
+    unlink glob "${fasta_directories}${fasta_filename}_numbered_scaffold*";
     die "No alignments produced superscaffolds therefore no super scaffold fasta was created\n";
 }
-print "$filter"; # print errors
-##################################################################################
-#########      create fasta file and report "stitching contigs"         ##########
-##################################################################################
-print "Making super-scaffold fasta file with new super-scaffolds. Unused sequences are printed with original fasta headers...\n";
-my $out_x_to_fasta=`perl ${dirname}/xmap_to_fasta.pl ${output_basename}_scaffolds.stitchmap ${1}_numbered_scaffold.fasta ${output_basename}_key`;
-print "$out_x_to_fasta";
 if (-e "${output_basename}_data_summary.csv") {print "${output_basename}_data_summary.csv file Exists$!\n"; exit;}
-###################################################################################
-##########    check fasta file for redundant super-scaffold names        ##########
-##########         this step only effects iterative assemblies           ##########
-###################################################################################
-#print "Checking super-scaffold fasta file for redundant super-scaffold headers. Unused sequences are still printed with original fasta headers...\n";
-#my $check_fasta=`perl ${dirname}/CheckHeaders.pl ${output_basename}_superscaffold.fasta`;
-#print "$check_fasta";
-##################################################################################
-#########                     create new AGP                            ##########
-##################################################################################
+
+#############################################################################
+#########                     create new AGP                       ##########
+#############################################################################
 print "Making new AGP and contig file for super-scaffolded fasta file...\n";
 my $make_agp=`perl ${dirname}/make_contigs_from_fasta.pl ${output_basename}_superscaffold.fasta`;
 print "$make_agp";
-##################################################################################
-#########              create a BNG compatible Bed file                  ##########
-##################################################################################
-print "Making new BED file for super-scaffolded fasta file...\n";
-my $make_bed=`perl ${dirname}/agp2bed.pl ${output_basename}_superscaffold.fasta_contig.agp`;
-print "$make_bed";
-##################################################################################
-##############  compress summary files and delete temp files    ##################
-##################################################################################
+#############################################################################
+#########              create a BNG compatible contig BED file     ##########
+#############################################################################
+print "Making new BED file of contigs for super-scaffolded fasta file...\n";
+my $make_contig_bed=`perl ${dirname}/agp2bed.pl ${output_basename}_superscaffold.fasta_contig.agp`;
+print "$make_contig_bed";
+#############################################################################
+#########              create a BNG compatible GAP BED file        ##########
+#############################################################################
+print "Making new BED file of gaps for super-scaffolded fasta file...\n";
+my $make_gap_bed=`perl ${dirname}/../sv_detect/agp2_gap_bed.pl ${output_basename}_superscaffold.fasta_contig.agp`;
+print "$make_gap_bed";
+#################################################################################
+##############  compress summary files and delete temp files  ###################
+#################################################################################
 print "Removing temp files...\n";
 open (SUMMARY,'>',"${output_basename}_data_summary.csv") or die "couldn't open ${output_basename}_data_summary.csv $!";
 open (REPORT,'<',"${output_basename}_report.csv") or die "couldn't open ${output_basename}_report.csv $!";
@@ -171,19 +178,23 @@ while (<WEAKPOINTS>)
     print SUMMARY;
 }
 close (WEAKPOINTS);
-unlink "${output_basename}_overlaps.csv","${output_basename}_weakpoints.csv","${output_basename}_report.csv","${1}_numbered_scaffold.fasta.index","${1}_numbered_scaffold.fasta";
-print "Done\n";
+unlink glob "${fasta_directories}${fasta_filename}_numbered_scaffold*";
+unlink "${output_basename}_overlaps.csv","${output_basename}_weakpoints.csv","${output_basename}_report.csv";
+print "Done running stitch\n";
 
-##################################################################################
-##############                  Documentation                   ##################
-##################################################################################
+#################################################################################
+##############                  Documentation                  ##################
+#################################################################################
 ## style adapted from http://www.perlmonks.org/?node_id=489861
 __END__
 
 =head1 NAME
 
-stitch.pl - a package of scripts that analyze IrysView output (i.e. XMAPs). The script filters XMAPs by confidence and the percent of the maximum potential length of the alignment and generates summary stats of the more stringent alignments. The first settings for confidence and the minimum percent of the full potential length of the alignment should be set to include the range that the researcher decides represent high quality alignments after viewing raw XMAPs. Some alignments have lower than optimal confidence scores because of low label density or short sequence-based scaffold length. The second set of filters should have a user-defined lower minimum confidence score, but a much higher percent of the maximum potential length of the alignment in order to capture these alignments. Resultant XMAPs should be examined in IrysView to see that the alignments agree with what the user would manually select.
-stitch.pl finds the best super-scaffolding alignments each run. It can be run iteratively until all super-scaffolds have been found by creating a new cmap from the output super-scaffold fasta, aligning this cmap as the query with the BNG consensus map as the reference and using the x_map, r_cmap and the super-scaffold fasta as input for another run of stitch.pl.
+ stitch.pl - Stitch filters alignment XMAP files by confidence and the percent of the maximum potential length of the alignment. The first settings for confidence and the minimum percent of the full potential length of the alignment should be set to include the range that the researcher decides represent high quality alignments after viewing raw XMAPs. Some alignments have lower than optimal confidence scores because of low label density or short sequence-based scaffold length. The second set of filters should have a user-defined lower minimum confidence score, but a much higher percent of the maximum potential length of the alignment in order to capture these alignments. Resultant filtered XMAPs should be examined in IrysView to see that the alignments agree with what the user would manually select. Stitch finds the best super-scaffolding alignments each run. It is run iteratively by `sewing_machine.pl` until all super-scaffolds have been found.
+ 
+ Start with the default filtering parameters for confidence scores (`--f_con` and `--s_con`) and percent of possible alignment thresholds (`--f_algn` and `--s_algn`). Test more or less strict options if your first results are not satisfactory.
+ 
+
 
 =head1 USAGE
 
@@ -249,7 +260,7 @@ The minimum percent of the full potential length of the alignment allowed for th
 
 The minimum confidence score for alignments for the second round of filtering. This should be the less stringent, lowest, of the two scores.
 
-=item B<--f_algn, --sa>
+=item B<--s_algn, --sa>
 
 The minimum percent of the full potential length of the alignment allowed for the second round of filtering. This should be higher than the setting for the first round of filtering.
 
@@ -278,12 +289,6 @@ The script also outputs contigs, an agp, and a bed file of contigs within supers
 
 B<Test with sample datasets:>
 
-git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
-
-cd Irys-scaffolding/KSU_bioinfo_lab/stitch
-
-mkdir results
-
-perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
+Follow instructions at https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/stitch/sewing_machine_LAB.md. 
 
 =cut

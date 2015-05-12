@@ -1,6 +1,14 @@
+##Sewing Machine pipeline: iteratively super scaffold genome FASTA files with BioNano genome maps using `stitch.pl`
+
+<a href="url"><img src="https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/pipelines_for_bionano_data_wide.png" align="left" width="348" ></a>
+
+
+The sewing machine pipeline iteratively super scaffolds genome FASTA files with BioNano genome maps using `stitch.pl` and the BioNano tool `RefAligner` until no new super scaffolds can be produced. The pipeline runs alignments with both default and relaxed parameters. These alignments are then used by `stitch.pl` to superscaffold a fragmented genome FASTA. See tutorial lab to run the sewing machine pipeline with sample data https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/stitch/sewing_machine_LAB.md.
+
+
 SCRIPT 
 
-**stitch.pl -**
+**sewing_machine.pl -**
        a package of scripts that analyze IrysView
        output (i.e. XMAPs). The script filters XMAPs by confidence and the
        percent of the maximum potential length of the alignment and generates
@@ -15,95 +23,131 @@ SCRIPT
        alignment in order to capture these alignments. Resultant XMAPs should
        be examined in IrysView to see that the alignments agree with what the
        user would manually select. 
-       
-It can be run iteratively until all super-scaffolds have been found by 
-       creating a new cmap from the output super-scaffold fasta, aligning
-       this cmap as the query with the BNG consensus map as the reference and 
-       using the x_map, r_cmap and the super-scaffold fasta as input for another 
-       run of stitch.pl.
-       
-####Note: BioNano's refaligner was only built to take the in silico CMAP (created from the sequence assembly) as the reference and the BioNano assembled CMAP (assembled from BioNano molecule maps) as the query. This needs to be inverted before running stitch.pl. You can flip your XMAP by running the code below. Then use the `.flip` file with the `-x` flag and your original `_q.cmap` with the `-r` flag...
 
-```
-perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/flip_xmap.pl <original_xmap> <output_basename>
-```
+![Alt text](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/stitch/Fig_3_detailed_stitch_steps.png)
 
-![Alt text](https://raw.github.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/scaffolding.png)
+**Steps of the stitch.pl algorithm.** Consensus genome maps (blue) are shown aligned to in silico maps (green). Alignments are indicated with grey lines. CMAP orientation for in silico maps is indicated with a ”+” or ”-” for positive or negative orientation respectively. (A) The in silico maps are used as the reference. (B) The alignment is inverted and used as input for stitch.pl. (C) The alignments are filtered based on alignment length (purple) relative to total possible alignment length (black) and confidence. Here assuming all alignments have high confidence scores and the minimum percent aligned is 40% two alignments fail for aligning over less than 40% of the potential alignment length for that alignment. (D) Filtering produces an XMAP of high quality alignments with short (local) alignments removed. (E) High quality scaffolding alignments are filtered for longest and highest confidence alignment for each in silico map. The third alignment (unshaded) is filtered because the second alignment is the longest alignment for in silico map 2. (F) Passing alignments are used to super scaffold (captured gaps indicated in dark green). (G) Stitch is iterated and additional super scaffolding alignments are found using second best scaffolding alignments. (H) Iteration takes advantage of cases where in silico maps scaffold consensus genome maps as in silico map 2 does. Stitch is run iteratively until all super scaffolding alignments are found.
 
 
 DEPENDENCIES
 
        git - see http://git-scm.com/book/ch1-4.html for instructions
-       bioperl - see http://www.bioperl.org/wiki/Installing_BioPerl 
+       BioPerl - see http://www.bioperl.org/wiki/Installing_BioPerl 
+       
+       Requires BNGCompare from https://github.com/i5K-KINBRE-script-share/BNGCompare in your home
+       directory. Also requires RefAligner. Install BioNano scripts and
+       executables in `~/scripts` and `~/tools` directories respectively. Follow the Linux installation
+       instructions in the "2.5.1 IrysSolve server RefAligner and Assembler" section of
+       http://www.bnxinstall.com/training/docs/IrysViewSoftwareInstallationGuide.pdf to install
+       RefAligner.
        
 
 USAGE
 
-       perl stitch.pl [options]
+Usage:
+    perl sewing_machine.pl [options]
 
-        Documentation options:
-          -help    brief help message
-          -man     full documentation
-        Required options:
-          -r        reference CMAP
-          -x        comparison XMAP
-          -f        scaffold FASTA
-          -o        base name for the output files
-        Filtering options:
-          --f_con       first minimum confidence score
-          --f_algn      first minimum % of possible alignment
-          --s_con       second minimum confidence score
-          --s_algn      second minimum % of possible alignment
-OPTIONS
+    Documentation options:
 
-       -help   Print a brief help message and exits.
+        -help    brief help message
+        -man            full documentation
 
-       -man    Prints the more detailed manual page with output details and
-               examples and exits.
+    Required options:
 
-       -r, --r_cmap
-               The reference CMAP produced by IrysView when you create an
-               XMAP. It can be found in the "Imports" folder within a
-               workspace.
+        -o       output directory
+        -g       genome map CMAP file
+        -p       project
+        -e       enzyme
+        -f       scaffold (reference) FASTA
+        -r       reference (in silico map) CMAP file
 
-       -x, --xmap
-               The XMAP produced by IrysView. It can also be found in the
-               "Imports" folder within a workspace.
+    Required options (for assemble_XeonPhi pipeline):
 
-       -f, --fasta
-               The FASTA that will be super-scaffolded based on alignment to
-               the IrysView assembly. It is preferable to use the scaffold
-               FASTA rather than the contigs. Many contigs will not be long
-               enough to align.
+        -b       best assembly directory (replaces -o and -g)
 
-       -o, --output_basename
-               This is the basename for all output files. Output file include
-               an XMAP with only high quality alignments of molecule maps that
-               scaffold contigs, an XMAP of all high quality alignments, a csv
-               file with summary metrics, and a non-redundant (i.e. no
-               scaffold is used twice) super-scaffold from a user-provided
-               scaffold file and a filtered XMAP.
+    Filtering options:
 
-       --f_con, --fc
-               The minimum confidence score for alignments for the first round
-               of filtering. This should be the most stringent, highest, of
-               the two scores.
+        --f_con      first minimum confidence score (default = 20)
+        --f_algn     first minimum % of possible alignment (default = 40)
+        --s_con      second minimum confidence score (default = 15)
+        --s_algn     second minimum % of possible alignment (default = 90)
+        --n          minimum negative gap length allowed (default = 20000 bp)
+        -T           RefAligner p-value threshold (default = 1e-8)
 
-       --f_algn, --fa
-               The minimum percent of the full potential length of the
-               alignment allowed for the first round of filtering. This should
-               be lower than the setting for the second round of filtering.
+Options:
 
-       --s_con, --sc
-               The minimum confidence score for alignments for the second
-               round of filtering. This should be the less stringent, lowest,
-               of the two scores.
+    -help   Print a brief help message and exits.
 
-       --f_algn, --sa
-               The minimum percent of the full potential length of the
-               alignment allowed for the second round of filtering. This
-               should be higher than the setting for the first round of
-               filtering.
+    -man    Prints the more detailed manual page with output details and
+            examples and exits.
+
+    -o, --out_dir
+            Path of the user selected output directory without trailing
+            slash (e.g. -o ~/stitch_out ).
+
+    -g, --genome_maps
+            Path of the CMAP file containing genome maps assembled from
+            single molecule maps (e.g. -g
+            ~/Irys-scaffolding/KSU_bioinfo_lab/sample_output_directory/BioNa
+            no_consensus_cmap/ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1
+            .cmap ).
+
+    -p, --project
+            The project name with no spaces, slashes or characters other
+            than underscore (e.g. -p Esch_coli_1_2015_000).
+
+    -e, --enzyme
+            A space separated list of the enzymes used to label the
+            molecules and to in silico nick the sequence-based FASTA file.
+            They can include BspQI BbvCI BsrDI bseCI (e.g. -e BspQI). If
+            multiple enzymes were used enclose the list with quotes (e.g. -e
+            "BspQI BbvCI").
+
+    -f, --fasta
+            Path of the FASTA file that will be super-scaffolded based on
+            alignment to the assembled genome maps. It is preferable to use
+            the scaffold FASTA rather than the contigs. Many contigs will
+            not be long enough to align.
+
+    -r, --r_cmap
+            The reference CMAP produced from your sequence FASTA file.
+
+    -b, --best_dir
+            Path of the user selected directory of the "best" assembly
+            without trailing slash (e.g.
+            ~/Esch_coli_1_2015_000/default_t_100 ). This parameter replaces
+            -o and -g when using the assemble_XeonPhi pipeline.
+
+    --f_con, --fc
+            The minimum confidence score for alignments for the first round
+            of filtering. This should be the most stringent, highest, of the
+            two scores (default = 20).
+
+    --f_algn, --fa
+            The minimum PAT, or minimum percent of the full potential length
+            of the alignment allowed, for the first round of filtering. This
+            should be lower than the setting for the second round of
+            filtering (default = 40).
+
+    --s_con, --sc
+            The minimum confidence score for alignments for the second round
+            of filtering. This should be the less stringent, lowest, of the
+            two scores (default = 15).
+
+    --s_algn, --sa
+            The minimum PAT, or percent of the full potential length of the
+            alignment allowed, for the second round of filtering. This
+            should be higher than the setting for the first round of
+            filtering (default = 90).
+
+    -n, --neg_gap
+            Allows user to adjust minimum negative gap length allowed
+            (default = 20000 bp).
+
+    -t, --p-value_T
+            The RefAligner p-value threshold (default = 1e-8). Can use -T as
+            low as 1e-6 for small bacterial genomes or up to 1e-9 or 1e-10
+            for large genomes (> 1G).
 
 DESCRIPTION
 
@@ -144,20 +188,22 @@ DESCRIPTION
 
 **Test with sample datasets**
 ```
-git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
-
-cd Irys-scaffolding/KSU_bioinfo_lab/stitch
-
-mkdir results
-
-perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 8 --s_algn 90
+See tutorial lab to run the sewing machine pipeline with sample data https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/stitch/sewing_machine_LAB.md.
 ```
 
-UPDATES
+UPDATES to `stitch.pl`
+
+####stitch.pl Version 1.4.7
+
+Fixed bug in halting if no super scaffolds are created and in handling of filenames (to delete intermediate fasta files)
+
+####stitch.pl Version 1.4.6
+
+Automatically skips creating contigs if no super scaffolds were created.
 
 ####stitch.pl Version 1.4.5 
 
-rejects scaffolding alignments if overlap is longer than 20,000 (bp)
+rejects scaffolding alignments if overlap is longer than the "-n, --neg_gap" argument (default = 20000 bp). This allows user to adjust minimum negative gap length allowed. 
 
 ####stitch.pl Version 1.4.4 
 

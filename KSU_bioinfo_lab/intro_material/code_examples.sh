@@ -12,7 +12,7 @@
 
     #    fa2cmap_multi.pl HELP MENU:
 
-    #    Usage: /homes/bioinfo/bioinfo_software/bionano/fa2cmap_multi.pl [options] <Args>
+    #    Usage: ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/third-party/fa2cmap_multi.pl [options] <Args>
     #    Options:
     #    -h    : This help message
     #    -v    : Verbose output  (Default: OFF)
@@ -26,7 +26,7 @@
 
     #    EXAMPLE:
 
-    perl ~/fa2cmap_multi.pl -v -i REFERENCE.fasta -e BspQI
+    perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/third-party/fa2cmap_multi.pl -v -i REFERENCE.fasta -e BspQI
 
 ##################################################
 #                ALIGNING TWO CMAPS              #
