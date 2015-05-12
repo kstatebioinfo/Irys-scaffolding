@@ -184,5 +184,30 @@ Open the `~/sample_assembly_working_directory/NC_010473_mock_scaffolds_BNGCompar
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/write_report.pl -b ~/sample_assembly_working_directory/strict_t_150 -p Esch_coli_1_2015_000 -e BspQI -f ~/sample_assembly_working_directory/fasta_and_cmap/NC_010473_mock_scaffolds.fna -r ~/sample_assembly_working_directory/fasta_and_cmap/cmaps/NC_010473_mock_scaffolds_BspQI.cmap --alignment_parameters default_alignment
 ```
 
+###Step 10: Explore your results in IrysView
+
 Read your `~/sample_assembly_working_directory/report.txt` file or explore files in your `~/sample_assembly_working_directory/Esch_coli_1_2015_000` output directory. The contents of the `~/sample_assembly_working_directory/Esch_coli_1_2015_000` directory are also compressed in the `~/sample_assembly_working_directory/Esch_coli_1_2015_000.tar.gz` file. Move this to a windows machine and follow instructions in the https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/README.pdf file to view alignments in IrysView.
+
+Following the instructions for loading an XMAP, first import the XMAP file of the alignment of the original in silico maps to the assembled genome maps. This will be in the `Esch_coli_1_2015_000/align_in_silico_xmap` directory.
+
+![alttext](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/result_pre_scaffolding.png)
+Above is a screen shot of the first alignment (after ordering the anchors "in silico map #2", "in silico map #3", "in silico map #4", "in silico map #1").
+
+Next import the XMAP file of the alignment of the super scaffolded in silico map to the assembled genome maps. This will be in the `Esch_coli_1_2015_000/align_in_silico_super_scaffold_xmap` directory.
+
+![alttext](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/result_post_scaffolding.png)
+Above is a screen shot of the second alignment (of the super scaffolded in silico map aligned to the genome maps).
+
+Next load the BED file of the contigs for the super scaffolded in silico maps. This will be `Esch_coli_1_2015_000/super_scaffold/Esch_coli_1_2015_000_20_40_15_90_2_superscaffold.fasta_contig.bed`. There is also a BED file of the gaps for the super scaffolded in silico maps but the gaps for this sample genome are very small and therefore more difficult to view in the alignment `Esch_coli_1_2015_000/super_scaffold/Esch_coli_1_2015_000_20_40_15_90_2_superscaffold.fasta_contig_gaps.bed`. 
+
+![alttext](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/add_bed_file.png)
+Begin to load the BED file.
+
+![alttext](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/locate_bed_file.png)
+Find the contig BED file for the super scaffolded in silico map.
+
+![alttext](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/result_post_scaffolding_with_bed.png)
+Above is the second alignment with the contig BED file loaded.
+
+
 
