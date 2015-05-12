@@ -186,7 +186,7 @@ perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/write_report.pl -b ~/sa
 
 ###Step 10: Explore your results in IrysView
 
-Read your `~/sample_assembly_working_directory/report.txt` file or explore files in your `~/sample_assembly_working_directory/Esch_coli_1_2015_000` output directory. The contents of the `~/sample_assembly_working_directory/Esch_coli_1_2015_000` directory are also compressed in the `~/sample_assembly_working_directory/Esch_coli_1_2015_000.tar.gz` file. Move this to a windows machine and follow instructions in the https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/README.pdf file to view alignments in IrysView.
+Read your `~/sample_assembly_working_directory/report.txt` file or explore files in your `~/sample_assembly_working_directory/Esch_coli_1_2015_000` output directory. The contents of the `~/sample_assembly_working_directory/Esch_coli_1_2015_000` directory are also compressed in the `~/sample_assembly_working_directory/Esch_coli_1_2015_000.tar.gz` file. Move this to a windows machine and follow instructions in the https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/README.pdf file to view alignments in IrysView. The following steps will be dificult to complete unless you have read the [README.md](https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/README.pdf) file.
 
 Following the instructions for loading an XMAP, first import the XMAP file of the alignment of the original in silico maps to the assembled genome maps. This will be in the `Esch_coli_1_2015_000/align_in_silico_xmap` directory.
 
@@ -210,6 +210,16 @@ Above is a screen shot of the menus that you will need to follow to find the con
 
 <a href="url"><img src="https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/result_post_scaffolding_with_bed.png" align="center" width="830" ></a>
 Above is a screen shot of the second alignment with the contig BED file loaded.
+
+Switch from viewing the final superscaffold alignment to viewing the alignment of the original in silico maps to the assembled genome maps. You do this by highlighting the other alignment in the "Comparison Maps" window to the left. Follow the instructions in the [README.md](https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/README.pdf) to import the `SMAP` and the merged `BED` files. 
+
+You will only see the annotation when viewing a single anchor from the "Anchor" drop down list at the bottom of the screen. Anchor #1 is the only anchor with predicted structural variants. Viewing the annotations will generally require redrawing the image according to the instructions in [README.md](https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/README.pdf). 
+
+<a href="url"><img src="https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/load_smap_and_merged_smap_bed.png" align="center" width="830" ></a>
+Above is a screenshot of the SV predictions for the in silico map anchor #1 after the SV annotation has loaded but before we have redrawn to view all labels.
+
+<a href="url"><img src="https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/redraw_to_view_labels.png" align="center" width="830" ></a>
+Above is a screenshot of the SV predictions for the in silico map anchor #1 after the SV annotation has loaded and after we have redrawn to view all labels.
 
 
 
