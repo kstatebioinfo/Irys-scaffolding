@@ -201,13 +201,13 @@ Above is a screen shot of the second alignment (of the super scaffolded in silic
 Next load the BED file of the contigs for the super scaffolded in silico maps. This will be `Esch_coli_1_2015_000/super_scaffold/Esch_coli_1_2015_000_20_40_15_90_2_superscaffold.fasta_contig.bed`. There is also a BED file of the gaps for the super scaffolded in silico maps but the gaps for this sample genome are very small and therefore more difficult to view in the alignment `Esch_coli_1_2015_000/super_scaffold/Esch_coli_1_2015_000_20_40_15_90_2_superscaffold.fasta_contig_gaps.bed`. 
 
 ![alttext](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/add_bed_file.png)
-Begin to load the BED file.
+Above is a screen shot of the menus that you will need to follow to begin to load the BED file.
 
 ![alttext](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/locate_bed_file.png)
-Find the contig BED file for the super scaffolded in silico map.
+Above is a screen shot of the menus that you will need to follow to find the contig BED file for the super scaffolded in silico map.
 
 ![alttext](https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/result_post_scaffolding_with_bed.png)
-Above is the second alignment with the contig BED file loaded.
+Above is a screen shot of the second alignment with the contig BED file loaded.
 
 
 
