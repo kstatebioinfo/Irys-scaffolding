@@ -1,6 +1,8 @@
 Irys-scaffolding
 ================
 
+Citetaion: [![DOI](https://zenodo.org/badge/12929/i5K-KINBRE-script-share/Irys-scaffolding.svg)](http://dx.doi.org/10.5281/zenodo.17584)
+
 scripts to parse IrysView output
 
 KSU_bioinfo_lab
@@ -199,5 +201,4 @@ SUMMARY
 SUMMARY
 
 **analyze_irys_output.pl - This script was replaced by stitch.pl**
-
 
