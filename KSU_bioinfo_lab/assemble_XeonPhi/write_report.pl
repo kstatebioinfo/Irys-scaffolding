@@ -64,7 +64,6 @@ my $refaligner_version='UNKNOWN'; # Was 3520 at the time this code was written
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print colored ("#      WARNING: SCRIPT CURRENTLY UNDER DEVELOPMENT        #", 'bold white on_blue'), "\n";
 print "#  write_report.pl Version 1.0.0                          #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 2/26/15                    #\n";
