@@ -2,7 +2,6 @@
 ##################################################################################
 #   
 #	USAGE: perl AssembleIrysXeonPhi.pl [options]
-#   WARNING: SCRIPT CURRENTLY UNDER DEVELOPMENT!!!!
 #
 #  Created by jennifer shelton
 #
@@ -19,7 +18,6 @@ use Pod::Usage;
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print colored ("#      WARNING: SCRIPT CURRENTLY UNDER DEVELOPMENT        #", 'bold white on_blue'), "\n";
 print "#  AssembleIrysXeonPhi.pl Version 1.0.0                   #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 2/26/15                    #\n";
