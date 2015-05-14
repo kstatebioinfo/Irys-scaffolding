@@ -41,7 +41,6 @@ my $best_dir =''; # no trailing slash (e.g. /home/bionano/bionano/Trib_cast_0002
 ##############         Print informative message               ##################
 #################################################################################
 print "###########################################################\n";
-print colored ("#       WARNING: SCRIPT CURRENTLY UNDER DEVELOPMENT       #", 'bold white on_blue'), "\n";
 print "#  sewing_machine.pl Version 1.0.0                        #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 5/05/15                    #\n";
