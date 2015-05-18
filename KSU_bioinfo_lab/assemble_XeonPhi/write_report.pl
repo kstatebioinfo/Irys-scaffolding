@@ -64,7 +64,7 @@ my $refaligner_version='UNKNOWN'; # Was 3520 at the time this code was written
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print "#  write_report.pl Version 1.0.0                          #\n";
+print "#  write_report.pl Version 1.0.1                          #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 2/26/15                    #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -379,8 +379,11 @@ unless($de_novo)
     {
         if ($file =~ /\.xmap/)
         {
-            $file =~ /(.*)\.xmap/; # grab the unfiltered XMAP file prefix
-            $prefix = $1;
+            unless ($file =~ /_filtered\.xmap/)
+            {
+                $file =~ /(.*)\.xmap/; # grab the unfiltered XMAP file prefix
+                $prefix = $1;
+            }
         }
     }
     my @in_silico_aligns = glob "$in_silico_align_dir_path/${prefix}*";
