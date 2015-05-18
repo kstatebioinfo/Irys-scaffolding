@@ -549,7 +549,7 @@ FINISH:
 print "Compressing files...\n\n";
 my $compress_log_file = "${out}/compress_log.txt";
 open (my $compress_log, ">", $compress_log_file) or die "Can't open $compress_log_file: $!";
-my $compress = `cd ${out} ; tar -czvf ${project}.tar.gz $project`;
+my $compress = `cd ${out} ; tar -chzvf ${project}.tar.gz $project`;
 print $compress_log "$compress";
 ###########################################################
 #          Print to report: Text File inventory
