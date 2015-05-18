@@ -211,7 +211,7 @@ Above is a screen shot of the menus that you will need to follow to find the con
 <a href="url"><img src="https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/result_post_scaffolding_with_bed.png" align="center" width="830" ></a>
 Above is a screen shot of the second alignment with the contig BED file loaded.
 
-Switch from viewing the final superscaffold alignment to viewing the alignment of the original in silico maps to the assembled genome maps. You do this by highlighting the other alignment in the "Comparison Maps" window to the left. Follow the instructions in the [README.md](https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/README.pdf) to import the `SMAP` and the merged `BED` files. 
+Switch from viewing the final superscaffold alignment. Load the the `sv_xmap` of the original in silico maps to the assembled genome maps from the `smaps` directory. You do this by highlighting the other alignment in the "Comparison Maps" window to the left. Follow the instructions in the [README.md](https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/README.pdf) to import the `SMAP` and the merged `BED` files. 
 
 You will only see the annotation when viewing a single anchor from the "Anchor" drop down list at the bottom of the screen. Anchor #1 is the only anchor with predicted structural variants. Viewing the annotations will generally require redrawing the image according to the instructions in [README.md](https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/README.pdf). 
 
