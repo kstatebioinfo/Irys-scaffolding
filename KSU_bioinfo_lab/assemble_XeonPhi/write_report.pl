@@ -323,14 +323,14 @@ unless($de_novo)
         die "Can't create $report_dir/in_silico_cmap/";
     }
     my (${cmap_filename}, ${cmap_directories}, ${cmap_suffix}) = fileparse($cmap,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
-    link ($cmap,"$report_dir/in_silico_cmap/${cmap_filename}.cmap" ) or warn "Can't link $cmap to $report_dir/in_silico_cmap/${cmap_filename}.cmap: $!";
+    link ($cmap,"$report_dir/in_silico_cmap/${cmap_filename}.cmap" ) or warn "Warning: Can't link $cmap to $report_dir/in_silico_cmap/${cmap_filename}.cmap (this may have been created durring an earlier step): $!";
     if (-f "${cmap_directories}${cmap_filename}_key.txt")
     {
-        link ("${cmap_directories}${cmap_filename}_key.txt","$report_dir/in_silico_cmap/${cmap_filename}_key.txt") or warn "Can't link ${cmap_directories}${cmap_filename}_key.txt to $report_dir/in_silico_cmap/${cmap_filename}_key.txt: $!";
+        link ("${cmap_directories}${cmap_filename}_key.txt","$report_dir/in_silico_cmap/${cmap_filename}_key.txt") or warn "Warning: Can't link ${cmap_directories}${cmap_filename}_key.txt to $report_dir/in_silico_cmap/${cmap_filename}_key.txt (this may have been created durring an earlier step): $!";
     }
     else
     {
-        die "Error you are missing a key to your in silico reference CMAP in the same directory as $cmap. Create a new CMAP with ${dirname}/third-party/fa2cmap_multi.pl and try again.\n";
+        die "Error you are missing a key file to your in silico reference CMAP in the same directory as $cmap. Create a new CMAP with ${dirname}/third-party/fa2cmap_multi.pl and try again.\n";
     }
     ###############################################################################
     #########                     create new AGP                         ##########
@@ -373,7 +373,7 @@ unless($de_novo)
         die "Can't create $report_dir/align_in_silico_xmap/";
     }
     my $in_silico_align_dir_path = "${out}/${alignment_parameters}";
-    opendir (my $in_silico_align_dir, $in_silico_align_dir_path) or die "Can't open $in_silico_align_dir_path: $!";
+    opendir (my $in_silico_align_dir, $in_silico_align_dir_path) or die "Can't open $in_silico_align_dir_path. Either this means you are running a de novo project and should add the \"--de_novo\" flag to your command or make sure that sewing_machine.pl has already been run with the same parameters to produce alignments.: $!";
     my $prefix;
     for my $file (readdir $in_silico_align_dir)
     {
