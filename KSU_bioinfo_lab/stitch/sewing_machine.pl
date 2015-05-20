@@ -41,7 +41,7 @@ my $best_dir =''; # no trailing slash (e.g. /home/bionano/bionano/Trib_cast_0002
 ##############         Print informative message               ##################
 #################################################################################
 print "###########################################################\n";
-print "#  sewing_machine.pl Version 1.0.0                        #\n";
+print "#  sewing_machine.pl Version 1.0.1                        #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 5/05/15                    #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -175,12 +175,12 @@ for my $stringency (@alignments)
     open (my $comparison_metrics, ">>", $comparison_metrics_temp_file) or die "Can't open $comparison_metrics_temp_file: $!";
     print $comparison_metrics "$stringency :\n";
     close($comparison_metrics);
-    my $xmap_alignments = `perl ~/BNGCompare/BNGCompare.pl -f $fasta -r $reference_maps -q ${genome_map_cmap} -x ${out}/${stringency}/${filename}_to_${genome_map_filename}.xmap -o $comparison_metrics_temp_file`;
+    my $xmap_alignments = `perl ${dirname}/../../../BNGCompare/BNGCompare.pl -f $fasta -r $reference_maps -q ${genome_map_cmap} -x ${out}/${stringency}/${filename}_to_${genome_map_filename}.xmap -o $comparison_metrics_temp_file`;
     print $xmap_alignments;
     ###########################################################
     #                      Flip xmap
     ###########################################################
-    my $flip =  `perl ${dirname}/../stitch/flip_xmap.pl ${out}/${stringency}/${filename}_to_${genome_map_filename}.xmap ${out}/${stringency}/${genome_map_filename}_to_${filename}`;
+    my $flip =  `perl ${dirname}/flip_xmap.pl ${out}/${stringency}/${filename}_to_${genome_map_filename}.xmap ${out}/${stringency}/${genome_map_filename}_to_${filename}`;
     print $flip;
     ###########################################################
     #                 Get flipped metrics
@@ -199,13 +199,13 @@ for my $stringency (@alignments)
     {
         print "Unable to create $stitch_dir\n";
     }
-    my $stitch_out =  `perl ${dirname}/../stitch/stitch.pl -r ${out}/${stringency}/${filename}_to_${genome_map_filename}_q.cmap -x ${out}/${stringency}/${genome_map_filename}_to_${filename}.flip -f $fasta -o $stitch_dir/${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_1 --f_con ${f_con} --f_algn ${f_algn} --s_con ${s_con} --s_algn ${s_algn}`;
+    my $stitch_out =  `perl ${dirname}/stitch.pl -r ${out}/${stringency}/${filename}_to_${genome_map_filename}_q.cmap -x ${out}/${stringency}/${genome_map_filename}_to_${filename}.flip -f $fasta -o $stitch_dir/${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_1 --f_con ${f_con} --f_algn ${f_algn} --s_con ${s_con} --s_algn ${s_algn}`;
     my $agp_list_file = "${out}/$stringency/agp_list.txt";
     open (my $agp_list, ">", $agp_list_file) or die "Can't open $agp_list_file: $!";
     ###########################################################
     #              Make filtered xmap
     ###########################################################
-    my $make_filtered = `perl ${dirname}/../stitch/get_passing_xmap.pl -f ${out}/${stringency}/stitch${stitch_num}/${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${stitch_num}_all_filtered.xmap -o ${out}/${stringency}/${filename}_to_${genome_map_filename}.xmap`;
+    my $make_filtered = `perl ${dirname}/get_passing_xmap.pl -f ${out}/${stringency}/stitch${stitch_num}/${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${stitch_num}_all_filtered.xmap -o ${out}/${stringency}/${filename}_to_${genome_map_filename}.xmap`;
     print $make_filtered;
     ###########################################################
     #    Remove stitch directory if no scaffolds were made
@@ -256,12 +256,12 @@ for my $stringency (@alignments)
         ###########################################################
         #                       Flip xmap
         ###########################################################
-        my $iter_flip_align = `perl ${dirname}/../stitch/flip_xmap.pl ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${genome_map_filename}.xmap ${out_dir}${genome_map_filename}_to_${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}`;
+        my $iter_flip_align = `perl ${dirname}/flip_xmap.pl ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${genome_map_filename}.xmap ${out_dir}${genome_map_filename}_to_${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}`;
         print $iter_flip_align;
         ###########################################################
         #                      Call stitch
         ###########################################################
-        my $iter_stitch_out = `perl ${dirname}/../stitch/stitch.pl -r ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${genome_map_filename}_q.cmap -x ${out_dir}${genome_map_filename}_to_${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}.flip -f ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold.fasta -o ${out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${stitch_num} --f_con ${f_con} --f_algn ${f_algn} --s_con ${s_con} --s_algn ${s_algn}`;
+        my $iter_stitch_out = `perl ${dirname}/stitch.pl -r ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${genome_map_filename}_q.cmap -x ${out_dir}${genome_map_filename}_to_${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}.flip -f ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold.fasta -o ${out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${stitch_num} --f_con ${f_con} --f_algn ${f_algn} --s_con ${s_con} --s_algn ${s_algn}`;
         ###########################################################
         #    Remove stitch directory if no scaffolds were made
         ###########################################################
@@ -275,7 +275,7 @@ for my $stringency (@alignments)
             ###########################################################
             my $superscaffold_metrics =  `perl ~/BNGCompare/N50.pl ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold.fasta $comparison_metrics_temp_file`;
             print $superscaffold_metrics;
-            my $collapse_agp = `perl ${dirname}/../stitch/collapse_agp.pl -a $agp_list_file`;
+            my $collapse_agp = `perl ${dirname}/collapse_agp.pl -a $agp_list_file`;
             print $collapse_agp;
             ###########################################################
             #                 Remove intermediate directories
@@ -329,6 +329,16 @@ __END__
 sewing_machine.pl - iteratively super scaffold genome FASTA files with BioNano genome maps using stitch.pl. The pipeline runs alignments with default and relaxed parameters.
  
 If you are using this as part of the assemble_XeonPhi pipeline the parameter `-b` is the directory with the "contigs" subdirectory created for the "best" assembly.
+ 
+=head1 REQUIREMENTS
+
+Requires BNGCompare from https://github.com/i5K-KINBRE-script-share/BNGCompare in your home directory. Also requires BioPerl. Also requires RefAligner. Install BioNano scripts and executables in `~/scripts` and `~/tools` directories respectively. Follow the Linux installation instructions in the "2.5.1 IrysSolve server RefAligner and Assembler" section of http://www.bnxinstall.com/training/docs/IrysViewSoftwareInstallationGuide.pdf to install RefAligner.
+
+=head1 UPDATES
+
+B<sewing_machine.pl Version 1.0.1>
+
+Replaced "${dirname}/../stitch/" with "${dirname}/" now that sewing_machine.pl is in the "stitch" subdirectory. Also changed "~/BNGCompare/BNGCompare.pl" to "${dirname}/../../../BNGCompare/BNGCompare.pl" for systems where the user does not want to clone to the home directory.
  
 
 =head1 USAGE
@@ -428,10 +438,6 @@ Allows user to adjust minimum negative gap length allowed (default = 20000 bp).
 
 The RefAligner p-value threshold (default = 1e-8). Can use -T as low as 1e-6 for small bacterial genomes or up to 1e-9 or 1e-10 for large genomes (> 1G).
 
-=head1 REQUIREMENTS
- 
-Requires BNGCompare from https://github.com/i5K-KINBRE-script-share/BNGCompare in your home directory. Also requires BioPerl. Also requires RefAligner. Install BioNano scripts and executables in `~/scripts` and `~/tools` directories respectively. Follow the Linux installation instructions in the "2.5.1 IrysSolve server RefAligner and Assembler" section of http://www.bnxinstall.com/training/docs/IrysViewSoftwareInstallationGuide.pdf to install RefAligner.
- 
 =back
 
 =head1 DESCRIPTION
@@ -453,12 +459,6 @@ The script also outputs contigs, an agp, and a bed file of contigs within supers
 
 B<QUICK START:>
 
-git clone https://github.com/i5K-KINBRE-script-share/Irys-scaffolding
-
-cd Irys-scaffolding/KSU_bioinfo_lab/stitch
-
-mkdir results
-
-perl stitch.pl -r sample_data/sample.r.cmap -x sample_data/sample.xmap -f sample_data/sample_scaffold.fasta -o results/test_output --f_con 15 --f_algn 30 --s_con 6 --s_algn 90
+Follow instructions in https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/stitch/sewing_machine_LAB.md
 
 =cut
