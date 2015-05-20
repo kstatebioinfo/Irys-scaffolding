@@ -41,7 +41,7 @@ my $best_dir =''; # no trailing slash (e.g. /home/bionano/bionano/Trib_cast_0002
 ##############         Print informative message               ##################
 #################################################################################
 print "###########################################################\n";
-print "#  sewing_machine.pl Version 1.0.1                        #\n";
+print "#  sewing_machine.pl Version 1.0.2                        #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 5/05/15                    #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -54,6 +54,10 @@ print "###########################################################\n";
 my $man = 0;
 my $help = 0;
 my $version = 0;
+my $refaligner_dir = '~/tools'; # default path without trailing slash
+my $maxmem = 256; # maximum memory in Gbytes
+
+
 GetOptions (
     'help|?' => \$help,
     'version' => \$version,
@@ -70,7 +74,9 @@ GetOptions (
     'n|neg_gap:f' => \$neg_gap,
     'o|out_dir:s' => \$out,
     'g|genome_maps:s' => \$genome_maps,
-    'b|best_dir:s' => \$best_dir
+    'b|best_dir:s' => \$best_dir,
+    'a|aligner_dir:s' => \$refaligner_dir,
+    'x|maxmem:i' => \$maxmem
 )
 or pod2usage(2);
 pod2usage(1) if $help;
@@ -166,7 +172,7 @@ for my $stringency (@alignments)
     ###########################################################
     print "Running first alignments and comparison for $stringency stringency...\n";
     print $alignment_log "Running first alignments and comparison for $stringency stringency...\n";
-    my $align = `~/tools/RefAligner -i ${genome_map_cmap} -ref $reference_maps -o ${out}/${stringency}/${filename}_to_${genome_map_filename} -res 2.9 $alignment_parameters{$stringency} -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -T $T -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 1 -hash -hashdelta 50 -mres 1e-3 -insertThreads 4 -nosplit 2 -biaswt 0 -indel -rres 1.2 -f -maxmem 256`;
+    my $align = `${refaligner_dir}/RefAligner -i ${genome_map_cmap} -ref $reference_maps -o ${out}/${stringency}/${filename}_to_${genome_map_filename} -res 2.9 $alignment_parameters{$stringency} -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -T $T -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 1 -hash -hashdelta 50 -mres 1e-3 -insertThreads 4 -nosplit 2 -biaswt 0 -indel -rres 1.2 -f -maxmem ${maxmem}`;
     print $alignment_log "$align";
     ###########################################################
     #                 Get most metrics
@@ -251,7 +257,7 @@ for my $stringency (@alignments)
         {
             print "Unable to create $out_dir\n";
         }
-        my $iter_xmap_alignments = `~/tools/RefAligner -i ${genome_map_cmap} -ref ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold*.cmap -o ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${genome_map_filename} -res 2.9 $alignment_parameters{$stringency} -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -T $T -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 1 -hash -hashdelta 50 -mres 1e-3 -insertThreads 4 -nosplit 2 -biaswt 0 -indel -rres 1.2 -f -maxmem 256`;
+        my $iter_xmap_alignments = `${refaligner_dir}/RefAligner -i ${genome_map_cmap} -ref ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold*.cmap -o ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${genome_map_filename} -res 2.9 $alignment_parameters{$stringency} -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -T $T -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 1 -hash -hashdelta 50 -mres 1e-3 -insertThreads 4 -nosplit 2 -biaswt 0 -indel -rres 1.2 -f -maxmem ${maxmem}`;
         print $alignment_log "$iter_xmap_alignments";
         ###########################################################
         #                       Flip xmap
@@ -340,6 +346,10 @@ B<sewing_machine.pl Version 1.0.1>
 
 Replaced "${dirname}/../stitch/" with "${dirname}/" now that sewing_machine.pl is in the "stitch" subdirectory. Also changed "~/BNGCompare/BNGCompare.pl" to "${dirname}/../../../BNGCompare/BNGCompare.pl" for systems where the user does not want to clone to the home directory.
  
+B<sewing_machine.pl Version 1.0.2>
+ 
+Added optional flag to change RefAligner directory from the default "~/tools". Also added ability to change "-maxmem" flag for RefAligner which specifies maximum memory in Gbytes (default 256).
+ 
 
 =head1 USAGE
 
@@ -364,6 +374,11 @@ Required options (for assemble_XeonPhi pipeline):
  
     -b	     best assembly directory (replaces -o and -g)
  
+System options:
+
+    -a	     The directory for RefAligner
+    -x	     Maximum Memory in Gbytes
+
 Filtering options:
 
     --f_con	 first minimum confidence score (default = 20)
@@ -437,6 +452,14 @@ Allows user to adjust minimum negative gap length allowed (default = 20000 bp).
 =item B<-t, --p-value_T>
 
 The RefAligner p-value threshold (default = 1e-8). Can use -T as low as 1e-6 for small bacterial genomes or up to 1e-9 or 1e-10 for large genomes (> 1G).
+ 
+=item B<-a, --aligner_dir>
+
+The directory for RefAligner (without a trailing slash). (default = ~/tools )
+
+=item B<-x, --maxmem>
+
+Maximum Memory in Gbytes (default 256)
 
 =back
 
