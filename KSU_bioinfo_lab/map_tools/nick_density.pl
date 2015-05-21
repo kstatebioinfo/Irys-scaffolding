@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-##################################################################################
+################################################################################
 #
 # USAGE: perl nick_density.pl [OPTIONS] FASTA_FILES...
 # Script reports label density for various enzymes for FASTA files. Script requires fa2cmap_multi.pl from BioNano Genomics.
@@ -7,7 +7,7 @@
 #
 #  Created by jennifer shelton 01/15/15
 #
-##################################################################################
+################################################################################
 use strict;
 use warnings;
 use Math::BigFloat;
@@ -19,11 +19,12 @@ use File::Basename; # enable maipulating of the full path
 #use Term::ANSIColor;
 use Getopt::Long;
 use Pod::Usage;
+use File::Spec;
 ###############################################################################
 ##############         Print informative message             ##################
 ###############################################################################
 print "###########################################################\n";
-print "#   nick_density.pl Version 1.0                           #\n";
+print "#   nick_density.pl Version 1.1                           #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 03/13/15                   #\n";
 print "#  github.com/i5K-KINBRE-script-share                     #\n";
@@ -36,7 +37,6 @@ print "###########################################################\n";
 my $two_enzyme;
 my $man = 0;
 my $help = 0;
-my $path_to_fa2cmap_multi = '~/bin/fa2cmap_multi.pl';
 GetOptions (
     'help|?' => \$help,
     'man' => \$man,
@@ -50,6 +50,7 @@ if (scalar(@ARGV) == 0)
 {
     die "No FASTA flies were selected.\n";
 }
+my $path_to_fa2cmap_multi = "${dirname}/../assemble_XeonPhi/third-party/fa2cmap_multi.pl";
 ###############################################################################
 ##############              run                              ##################
 ###############################################################################
@@ -61,6 +62,7 @@ if ($two_enzyme)
 print "FASTA Enzyme : Nick density (nicks/100kb)\n";
 for my $fasta (@ARGV)
 {
+    $fasta = File::Spec->rel2abs($fasta);
     my (${filename}, ${directories}, ${suffix}) = fileparse($fasta,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
     ##################################################################
     ##############        Create cmap directory     ##################
@@ -84,9 +86,9 @@ for my $fasta (@ARGV)
         print "$filename $enzyme : $1\n";
         print $out "$filename,$enzyme,$1\n";
     }
-    ###############################################################################
-    ##############              Clean up files                   ##################
-    ###############################################################################
+    ############################################################################
+    ##############              Clean up files                ##################
+    ############################################################################
     opendir (my $temp_out_dir, $directories) or die "Can't open $directories: $!";
     while (my $entry = readdir $temp_out_dir )
     {
@@ -111,14 +113,16 @@ __END__
 
 =head1 NAME
  
-nick_density.pl - Script reports label density for various enzymes for FASTA files. Script requires fa2cmap_multi.pl from BioNano Genomics. Script logs the label density values in the project's directory with the file suffix "_nick_density.csv" as well as printing the results to the screen. You could also run the following if you just wanted to quickly check density for BspQI and BbvCI with the "--two_enzyme" flag.
+nick_density.pl - Script reports label density for various enzymes for FASTA files. Script logs the label density values in the project's directory with the file suffix "_nick_density.csv" as well as printing the results to the screen. You could also run the following if you just wanted to quickly check density for BspQI and BbvCI with the "--two_enzyme" flag.
 
 Script can also determine label density for multiple FASTA files.
 
 
 =head1 UPDATES:
 
-None to date
+B<nick_density.pl Version 1.1>
+ 
+Script now handles relative paths more robustly and now finds the copy of fa2cmap_multi.pl in the Irys-scaffolding repo.
 
 =head1 DEPENDENCIES
 
@@ -159,7 +163,7 @@ Quickly check density for only the two most commonly used enzymes, BspQI and Bbv
 
 B<OUTPUT DETAILS:>
 
-Script requires Perl and fa2cmap_multi.pl from BioNano Genomics. Change line 39 to change the path to fa2cmap_multi.pl from ~/bin/fa2cmap_multi.pl if needed.
+Script requires Perl.
 
 
 =cut
