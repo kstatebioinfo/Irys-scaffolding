@@ -41,7 +41,7 @@ my $best_dir =''; # no trailing slash (e.g. /home/bionano/bionano/Trib_cast_0002
 ##############         Print informative message               ##################
 #################################################################################
 print "###########################################################\n";
-print "#  sewing_machine.pl Version 1.0.2                        #\n";
+print "#  sewing_machine.pl Version 1.0.3                        #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 5/05/15                    #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -51,13 +51,13 @@ print "###########################################################\n";
 #########################################################################
 ########################  End Default variables  ########################
 #########################################################################
+my $dirname = dirname(__FILE__);
 my $man = 0;
 my $help = 0;
 my $version = 0;
-my $refaligner_dir = '~/tools'; # default path without trailing slash
+my $refaligner = '~/tools/RefAligner'; # default path to RefAligner
+my $bngcompare = "${dirname}/../../../BNGCompare/BNGCompare.pl"; # default path to BNGCompare.pl
 my $maxmem = 256; # maximum memory in Gbytes
-
-
 GetOptions (
     'help|?' => \$help,
     'version' => \$version,
@@ -75,7 +75,8 @@ GetOptions (
     'o|out_dir:s' => \$out,
     'g|genome_maps:s' => \$genome_maps,
     'b|best_dir:s' => \$best_dir,
-    'a|aligner_dir:s' => \$refaligner_dir,
+    'a|aligner:s' => \$refaligner,
+    'c|bngcompare:s' => \$bngcompare,
     'x|maxmem:i' => \$maxmem
 )
 or pod2usage(2);
@@ -86,7 +87,6 @@ if ($version)
     print "sewing_machine.pl Version 1.0.0\n";
     exit;
 }
-my $dirname = dirname(__FILE__);
 unless (($best_dir) || (($out) && ($genome_maps)))
 {
     die "Either specify option -b / --best_dir or both options -o / --out_dir and -g / --genome_maps.\n"; # report missing required variables
@@ -95,6 +95,14 @@ die "Option -p or --proj not specified.\n" unless $project; # report missing req
 die "Option -e or --enzyme not specified.\n" unless $enzyme; # report missing required variables
 die "Option -f or --fasta not specified.\n" unless $fasta; # report missing required variables
 die "Option -r or --ref_maps not specified.\n" unless $reference_maps; # report missing required variables
+unless (-f $refaligner)
+{
+    die "Can't find RefAligner at $refaligner. Use the -a flag to give working path.\n";
+}
+unless (-f $bngcompare)
+{
+    die "Can't find BNGCompare.pl at $bngcompare. Use the -c flag to give working path.\n";
+}
 ###########################################################
 #          Get genome map CMAP file (fullpath)
 ###########################################################
@@ -172,7 +180,7 @@ for my $stringency (@alignments)
     ###########################################################
     print "Running first alignments and comparison for $stringency stringency...\n";
     print $alignment_log "Running first alignments and comparison for $stringency stringency...\n";
-    my $align = `${refaligner_dir}/RefAligner -i ${genome_map_cmap} -ref $reference_maps -o ${out}/${stringency}/${filename}_to_${genome_map_filename} -res 2.9 $alignment_parameters{$stringency} -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -T $T -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 1 -hash -hashdelta 50 -mres 1e-3 -insertThreads 4 -nosplit 2 -biaswt 0 -indel -rres 1.2 -f -maxmem ${maxmem}`;
+    my $align = `${refaligner} -i ${genome_map_cmap} -ref $reference_maps -o ${out}/${stringency}/${filename}_to_${genome_map_filename} -res 2.9 $alignment_parameters{$stringency} -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -T $T -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 1 -hash -hashdelta 50 -mres 1e-3 -insertThreads 4 -nosplit 2 -biaswt 0 -indel -rres 1.2 -f -maxmem ${maxmem}`;
     print $alignment_log "$align";
     ###########################################################
     #                 Get most metrics
@@ -257,7 +265,7 @@ for my $stringency (@alignments)
         {
             print "Unable to create $out_dir\n";
         }
-        my $iter_xmap_alignments = `${refaligner_dir}/RefAligner -i ${genome_map_cmap} -ref ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold*.cmap -o ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${genome_map_filename} -res 2.9 $alignment_parameters{$stringency} -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -T $T -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 1 -hash -hashdelta 50 -mres 1e-3 -insertThreads 4 -nosplit 2 -biaswt 0 -indel -rres 1.2 -f -maxmem ${maxmem}`;
+        my $iter_xmap_alignments = `${refaligner} -i ${genome_map_cmap} -ref ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold*.cmap -o ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_to_${genome_map_filename} -res 2.9 $alignment_parameters{$stringency} -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -T $T -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 1 -hash -hashdelta 50 -mres 1e-3 -insertThreads 4 -nosplit 2 -biaswt 0 -indel -rres 1.2 -f -maxmem ${maxmem}`;
         print $alignment_log "$iter_xmap_alignments";
         ###########################################################
         #                       Flip xmap
@@ -349,7 +357,10 @@ Replaced "${dirname}/../stitch/" with "${dirname}/" now that sewing_machine.pl i
 B<sewing_machine.pl Version 1.0.2>
  
 Added optional flag to change RefAligner directory from the default "~/tools". Also added ability to change "-maxmem" flag for RefAligner which specifies maximum memory in Gbytes (default 256).
- 
+
+B<sewing_machine.pl Version 1.0.3>
+
+Changed optional flag "-a" to change full RefAligner path from the default "~/tools/RefAligner". Also added ability to change the default path to BNGCompare.pl. The default path assumes BNGCompare was cloned into the same parent directory that Irys-scaffolding was cloned into.
 
 =head1 USAGE
 
@@ -376,8 +387,10 @@ Required options (for assemble_XeonPhi pipeline):
  
 System options:
 
-    -a	     The directory for RefAligner
-    -x	     Maximum Memory in Gbytes
+    -a	     The path for RefAligner (default ~/tools/RefAligner)
+    -c	     The path for BNGCompare.pl (default assumes 
+             BNGCompare was cloned into the same dir as Irys-scaffolding)
+    -x	     Maximum Memory in Gbytes (default 256)
 
 Filtering options:
 
@@ -453,9 +466,13 @@ Allows user to adjust minimum negative gap length allowed (default = 20000 bp).
 
 The RefAligner p-value threshold (default = 1e-8). Can use -T as low as 1e-6 for small bacterial genomes or up to 1e-9 or 1e-10 for large genomes (> 1G).
  
-=item B<-a, --aligner_dir>
+=item B<-a, --aligner>
 
-The directory for RefAligner (without a trailing slash). (default = ~/tools )
+The path for RefAligner. (default = ~/tools/RefAligner )
+ 
+=item B<-c, --bngcompare>
+
+The path for BNGCompare.pl. Default assumes BNGCompare was cloned into the same parent directory that Irys-scaffolding was cloned into.
 
 =item B<-x, --maxmem>
 
