@@ -13,6 +13,7 @@ use File::Basename; # enable manipulating of the full path
 # use List::Util qw(sum);
 use Getopt::Long;
 use Pod::Usage;
+use File::Spec;
 ###############################################################################
 ##############         Print informative message             ##################
 ###############################################################################
@@ -46,6 +47,7 @@ my $dirname = dirname(__FILE__);
 die "Option -a or --assembly_dir not specified.\n" unless $assembly_directory; # report missing required variables
 die "Option -p or --proj not specified.\n" unless $project; # report missing required variables
 die "Option -g or --genome not specified.\n" unless $genome; # report missing required variables
+$assembly_directory = File::Spec->rel2abs($assembly_directory);
 ###############################################################################
 ########## create array with all default assembly directories #################
 ###############################################################################

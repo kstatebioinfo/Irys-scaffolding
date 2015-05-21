@@ -1,11 +1,11 @@
 #!/usr/bin/perl
-##################################################################################
+################################################################################
 #   
 #	USAGE: perl AssembleIrysXeonPhi.pl [options]
 #
 #  Created by jennifer shelton
 #
-##################################################################################
+################################################################################
 use strict;
 use warnings;
 use Term::ANSIColor;
@@ -14,9 +14,10 @@ use Term::ANSIColor;
 use File::Basename; # enable manipulating of the full path
 use Getopt::Long;
 use Pod::Usage;
-##################################################################################
-##############         Print informative message                ##################
-##################################################################################
+use File::Spec;
+################################################################################
+##############         Print informative message              ##################
+################################################################################
 print "###########################################################\n";
 print "#  AssembleIrysXeonPhi.pl Version 1.0.0                   #\n";
 print "#                                                         #\n";
@@ -26,10 +27,19 @@ print "#  perl AssembleIrysXeonPhi.pl -help # for usage/options  #\n";
 print "#  perl AssembleIrysXeonPhi.pl -man # for more details    #\n";
 print "###########################################################\n";
 #perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble/AssembleIrysXeonPhi.pl -g 230 -a test_assembly_dir - p Oryz_sati_0027
-
-##################################################################################
-##############                get arguments                     ##################
-##################################################################################
+print colored (" Note: This pipeline was designed to run on a Xeon Phi server with     ",'bold bright_magenta on_blue'), "\n";
+print colored (" 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux       ",'bold bright_magenta on_blue'), "\n";
+print colored (" CentOS 7 operating system. Customization of the                       ",'bold bright_magenta on_blue'), "\n";
+print colored (" \"Customize RefAligner Settings\" section of                            ",'bold bright_magenta on_blue'), "\n";
+print colored (" Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/rescale_stretch.pl  ",'bold bright_magenta on_blue'), "\n";
+print colored (" may be required to run the BioNano Assembler on a different machine.  ",'bold bright_magenta on_blue'), "\n";
+print colored (" Customization of                                                      ",'bold bright_magenta on_blue'), "\n";
+print colored (" Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/clusterArguments.xml",'bold bright_magenta on_blue'), "\n";
+print colored (" may also be required for assembly to run successfully on a different  ",'bold bright_magenta on_blue'), "\n";
+print colored (" cluster.                                                              ",'bold bright_magenta on_blue'),"\n";
+################################################################################
+##############                get arguments                   ##################
+################################################################################
 my ($assembly_directory,$genome,$reference,$project);
 
 my $man = 0;
@@ -61,11 +71,13 @@ die "Option -g or --genome not specified.\n" unless $genome; # report missing re
 unless ($de_novo)
 {
     die "Option -r or --ref not specified.\n" unless $reference; # report missing required variables
+    $reference = File::Spec->rel2abs($reference);
 }
+$assembly_directory = File::Spec->rel2abs($assembly_directory);
 my $T = 0.00001/$genome;
-###################################################################################
-############          Generate BNX file summaries                ##################
-###################################################################################
+################################################################################
+############          Generate BNX file summaries             ##################
+################################################################################
 print "##################################################################################\n";
 print "Generating BNX stats...\n";
 print "##################################################################################\n";
@@ -80,9 +92,9 @@ print "$linked";
 my $bnx_dir = "${assembly_directory}/bnx";
 my $bnx_stats=`perl ${dirname}/../map_tools/bnx_stats.pl -l 100 ${bnx_dir}/Molecules_*.bnx`;
 print "$bnx_stats";
-###################################################################################
-############    Make reference CMAP available for final report   ##################
-###################################################################################
+################################################################################
+############   Make reference CMAP available for final report ##################
+################################################################################
 unless ($de_novo)
 {
     my $ref_directory = "${assembly_directory}/${project}/in_silico_cmap";
@@ -96,9 +108,9 @@ unless ($de_novo)
     my $cmap_key_linked= `ln -s \'${cmap_directories}${cmap_filename}_key.txt\' \'${ref_directory}/${cmap_filename}_key.txt\'`; # link reference cmap key to final report directory
     print "$cmap_key_linked";
 }
-###################################################################################
-############          Rescaling molecules in BNX files         ##################
-###################################################################################
+################################################################################
+############         Rescaling molecules in BNX files         ##################
+################################################################################
 if ($de_novo)
 {
     print "##################################################################################\n";
@@ -115,9 +127,9 @@ else
     my $rescale_stretch=`perl ${dirname}/rescale_stretch.pl $assembly_directory $T $project $reference`;
     print "$rescale_stretch";
 }
-###################################################################################
-############                Writing assembly scripts               ################
-###################################################################################
+################################################################################
+############                Writing assembly scripts            ################
+################################################################################
 print "##################################################################################\n";
 print "Writing assembly scripts...\n";
 print "##################################################################################\n";
@@ -135,9 +147,9 @@ else
 
 print "Finished running AssembleIrysXeonPhi.pl\n";
 
-##################################################################################
-##############                  Documentation                   ##################
-##################################################################################
+################################################################################
+##############                  Documentation                 ##################
+################################################################################
 ## style adapted from http://www.perlmonks.org/?node_id=489861 
 __END__
 
