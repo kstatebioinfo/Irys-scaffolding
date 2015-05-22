@@ -116,7 +116,7 @@ The ultimate goal is often to produce consensus genome maps that can be used to 
 
 Take a look at the `~/de_novo_sample_assembly_working_directory/Assembly_quality_metrics.csv` file to see the results for this assembly. The file `Assembly_parameter_tests.csv` has details about each assembly that can be used find the best assembly.
 
-###Step 7: Choose your summarize the results for your best assembly
+###Step 7: Summarize the results for your best assembly
 
 Read about the software in this section:
 
