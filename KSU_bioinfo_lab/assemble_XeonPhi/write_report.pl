@@ -115,14 +115,17 @@ if (($out) && ($genome_maps))
     $out = File::Spec->rel2abs( "$out" ) ;
     $genome_maps = File::Spec->rel2abs( "$genome_maps" ) ;
 }
-elsif ($best_dir)
+elsif (($best_dir) && ($fasta) && ($cmap))
 {
     $fasta = File::Spec->rel2abs( "$fasta" ) ;
     $cmap = File::Spec->rel2abs( "$cmap" ) ;
 }
 unless ($de_novo)
 {
-    $best_dir = File::Spec->rel2abs( "$best_dir" ) ;
+    if ($best_dir)
+    {
+        $best_dir = File::Spec->rel2abs( "$best_dir" ) ;
+    }
 }
 if ($optional_assembly_optArguments_xml)
 {
