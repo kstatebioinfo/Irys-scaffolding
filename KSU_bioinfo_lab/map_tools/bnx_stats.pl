@@ -25,7 +25,7 @@ use Pod::Usage;
 print "###########################################################\n";
 print colored ("#             NOTE: SCRIPT ASSUMES DATA WITH              #", 'bold white on_blue'), "\n";
 print colored ("#     BACKBONE & A SINGLE CHANNEL OF LABEL INFORMATION    #", 'bold white on_blue'), "\n";
-print "#   bnx_stats.pl Version 1.1                              #\n";
+print "#   bnx_stats.pl Version 1.2                              #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 01/15/15                   #\n";
 print "#  github.com/i5K-KINBRE-script-share                     #\n";
@@ -82,6 +82,7 @@ open (my $temp_mean_label_snr, ">", 'temp_mean_label_snr.tab') or die "Can't ope
 open (my $temp_mean_label_intensity, ">", 'temp_mean_label_intensity.tab') or die "Can't open temp_mean_label_intensity.tab: $!"; # Open temp files
 my (@lengths,@mol_intensities,@mol_snrs,@mol_NumberofLabels);
 my $total_length =0;
+my $label_count = 0;
 my ($bnx_count,$scan_count);
 print "Reading BNX files of molecule maps...\n";
 my $file_count = scalar(@ARGV); # get number of bnx files
@@ -142,6 +143,7 @@ for my $input_bnx (@ARGV)
                 {
                     next;
                 }
+                $label_count += $NumberofLabels;
                 ++$bnx_count; # count molecules
                 $total_flowcell_length += $Lengthkb;
                 push (@lengths,$Lengthkb);
@@ -181,6 +183,8 @@ for my $input_bnx (@ARGV)
     }
     my $new_total_length = $total_length + $total_flowcell_length;
     $total_length = $new_total_length;
+#    my $new_total_label_count = $total_label_count + $total_flowcell_label_count;
+#    $total_label_count = $new_total_label_count;
 }
 ##############################################################################
 # CALCULATE N50:
@@ -211,8 +215,8 @@ print "Graphing data...\n";
 my $graph_data = `Rscript ${dirname}/histograms.R temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_snrs.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab 'Summary metrics for molecule maps > $min_length_kb kb within all BNX files' 'Molecule map N50: $current_length (kb)' 'Cumulative length of molecule maps: $total_length (Mb)' 'Number of molecule maps: $bnx_count'`;
 print "$graph_data\n";
 unlink qw/temp_bnx_lengths.tab temp_bnx_mol_intensities.tab temp_bnx_mol_NumberofLabels.tab temp_mean_label_snr.tab temp_mean_label_intensity.tab Rplots.pdf temp_bnx_mol_snrs.tab/;
-
-
+my $label_density = ($label_count/ $total_length)/10;
+print "Label density (labels/ 100kb) : $label_density\n";
 
 print "Done graphing BNX QC metrics\n";
 ###############################################################################
@@ -229,7 +233,13 @@ Script has no options other than help menus currently but it was designed to be 
 
 =head1 UPDATES: 
  
-bnx_stats.pl Version 1.1 - rescaled the x-axis for graphs to better fit data and added filters for rare but very large values of "Number of Labels" and "Molecule SNR" so that the bulk of the data could be visualized.
+B<bnx_stats.pl Version 1.1>
+ 
+Rescaled the x-axis for graphs to better fit data and added filters for rare but very large values of "Number of Labels" and "Molecule SNR" so that the bulk of the data could be visualized.
+ 
+B<bnx_stats.pl Version 1.2>
+ 
+Now prints molecule label density to the screen.
  
 =head1 DEPENDENCIES
  
