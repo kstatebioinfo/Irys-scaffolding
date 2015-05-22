@@ -17,6 +17,7 @@ use Term::ANSIColor;
 use File::Basename; # enable manipulating of the full path
 use Getopt::Long;
 use Pod::Usage;
+use File::Spec;
 #####################################################################
 ########################  Project variables  ########################
 #####################################################################
@@ -103,8 +104,33 @@ pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 if ($version)
 {
-    print "run_compare.pl Version 1.0.0\n";
+    print "run_compare.pl Version 1.0.1\n";
     exit;
+}
+###########################################################
+#      Convert relative paths to full paths for links
+###########################################################
+if (($out) && ($genome_maps))
+{
+    $out = File::Spec->rel2abs( "$out" ) ;
+    $genome_maps = File::Spec->rel2abs( "$genome_maps" ) ;
+}
+elsif ($best_dir)
+{
+    $fasta = File::Spec->rel2abs( "$fasta" ) ;
+    $cmap = File::Spec->rel2abs( "$cmap" ) ;
+}
+unless ($de_novo)
+{
+    $best_dir = File::Spec->rel2abs( "$best_dir" ) ;
+}
+if ($optional_assembly_optArguments_xml)
+{
+    $optional_assembly_optArguments_xml = File::Spec->rel2abs( "$optional_assembly_optArguments_xml" ) ;
+}
+if ($optional_assembly_pipelineReport_txt)
+{
+    $optional_assembly_pipelineReport_txt = File::Spec->rel2abs( "$optional_assembly_pipelineReport_txt" ) ;
 }
 my $dirname = dirname(__FILE__);
 unless (($best_dir) || (($out) && ($genome_maps)))

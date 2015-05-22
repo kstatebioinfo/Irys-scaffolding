@@ -16,7 +16,11 @@ use File::Basename; # enable maipulating of the full path
 ##############           Customize RefAligner Settings        ##################
 ################################################################################
 # This pipeline was designed to run on a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. Customization of this section may be required to run the BioNano Assembler on a different machine. Customization of Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/clusterArguments.xml may also be required for assembly to run successfully on a different cluster.
-my $refaligner = '~/tools/RefAligner'; # See "~/tools/RefAligner -help" for details about these parameters
+my $refaligner = $ENV{"HOME"} ."/tools/RefAligner"; # See "~/tools/RefAligner -help" for details about these parameters
+unless (-f $refaligner)
+{
+    die "Can't find RefAligner at $refaligner. Please add correct path to rescale_stretch.pl and retry:\n $!";
+}
 my $maxmem = 240;
 my $hashmaxmem = 120;
 my $insertThreads = 16;

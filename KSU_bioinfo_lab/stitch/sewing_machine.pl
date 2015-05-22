@@ -18,6 +18,7 @@ use Term::ANSIColor;
 use File::Basename; # enable manipulating of the full path
 use Getopt::Long;
 use Pod::Usage;
+use File::Spec;
 #####################################################################
 ########################  Default variables  ########################
 #####################################################################
@@ -55,7 +56,7 @@ my $dirname = dirname(__FILE__);
 my $man = 0;
 my $help = 0;
 my $version = 0;
-my $refaligner = '~/tools/RefAligner'; # default path to RefAligner
+my $refaligner = $ENV{"HOME"}."/tools/RefAligner"; # default path to RefAligner
 my $bngcompare = "${dirname}/../../../BNGCompare/BNGCompare.pl"; # default path to BNGCompare.pl
 my $maxmem = 256; # maximum memory in Gbytes
 GetOptions (
@@ -103,6 +104,8 @@ unless (-f $bngcompare)
 {
     die "Can't find BNGCompare.pl at $bngcompare. Use the -c flag to give working path.\n";
 }
+my (${bngcompare_filename}, ${bngcompare_directories}, ${bngcompare_suffix}) = fileparse($bngcompare,qr/\.[^.]*/); # directories has trailing slash
+
 ###########################################################
 #          Get genome map CMAP file (fullpath)
 ###########################################################
@@ -189,7 +192,7 @@ for my $stringency (@alignments)
     open (my $comparison_metrics, ">>", $comparison_metrics_temp_file) or die "Can't open $comparison_metrics_temp_file: $!";
     print $comparison_metrics "$stringency :\n";
     close($comparison_metrics);
-    my $xmap_alignments = `perl ${dirname}/../../../BNGCompare/BNGCompare.pl -f $fasta -r $reference_maps -q ${genome_map_cmap} -x ${out}/${stringency}/${filename}_to_${genome_map_filename}.xmap -o $comparison_metrics_temp_file`;
+    my $xmap_alignments = `perl $bngcompare -f $fasta -r $reference_maps -q ${genome_map_cmap} -x ${out}/${stringency}/${filename}_to_${genome_map_filename}.xmap -o $comparison_metrics_temp_file`;
     print $xmap_alignments;
     ###########################################################
     #                      Flip xmap
@@ -199,7 +202,7 @@ for my $stringency (@alignments)
     ###########################################################
     #                 Get flipped metrics
     ###########################################################
-    my $flip_align =  `perl ~/BNGCompare/xmap_stats.pl -x ${out}/${stringency}/${genome_map_filename}_to_${filename}.flip -o $comparison_metrics_temp_file`;
+    my $flip_align =  `perl ${bngcompare_directories}xmap_stats.pl -x ${out}/${stringency}/${genome_map_filename}_to_${filename}.flip -o $comparison_metrics_temp_file`;
     print "$flip_align";
     ###########################################################
     #                       Stitch1
@@ -287,7 +290,7 @@ for my $stringency (@alignments)
             ###########################################################
             #                 Get super scaffold metrics
             ###########################################################
-            my $superscaffold_metrics =  `perl ~/BNGCompare/N50.pl ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold.fasta $comparison_metrics_temp_file`;
+            my $superscaffold_metrics =  `perl ${bngcompare_directories}N50.pl ${old_out_dir}${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_${previous_stitch}_superscaffold.fasta $comparison_metrics_temp_file`;
             print $superscaffold_metrics;
             my $collapse_agp = `perl ${dirname}/collapse_agp.pl -a $agp_list_file`;
             print $collapse_agp;
@@ -328,7 +331,7 @@ for my $stringency (@alignments)
 ###########################################################
 my $comparison_metrics_file = "${out}/${filename}_BNGCompare.csv";
 my $comparison_metrics_temp_file = "${out}/${filename}_BNGCompare_temp.csv";
-my $refineCSV = `perl ~/BNGCompare/refine_comparison.pl $comparison_metrics_temp_file $comparison_metrics_file`;
+my $refineCSV = `perl ${bngcompare_directories}refine_comparison.pl $comparison_metrics_temp_file $comparison_metrics_file`;
 print "$refineCSV ";
 
 print "Done iterating stitch and generating comparisons of BioNano genome maps and in silico maps\n";

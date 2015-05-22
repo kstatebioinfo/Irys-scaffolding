@@ -1,11 +1,11 @@
 #!/usr/bin/perl
-##################################################################################
+################################################################################
 #   
 #	USAGE: perl assemble.pl <assembly_directory> <p_value Threshold> <project prefix> <genome size> <reference>
 #
 #  Created by Jennifer Shelton
 #
-##################################################################################
+################################################################################
 use strict;
 use warnings;
 # use List::Util qw(max);
@@ -13,9 +13,23 @@ use warnings;
 #use XML::Simple;
 #use Data::Dumper;
 use File::Basename; # enable manipulating of the full path
-##################################################################################
-##############                     get arguments                ##################
-##################################################################################
+################################################################################
+##############       Customize BioNano Script Settings        ##################
+################################################################################
+# This pipeline was designed to run on a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. Customization of this section may be required to run the BioNano Assembler on a different machine. Customization of Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/clusterArguments.xml may also be required for assembly to run successfully on a different cluster.
+my $pipelineCL = $ENV{"HOME"} ."/scripts/pipelineCL.py"; #Change if not ~/scripts/pipelineCL.py
+unless (-f $pipelineCL)
+{
+    die "Can't find pipelineCL.py at $pipelineCL . Please add correct path to assemble.pl and retry:\n $!";
+}
+my $tools = $ENV{"HOME"} ."/tools"; #Change if not ~/tools
+unless (-d $tools)
+{
+    die "Can't find the BioNano directory \"tools\" at $tools . Please add correct path to assemble.pl and retry:\n $!";
+}
+################################################################################
+##############                     get arguments              ##################
+################################################################################
 my $assembly_directory = $ARGV[0];
 my $T = $ARGV[1];
 my $project = $ARGV[2];
@@ -25,7 +39,7 @@ if ($ARGV[4])
 {
     if (-f "$ARGV[4]")
     {
-        $de_novo=0; # change project is not de novo because a refernce CMAP exists
+        $de_novo=0; # change project is not de novo because a reference CMAP exists
         print "de_novo = false\n";
 
     }
@@ -43,9 +57,9 @@ unless($de_novo == 1)
 print "assembly_directory = $ARGV[0]\n";
 print "T = $ARGV[1]\n";
 my $dirname = dirname(__FILE__); # has no trailing slash
-##################################################################################
-##############              get parameters for XML              ##################
-##################################################################################
+################################################################################
+##############              get parameters for XML            ##################
+################################################################################
 my $T_relaxed = $T * 10;
 my $T_strict = $T/10;
 my ($FP,$FN,$SiteSD_Kb,$ScalingSD_Kb_square,$LabelDensity);
@@ -67,9 +81,9 @@ unless($de_novo == 1)
     }
     print "Label Density for aligned molecule maps per 100 kb: $LabelDensity\n";
 }
-##################################################################################
-##############  Select optArguments.xml file based on genome size ################
-##################################################################################
+################################################################################
+##############  Select optArguments.xml file based on genome size ##############
+################################################################################
 my $xml_infile;
 my $iterations = 5;
 if ( $genome < 100 )
@@ -86,9 +100,9 @@ else
     $iterations = 2; # Can lower the number of itereations for large genomes in future if needed
 
 }
-##################################################################################
-##############                 parse XML                        ##################
-##################################################################################
+################################################################################
+##############                 parse XML                      ##################
+################################################################################
 my %p_value = (
     'default_t_150' => "$T",
     'relaxed_t_150' => "$T_relaxed",
