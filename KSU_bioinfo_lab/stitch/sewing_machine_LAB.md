@@ -64,7 +64,7 @@ Stitch filters alignment XMAP files by confidence and the percent of the maximum
 We will start with the default filtering parameters for confidence scores (`--f_con` and `--s_con`) and percent of possible alignment thresholds (`--f_algn` and `--s_algn`). Generally we start with default parameters and then test more or less strict options if our first results are not satisfactory.
 
 ```
-perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/sewing_machine.pl -o ~/test-sewing-machine-out -g ~/dev/Irys-scaffolding/KSU_bioinfo_lab/sample_output_directory/BioNano_consensus_cmap/ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1.cmap -p Esch_coli_1_2015_000 -e BspQI -f ~/Irys-scaffolding/KSU_bioinfo_lab/sample_assembly_working_directory/fasta_and_cmap/NC_010473_mock_scaffolds.fna -r ~/Irys-scaffolding/KSU_bioinfo_lab/sample_output_directory/in_silico_cmap/NC_010473_mock_scaffolds_BspQI.cmap
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/stitch/sewing_machine.pl -o ~/test-sewing-machine-out -g ~/Irys-scaffolding/KSU_bioinfo_lab/sample_output_directory/BioNano_consensus_cmap/ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1.cmap -p Esch_coli_1_2015_000 -e BspQI -f ~/Irys-scaffolding/KSU_bioinfo_lab/sample_assembly_working_directory/fasta_and_cmap/NC_010473_mock_scaffolds.fna -r ~/Irys-scaffolding/KSU_bioinfo_lab/sample_output_directory/in_silico_cmap/NC_010473_mock_scaffolds_BspQI.cmap
 ```
 
 #####Note: If you need to create a new CMAP file of in silico maps from a genome FASTA for your `-r` reference argument you can run the following command to create in silico maps.
@@ -89,11 +89,15 @@ Read about the software in this section:
 perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/write_report.pl -help
 ```
 
-Open the `~/test-sewing-machine-out/NC_010473_mock_scaffolds_BNGCompare.csv` file to find the best alignment parameters. Like choosing the best assembly you want to find a result that balances sensitivity (i.e. long total aligned length) without increasing alignment redundancy excessively.
+Open the `~/test-sewing-machine-out/NC_010473_mock_scaffolds_BNGCompare.csv` file to find the best alignment parameters. Like choosing the best assembly you want to find a result that balances sensitivity (i.e. long total aligned length) without increasing alignment redundancy excessively. In this case we will use the default alignment in our final report.
+
+```
+perl ~/Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/write_report.pl -o ~/test-sewing-machine-out -g ~/Irys-scaffolding/KSU_bioinfo_lab/sample_output_directory/BioNano_consensus_cmap/ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1.cmap -p Esch_coli_1_2015_000 -e BspQI -f ~/sample_assembly_working_directory/fasta_and_cmap/NC_010473_mock_scaffolds.fna -r ~/Irys-scaffolding/KSU_bioinfo_lab/sample_output_directory/in_silico_cmap/NC_010473_mock_scaffolds_BspQI.cmap --alignment_parameters default_alignment
+```
 
 ###Step 4: Explore your results in IrysView
 
-Read your `~/sample_assembly_working_directory/report.txt` file or explore files in your `~/sample_assembly_working_directory/Esch_coli_1_2015_000` output directory. The contents of the `~/sample_assembly_working_directory/Esch_coli_1_2015_000` directory are also compressed in the `~/sample_assembly_working_directory/Esch_coli_1_2015_000.tar.gz` file. Move this to a windows machine and follow instructions in the https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/README.pdf file to view alignments in IrysView.
+Read your `~/sample_assembly_working_directory/report.txt` file or explore files in your `~/sample_assembly_working_directory/Esch_coli_1_2015_000` final output directory. The contents of the `~/sample_assembly_working_directory/Esch_coli_1_2015_000` directory are also compressed in the `~/sample_assembly_working_directory/Esch_coli_1_2015_000.tar.gz` file. Move this to a windows machine and follow instructions in the https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/README.pdf file to view alignments in IrysView.
 
 Following the instructions for loading an XMAP, first import the XMAP file of the alignment of the original in silico maps to the assembled genome maps. This will be in the `Esch_coli_1_2015_000/align_in_silico_xmap` directory.
 
