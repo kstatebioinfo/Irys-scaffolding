@@ -20,11 +20,12 @@ use File::Basename; # enable manipulating of the full path
 # use List::Util qw(sum);
 use Getopt::Long;
 use Pod::Usage;
+use File::Spec;
 ###############################################################################
 ##############         Print informative message             ##################
 ###############################################################################
 print "###########################################################\n";
-print "#  prep_bnxXeonPhi.pl Version 1.0.0                       #\n";
+print "#  prep_bnxXeonPhi.pl Version 1.0.1                       #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 02/26/15                   #\n";
 print "#  https://github.com/i5K-KINBRE-script-share             #\n";
@@ -51,52 +52,52 @@ pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 
 die "Option -a or --assembly_dir not specified.\n" unless $assembly_directory; # report missing required variables
+my $bnx_directory = File::Spec->rel2abs( "${assembly_directory}/bnx" ) ;
 
-
-my $bnx_directory = "${assembly_directory}/bnx";
 unless(mkdir $bnx_directory)
 {
-    print "Unable to create $assembly_directory\n";
+    print "Unable to create $bnx_directory.\n";
     if (!$extra_bnxs)
     {
         die "Exiting because the bnx directory may already exist. If you intend to add new bnx files to an existing directory check that these are not already linked to the current bnx directory and then use the -extra_bnxs flag to continue.\n";
     }
     
 }
-###############################################################################
+################################################################################
 ##############            Move and rename files              ##################
 ###############################################################################
 #my @dir_array = ('/homes', grep -d, glob "$dataset_directory/*");
-my $logfile = "$bnx_directory/bnx_key.txt";
+my $logfile = File::Spec->rel2abs("$bnx_directory/bnx_key.txt") ;
 open (my $log, ">", $logfile) or die "Can't open $logfile\n";
-my $dataset_directory = "${assembly_directory}/Datasets";
+my $dataset_directory = File::Spec->rel2abs("${assembly_directory}/Datasets");
 opendir (my $data, $dataset_directory) or die "Can't open $dataset_directory. Transfer the Dataset directory from Irysview after generating the run report.\n";
 print "Creating links to all Molecules.bnx files in a common bnx directory and renaming with auto-incremented numbers...\n";
 my $i=1;
+
 while (my $entry = readdir $data )
 {
     if (-d "${dataset_directory}/${entry}")
     {
         unless (($entry eq '..') || ($entry eq '.'))
         {
-            my $link = "$bnx_directory/Molecules_${i}.bnx";
+            my $link = File::Spec->rel2abs("$bnx_directory/Molecules_${i}.bnx");
             while (-e $link)
             {
                 ++$i;
-                $link = "$bnx_directory/Molecules_${i}.bnx";
-                
+                $link = File::Spec->rel2abs("$bnx_directory/Molecules_${i}.bnx");
             }
 #            my $linked= `ln -s \'${dataset_directory}/${entry}/Molecules.bnx\' $link`; # code for new Datasets directories
-            my $linked= `ln -s \'${dataset_directory}/${entry}/Detect Molecules/Molecules.bnx\' $link`; # code for older Datasets directories
-            print "$linked";
-            print $log "Molecules_${i}.bnx\t${entry}\n";
-            ++$i;
+            my $current_bnx = File::Spec->rel2abs( "${dataset_directory}/${entry}/Detect Molecules/Molecules.bnx");
+            if (-f $current_bnx)
+            {
+                my $linked= `ln -s \'$current_bnx\' $link`; # code for older Datasets directories
+                print "$linked";
+                print $log "Molecules_${i}.bnx\t${entry}\n";
+                ++$i;
+            }
         }
-        
     }
 }
-
-
 print "Done preping the working directory for AssembleIrysXeonPhi.pl\n";
 
 ###############################################################################
@@ -115,6 +116,11 @@ To use first make an assembly working directory for a project. Transfer the "Dat
  
  The parameter -a should be the same as the -a parameter that you will use for the assembly script. It is the assembly working directory for a project.
  
+=head1 UPDATES
+ 
+B<prep_bnxXeonPhi.pl Version 1.0.1>
+ 
+Script now handles relative paths more robustly.
  
 =head1 USAGE
  

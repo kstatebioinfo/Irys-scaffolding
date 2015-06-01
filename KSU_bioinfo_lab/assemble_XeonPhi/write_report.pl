@@ -17,6 +17,7 @@ use Term::ANSIColor;
 use File::Basename; # enable manipulating of the full path
 use Getopt::Long;
 use Pod::Usage;
+use File::Spec;
 #####################################################################
 ########################  Project variables  ########################
 #####################################################################
@@ -64,8 +65,7 @@ my $refaligner_version='UNKNOWN'; # Was 3520 at the time this code was written
 ##############         Print informative message                ##################
 ##################################################################################
 print "###########################################################\n";
-print colored ("#      WARNING: SCRIPT CURRENTLY UNDER DEVELOPMENT        #", 'bold white on_blue'), "\n";
-print "#  write_report.pl Version 1.0.0                          #\n";
+print "#  write_report.pl Version 1.0.1                          #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 2/26/15                    #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -104,8 +104,36 @@ pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 if ($version)
 {
-    print "run_compare.pl Version 1.0.0\n";
+    print "run_compare.pl Version 1.0.1\n";
     exit;
+}
+###########################################################
+#      Convert relative paths to full paths for links
+###########################################################
+if (($out) && ($genome_maps))
+{
+    $out = File::Spec->rel2abs( "$out" ) ;
+    $genome_maps = File::Spec->rel2abs( "$genome_maps" ) ;
+}
+elsif (($best_dir) && ($fasta) && ($cmap))
+{
+    $fasta = File::Spec->rel2abs( "$fasta" ) ;
+    $cmap = File::Spec->rel2abs( "$cmap" ) ;
+}
+unless ($de_novo)
+{
+    if ($best_dir)
+    {
+        $best_dir = File::Spec->rel2abs( "$best_dir" ) ;
+    }
+}
+if ($optional_assembly_optArguments_xml)
+{
+    $optional_assembly_optArguments_xml = File::Spec->rel2abs( "$optional_assembly_optArguments_xml" ) ;
+}
+if ($optional_assembly_pipelineReport_txt)
+{
+    $optional_assembly_pipelineReport_txt = File::Spec->rel2abs( "$optional_assembly_pipelineReport_txt" ) ;
 }
 my $dirname = dirname(__FILE__);
 unless (($best_dir) || (($out) && ($genome_maps)))
@@ -324,14 +352,14 @@ unless($de_novo)
         die "Can't create $report_dir/in_silico_cmap/";
     }
     my (${cmap_filename}, ${cmap_directories}, ${cmap_suffix}) = fileparse($cmap,qr/\.[^.]*/); # directories has trailing slash includes dot in suffix
-    link ($cmap,"$report_dir/in_silico_cmap/${cmap_filename}.cmap" ) or warn "Can't link $cmap to $report_dir/in_silico_cmap/${cmap_filename}.cmap: $!";
+    link ($cmap,"$report_dir/in_silico_cmap/${cmap_filename}.cmap" ) or warn "Warning: Can't link $cmap to $report_dir/in_silico_cmap/${cmap_filename}.cmap (this may have been created durring an earlier step): $!";
     if (-f "${cmap_directories}${cmap_filename}_key.txt")
     {
-        link ("${cmap_directories}${cmap_filename}_key.txt","$report_dir/in_silico_cmap/${cmap_filename}_key.txt") or warn "Can't link ${cmap_directories}${cmap_filename}_key.txt to $report_dir/in_silico_cmap/${cmap_filename}_key.txt: $!";
+        link ("${cmap_directories}${cmap_filename}_key.txt","$report_dir/in_silico_cmap/${cmap_filename}_key.txt") or warn "Warning: Can't link ${cmap_directories}${cmap_filename}_key.txt to $report_dir/in_silico_cmap/${cmap_filename}_key.txt (this may have been created durring an earlier step): $!";
     }
     else
     {
-        die "Error you are missing a key to your in silico reference CMAP in the same directory as $cmap. Create a new CMAP with ${dirname}/third-party/fa2cmap_multi.pl and try again.\n";
+        die "Error you are missing a key file to your in silico reference CMAP in the same directory as $cmap. Create a new CMAP with ${dirname}/third-party/fa2cmap_multi.pl and try again.\n";
     }
     ###############################################################################
     #########                     create new AGP                         ##########
@@ -374,14 +402,17 @@ unless($de_novo)
         die "Can't create $report_dir/align_in_silico_xmap/";
     }
     my $in_silico_align_dir_path = "${out}/${alignment_parameters}";
-    opendir (my $in_silico_align_dir, $in_silico_align_dir_path) or die "Can't open $in_silico_align_dir_path: $!";
+    opendir (my $in_silico_align_dir, $in_silico_align_dir_path) or die "Can't open $in_silico_align_dir_path. Either this means you are running a de novo project and should add the \"--de_novo\" flag to your command or make sure that sewing_machine.pl has already been run with the same parameters to produce alignments.: $!";
     my $prefix;
     for my $file (readdir $in_silico_align_dir)
     {
         if ($file =~ /\.xmap/)
         {
-            $file =~ /(.*)\.xmap/; # grab the unfiltered XMAP file prefix
-            $prefix = $1;
+            unless ($file =~ /_filtered\.xmap/)
+            {
+                $file =~ /(.*)\.xmap/; # grab the unfiltered XMAP file prefix
+                $prefix = $1;
+            }
         }
     }
     my @in_silico_aligns = glob "$in_silico_align_dir_path/${prefix}*";
@@ -547,7 +578,7 @@ FINISH:
 print "Compressing files...\n\n";
 my $compress_log_file = "${out}/compress_log.txt";
 open (my $compress_log, ">", $compress_log_file) or die "Can't open $compress_log_file: $!";
-my $compress = `cd ${out} ; tar -czvf ${project}.tar.gz $project`;
+my $compress = `cd ${out} ; tar -chzvf ${project}.tar.gz $project`;
 print $compress_log "$compress";
 ###########################################################
 #          Print to report: Text File inventory

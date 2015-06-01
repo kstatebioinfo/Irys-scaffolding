@@ -4,6 +4,8 @@
 
 All of the scripts you will need to complete this lab as well as the sample datasets will be copied to your computer as you follow the instructions below. You should type or paste the text in the beige code block into your terminal as you follow along with the instructions below. If you are not used to commandline, practice with real data is one of the best ways to learn.
 
+**Note: This pipeline was designed to run on a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. Customization of the "Customize RefAligner Settings" section of Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/rescale_stretch.pl may be required to run the BioNano Assembler on a different machine. Customization of Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/clusterArguments.xml may also be required for assembly to run successfully on a different cluster.**
+
 If you would like a quick primer on basic linux commands try these 10 minute lessons from Software Carpentry http://software-carpentry.org/v4/shell/index.html. 
 
 We will be using a BNX file of single molecule maps generated on the BioNano Irys genome mapping system from Escherichia coli genomic DNA. We will prep these raw molecule maps and write and run a series of assemblies for them. We will then find the best assembly and use this to super scaffold and compare with a fragmented copy of the Escherichia coli str. K-12 substr. DH10B genome and summarize our final assembly metrics and alignments. 
@@ -211,7 +213,7 @@ Above is a screen shot of the menus that you will need to follow to find the con
 <a href="url"><img src="https://raw.githubusercontent.com/i5K-KINBRE-script-share/Irys-scaffolding/master/KSU_bioinfo_lab/assemble_XeonPhi/images/result_post_scaffolding_with_bed.png" align="center" width="830" ></a>
 Above is a screen shot of the second alignment with the contig BED file loaded.
 
-Switch from viewing the final superscaffold alignment to viewing the alignment of the original in silico maps to the assembled genome maps. You do this by highlighting the other alignment in the "Comparison Maps" window to the left. Follow the instructions in the [README.md](https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/README.pdf) to import the `SMAP` and the merged `BED` files. 
+Switch from viewing the final superscaffold alignment. Load the the `sv_xmap` of the original in silico maps to the assembled genome maps from the `smaps` directory. You do this by highlighting the other alignment in the "Comparison Maps" window to the left. Follow the instructions in the [README.md](https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/README.pdf) to import the `SMAP` and the merged `BED` files. 
 
 You will only see the annotation when viewing a single anchor from the "Anchor" drop down list at the bottom of the screen. Anchor #1 is the only anchor with predicted structural variants. Viewing the annotations will generally require redrawing the image according to the instructions in [README.md](https://github.com/i5K-KINBRE-script-share/Irys-scaffolding/blob/master/KSU_bioinfo_lab/assemble_XeonPhi/README.pdf). 
 

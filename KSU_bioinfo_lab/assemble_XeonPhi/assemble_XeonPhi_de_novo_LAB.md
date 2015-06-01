@@ -7,6 +7,8 @@ All of the scripts you will need to complete this lab as well as the sample data
 
 If you would like a quick primer on basic linux commands try these 10 minute lessons from Software Carpentry http://software-carpentry.org/v4/shell/index.html. 
 
+**Note: This pipeline was designed to run on a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. Customization of the "Customize RefAligner Settings" section of Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/rescale_stretch.pl may be required to run the BioNano Assembler on a different machine. Customization of Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/clusterArguments.xml may also be required for assembly to run successfully on a different cluster.**
+
 We will be using a BNX file of single molecule maps generated on the BioNano Irys genome mapping system from Escherichia coli genomic DNA. We will write and run a series of assemblies for them. We will then find the best assembly and summarize our final assembly metrics. 
 
 The basic steps of the assemble_XeonPhi pipeline for de novo projects are A) The Irys produces TIFF files that are converted into BNX text files of molecule maps. B) Each IrysChip produces one BNX file for each of two flowcells. C) Each BNX file in the `bnx/` subdirectory of the `-a` assembly working directory is merged and molecule map quality metrics are summarized and plotted. D) Base assembly code is determined based on estimated genome size with Default Noise parameters. E) The first assemblies are run with a variety of p-value thresholds (at least one assembly is also run with defult noise parameters). F) The best of the first assemblies (red oval) is chosen and a version of this assembly is produced with a variety of minimum molecule length filters.
@@ -114,7 +116,7 @@ The ultimate goal is often to produce consensus genome maps that can be used to 
 
 Take a look at the `~/de_novo_sample_assembly_working_directory/Assembly_quality_metrics.csv` file to see the results for this assembly. The file `Assembly_parameter_tests.csv` has details about each assembly that can be used find the best assembly.
 
-###Step 7: Choose your summarize the results for your best assembly
+###Step 7: Summarize the results for your best assembly
 
 Read about the software in this section:
 
