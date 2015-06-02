@@ -176,7 +176,7 @@ for my $stringency (@alignments)
 {
     unless(mkdir "${out}/$stringency")
     {
-        print "Unable to create ${out}/$stringency\n";
+        print "Unable to create ${out}/$stringency: $!";
     }
     ###########################################################
     #                         Align
@@ -214,7 +214,7 @@ for my $stringency (@alignments)
     my $stitch_dir = "${out}/${stringency}/stitch${stitch_num}";
     unless(mkdir $stitch_dir)
     {
-        print "Unable to create $stitch_dir\n";
+        print "Unable to create $stitch_dir: $!";
     }
     my $stitch_out =  `perl ${dirname}/stitch.pl -r ${out}/${stringency}/${filename}_to_${genome_map_filename}_q.cmap -x ${out}/${stringency}/${genome_map_filename}_to_${filename}.flip -f $fasta -o $stitch_dir/${project}_${f_con}_${f_algn}_${s_con}_${s_algn}_1 --f_con ${f_con} --f_algn ${f_algn} --s_con ${s_con} --s_algn ${s_algn}`;
     my $agp_list_file = "${out}/$stringency/agp_list.txt";
