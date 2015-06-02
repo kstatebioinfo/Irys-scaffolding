@@ -85,7 +85,7 @@ pod2usage(1) if $help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $man;
 if ($version)
 {
-    print "sewing_machine.pl Version 1.0.0\n";
+    print "sewing_machine.pl Version 1.0.3\n";
     exit;
 }
 unless (($best_dir) || (($out) && ($genome_maps)))
