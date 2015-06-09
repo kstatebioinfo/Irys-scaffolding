@@ -17,12 +17,12 @@ use File::Basename; # enable manipulating of the full path
 ##############       Customize BioNano Script Settings        ##################
 ################################################################################
 # This pipeline was designed to run on a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. Customization of this section may be required to run the BioNano Assembler on a different machine. Customization of Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/clusterArguments.xml may also be required for assembly to run successfully on a different cluster.
-my $pipelineCL = $ENV{"HOME"} ."/scripts/pipelineCL.py"; #Change if not ~/scripts/pipelineCL.py
+my $pipelineCL = $ENV{"HOME"} ."/dev-scripts/pipelineCL.py"; #Change if not ~/scripts/pipelineCL.py
 unless (-f $pipelineCL)
 {
     die "Can't find pipelineCL.py at $pipelineCL . Please add correct path to assemble.pl and retry:\n $!";
 }
-my $tools = $ENV{"HOME"} ."/tools"; #Change if not ~/tools
+my $tools = $ENV{"HOME"} ."/dev-tools/"; #Change if not ~/tools
 unless (-d $tools)
 {
     die "Can't find the BioNano directory \"tools\" at $tools . Please add correct path to assemble.pl and retry:\n $!";
@@ -233,11 +233,11 @@ for my $stringency (@commands)
     }
     if ($de_novo == 1)
     {
-        print $out_assemble "python2 ~/scripts/pipelineCL.py -T 240 -j 240 -N 6 -i $iterations -a $xml_final -w -t ~/tools/ -l $out_dir -b ${assembly_directory}/all_flowcells/bnx_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -U -C ${dirname}/clusterArguments.xml\n";
+        print $out_assemble "python2 $pipelineCL -T 240 -j 240 -N 6 -i $iterations -a $xml_final -w -t $tools -l $out_dir -b ${assembly_directory}/all_flowcells/bnx_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -U -C ${dirname}/clusterArguments.xml\n";
     }
     else
     {
-        print $out_assemble "python2 ~/scripts/pipelineCL.py -T 240 -j 240 -N 6 -i $iterations -a $xml_final -w -t ~/tools/ -l $out_dir -b ${assembly_directory}/all_flowcells/bnx_merged_adj_rescaled.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -U -C ${dirname}/clusterArguments.xml\n";
+        print $out_assemble "python2 $pipelineCL -T 240 -j 240 -N 6 -i $iterations -a $xml_final -w -t $tools -l $out_dir -b ${assembly_directory}/all_flowcells/bnx_merged_adj_rescaled.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -U -C ${dirname}/clusterArguments.xml\n";
     }
     if ($min_length != 150)
     {
