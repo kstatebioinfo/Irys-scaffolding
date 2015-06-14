@@ -42,7 +42,7 @@ my $best_dir =''; # no trailing slash (e.g. /home/bionano/bionano/Trib_cast_0002
 ##############         Print informative message               ##################
 #################################################################################
 print "###########################################################\n";
-print "#  sewing_machine.pl Version 1.0.3                        #\n";
+print "#  sewing_machine.pl Version 1.0.4                        #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 5/05/15                    #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -185,6 +185,13 @@ for my $stringency (@alignments)
     print $alignment_log "Running first alignments and comparison for $stringency stringency...\n";
     my $align = `${refaligner} -i ${genome_map_cmap} -ref $reference_maps -o ${out}/${stringency}/${filename}_to_${genome_map_filename} -res 2.9 $alignment_parameters{$stringency} -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -T $T -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 1 -hash -hashdelta 50 -mres 1e-3 -insertThreads 4 -nosplit 2 -biaswt 0 -indel -rres 1.2 -f -maxmem ${maxmem}`;
     print $alignment_log "$align";
+    ###########################################################
+    #              Test that RefAligner ran
+    ###########################################################
+    unless (-f "${out}/${stringency}/${filename}_to_${genome_map_filename}.xmap")
+    {
+        die "No XMAP file was produced by Refaligner for ${out}/${stringency}/${filename}_to_${genome_map_filename}.xmap: $!";
+    }
     ###########################################################
     #                 Get most metrics
     ###########################################################
@@ -364,6 +371,10 @@ Added optional flag to change RefAligner directory from the default "~/tools". A
 B<sewing_machine.pl Version 1.0.3>
 
 Changed optional flag "-a" to change full RefAligner path from the default "~/tools/RefAligner". Also added ability to change the default path to BNGCompare.pl. The default path assumes BNGCompare was cloned into the same parent directory that Irys-scaffolding was cloned into.
+ 
+B<sewing_machine.pl Version 1.0.4>
+ 
+Scripts now exits if no xmap is created, e.g. because RefAligner does not run properly.
 
 =head1 USAGE
 
