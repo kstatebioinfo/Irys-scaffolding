@@ -22,7 +22,7 @@ unless (-f $pipelineCL)
 {
     die "Can't find pipelineCL.py at $pipelineCL . Please add correct path to assemble.pl and retry:\n $!";
 }
-my $tools = $ENV{"HOME"} ."/tools"; #Change if not ~/tools
+my $tools = $ENV{"HOME"} ."/tools/"; #Change if not ~/tools
 unless (-d $tools)
 {
     die "Can't find the BioNano directory \"tools\" at $tools . Please add correct path to assemble.pl and retry:\n $!";
@@ -233,11 +233,11 @@ for my $stringency (@commands)
     }
     if ($de_novo == 1)
     {
-        print $out_assemble "python2 ~/scripts/pipelineCL.py -T 240 -j 240 -N 6 -i $iterations -a $xml_final -w -t ~/tools/ -l $out_dir -b ${assembly_directory}/all_flowcells/bnx_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -U -C ${dirname}/clusterArguments.xml\n";
+        print $out_assemble "python2 $pipelineCL -T 240 -j 240 -N 6 -i $iterations -a $xml_final -w -t $tools -l $out_dir -b ${assembly_directory}/all_flowcells/bnx_merged.bnx -V 1 -e ${project}_${stringency} -p 0 -U -C ${dirname}/clusterArguments.xml\n";
     }
     else
     {
-        print $out_assemble "python2 ~/scripts/pipelineCL.py -T 240 -j 240 -N 6 -i $iterations -a $xml_final -w -t ~/tools/ -l $out_dir -b ${assembly_directory}/all_flowcells/bnx_merged_adj_rescaled.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -U -C ${dirname}/clusterArguments.xml\n";
+        print $out_assemble "python2 $pipelineCL -T 240 -j 240 -N 6 -i $iterations -a $xml_final -w -t $tools -l $out_dir -b ${assembly_directory}/all_flowcells/bnx_merged_adj_rescaled.bnx -V 1 -e ${project}_${stringency} -p 0 -r $ref -U -C ${dirname}/clusterArguments.xml\n";
     }
     if ($min_length != 150)
     {

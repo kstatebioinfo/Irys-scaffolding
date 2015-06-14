@@ -1,0 +1,13 @@
+# hostname=phihost
+# $ cd /home/bionano; /home/bionano/dev-tools/RefAligner -i /home/bionano/sample_assembly_working_directory/strict_t_150/contigs/Esch_coli_1_2015_000_strict_t_150_refineFinal1/ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1.cmap -ref /home/bionano/sample_assembly_working_directory/strict_t_150/../default_alignment/stitch1/Esch_coli_1_2015_000_20_40_15_90_1_superscaffold_BspQI.cmap -o /home/bionano/sample_assembly_working_directory/strict_t_150/../default_alignment/stitch1/Esch_coli_1_2015_000_20_40_15_90_1_to_ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1 -res 2.9 -FP 0.8 -FN 0.08 -sf 0.20 -sd 0.10 -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -T 1e-08 -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 1 -hash -hashdelta 50 -mres 1e-3 -insertThreads 4 -nosplit 2 -biaswt 0 -indel -rres 1.2 -f -maxmem 256
+# CompileDir= /home/users2/vdergachev/tools/tools.3625.3827/3625 SVNversion=3827 $Header: http://svn.bnm.local:81/svn/Informatics/RefAligner/branches/3625/RefAligner.cpp 3617 2015-03-06 23:19:53Z tanantharaman $
+# FLAGS: USE_SSE=1 USE_AVX=1 USE_MIC=0 USE_PFLOAT=1 USE_RFLOAT=1 DEBUG=1 VERB=1
+# XMAP File Version:	0.2
+# Label Channels:	1
+# Reference Maps From:	/home/bionano/sample_assembly_working_directory/strict_t_150/../default_alignment/stitch1/Esch_coli_1_2015_000_20_40_15_90_1_to_ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1_r.cmap
+# Query Maps From:	/home/bionano/sample_assembly_working_directory/strict_t_150/../default_alignment/stitch1/Esch_coli_1_2015_000_20_40_15_90_1_to_ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1_q.cmap
+#h XmapEntryID	QryContigID	RefContigID	QryStartPos	QryEndPos	RefStartPos	RefEndPos	Orientation	Confidence	HitEnum	QryLen	RefLen	LabelChannel	Alignment
+#f int        	int        	int        	float      	float    	float      	float    	string     	float     	string 	float 	float 	int         	string   
+0	2	1	765981.0	1949581.0	20.0	1188644.2	+	174.31	NA
+1	1	1	2332.0	2782682.5	1200946.3	3906904.9	+	332.23	NA
+2	2	4	19511.3	743436.5	20.0	724689.5	+	98.48	NA

@@ -425,8 +425,10 @@ unless($de_novo)
     #           Prepare: structural variant calls
     ###########################################################
     print "Preparing structural variant calls...\n\n";
-    my $sv_directory = glob "${best_dir}/contigs/*refineFinal1_sv/merged_smaps";
-    my $sv_calls_worked = glob "${best_dir}/contigs/*refineFinal1_sv/merged_smaps/*_merged.bed"; # This file should exist if structural variants were found
+    my @sv_directories = glob "${best_dir}/contigs/*refineFinal1_sv/merged_smaps";
+    my @sv_calls_workeds = glob "${best_dir}/contigs/*refineFinal1_sv/merged_smaps/*_refineFinal1_merged_filter.bed"; # This file should exist if structural variants were found
+    my $sv_directory = $sv_directories[0];
+    my $sv_calls_worked = $sv_calls_workeds[0];
     if (($sv_directory) && (-d "$sv_directory"))
     {
         if ( -f "$sv_calls_worked")
@@ -481,7 +483,7 @@ print "Printing to report: Text for basic assembly and alignment...\n\n";
 print $report "Further training and installation instructions for IrysView are available here: \nhttp://www.bnxinstall.com/training/docs/IrysViewSoftwareInstallationGuide.pdf\nhttp://www.bnxinstall.com/training/docs/IrysViewSoftwareTrainingGuide.pdf\n\nFor further information about your output refer to the included \"README.pdf\" file and the XMAP and CMAP file format specs in \"file_format.zip\".\n\nAssembly of consensus cmap from BioNano molecules\n________________________________________________________________________________________________________\nAll assembly scripts to run the BioNano IrysSolve pipeline were written and molecule maps were prepared using AssembleIrysXeonPhi.pl version ${AssembleIrysXeonPhi_version}. BioNano single molecule maps were filtered with a minimum length of ${minlen} (kb) and ${minsites} minimum labels. A p-value threshold for the BioNano assembler was set to ${AssemblyT} during the initial pair wise alignment stage and p-value thresholds for subsequent assembly stages were based off of this value by AssembleIrysXeonPhi.pl. The BioNano IrysSolve de novo assembly pipeline utilized RefAligner and Assembler binaries version ${refaligner_version} and pipeline scripts version ${pipeline_version}.";
 unless($de_novo)
 {
-    print $report "\n\nCreation of in silico cmap from your fasta genome\n________________________________________________________________________________________________________\nYour FASTA file was in silico nicked for ${enzyme} label(s). Note that in silico maps are only created for FASTA sequences > 20 kb enough and with > 5 labels. \n\nAlignment of BioNano consensus map to fasta genome\n________________________________________________________________________________________________________\n\nA stringency of ${T} was used for alignment with in silico cmaps as the anchor and BioNano consensus maps as the query.\n\n";
+    print $report "\n\nCreation of in silico cmap from your fasta genome\n________________________________________________________________________________________________________\nYour FASTA file was in silico nicked for ${enzyme} label(s). Note that in silico maps are only created for FASTA sequences > 20 kb and with > 5 labels. \n\nAlignment of BioNano consensus map to fasta genome\n________________________________________________________________________________________________________\n\nA stringency of ${T} was used for alignment with in silico cmaps as the anchor and BioNano consensus maps as the query.\n\n";
 }
 else
 {
