@@ -1,6 +1,0 @@
-# CMAP = /home/bionano/sample_assembly_working_directory/strict_t_150/../default_alignment/stitch1/Esch_coli_1_2015_000_20_40_15_90_1_superscaffold_BspQI.cmap
-# filter: Minimum Labels = 5
-# filter: Minimum Size (Kb) = 20
-CompntId	CompntName	CompntLength
-1	Super_scaffold_1	2354379
-2	scaffold1	2336133

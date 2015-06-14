@@ -1,0 +1,19 @@
+# hostname=phihost
+# $ cd /home/bionano; /home/bionano/dev-tools/RefAligner -i /home/bionano/sample_assembly_working_directory/strict_t_150/contigs/Esch_coli_1_2015_000_strict_t_150_refineFinal1/ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1.cmap -ref /home/bionano/sample_assembly_working_directory/strict_t_150/../default_alignment/stitch2/Esch_coli_1_2015_000_20_40_15_90_2_superscaffold_BspQI.cmap -o /home/bionano/sample_assembly_working_directory/strict_t_150/../default_alignment/stitch2/Esch_coli_1_2015_000_20_40_15_90_2_to_ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1 -res 2.9 -FP 0.8 -FN 0.08 -sf 0.20 -sd 0.10 -extend 1 -outlier 1e-4 -endoutlier 1e-2 -deltaX 12 -deltaY 12 -xmapchim 14 -T 1e-08 -hashgen 5 3 2.4 1.5 0.05 5.0 1 1 1 -hash -hashdelta 50 -mres 1e-3 -insertThreads 4 -nosplit 2 -biaswt 0 -indel -rres 1.2 -f -maxmem 256
+# CompileDir= /home/users2/vdergachev/tools/tools.3625.3827/3625 SVNversion=3827 $Header: http://svn.bnm.local:81/svn/Informatics/RefAligner/branches/3625/RefAligner.cpp 3617 2015-03-06 23:19:53Z tanantharaman $
+# FLAGS: USE_SSE=1 USE_AVX=1 USE_MIC=0 USE_PFLOAT=1 USE_RFLOAT=1 DEBUG=1 VERB=1
+# SMAP File Version:	0.0
+# Reference Maps From:	/home/bionano/sample_assembly_working_directory/strict_t_150/../default_alignment/stitch2/Esch_coli_1_2015_000_20_40_15_90_2_to_ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1_r.cmap
+# Query Maps From:	/home/bionano/sample_assembly_working_directory/strict_t_150/../default_alignment/stitch2/Esch_coli_1_2015_000_20_40_15_90_2_to_ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1_q.cmap
+# Xmap Entries From:	/home/bionano/sample_assembly_working_directory/strict_t_150/../default_alignment/stitch2/Esch_coli_1_2015_000_20_40_15_90_2_to_ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1.xmap
+#h SmapEntryID	QryContigID	RefcontigID1	RefcontigID2	QryStartPos	QryEndPos	RefStartPos	RefEndPos	Orientation	Confidence	Type	XmapID1	XmapID2
+#f int        	int        	int         	int         	float      	float    	float      	float    	string     	float 	string 	int	int
+1	4	1	1	232385.1	244412.0	250186.0	266376.0	+	18.29	deletion_4163I0D1	1	1
+2	1	1	1	1188644.2	1200946.3	1949581.0	1966907.0	+	25.41	deletion_5023I1D0	2	2
+3	1	1	1	1807146.9	1874727.3	2571467.0	2583278.5	+	229.92	insertion_55768I4D1	2	2
+4	1	1	1	1911546.3	1920529.5	2619949.0	2686490.0	+	227.56	deletion_57557I0D0	2	2
+5	1	1	1	1979205.8	2008059.1	2744769.0	2747375.5	+	218.96	insertion_26246I4D0	2	2
+6	1	1	1	2249673.1	2296878.2	2987736.0	2998344.0	+	191.25	insertion_36597I4D1	2	2
+7	1	1	1	2557053.4	2564158.7	3256336.0	3376042.0	+	159.87	deletion_112600I1D12	2	2
+8	1	1	1	3113859.4	3150802.9	3924932.0	3946570.0	+	90.74	insertion_15305I2D0	2	2
+9	1	1	1	3222222.1	3233037.0	4017011.0	4078175.0	+	81.64	deletion_50349I0D10	2	2

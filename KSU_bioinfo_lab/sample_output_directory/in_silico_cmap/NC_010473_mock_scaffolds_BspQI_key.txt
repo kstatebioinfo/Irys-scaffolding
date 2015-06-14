@@ -2,6 +2,7 @@
 # filter: Minimum Labels = 5
 # filter: Minimum Size (Kb) = 20
 CompntId	CompntName	CompntLength
-1	scaffold 1	2336133
-2	scaffold 2	1684760
-3	scaffold 3	660227
+1	scaffold 1	2070810
+2	scaffold 2	265323
+3	scaffold 3	1684760
+4	scaffold 4	660227

@@ -1,0 +1,4 @@
+readSmapInv: reading in Esch_coli_1_2015_000_strict_t_150_refineFinal1_merged_filter.smap
+	read in 0 relevant inversion records
+Main: printing to Esch_coli_1_2015_000_strict_t_150_refineFinal1_merged_filter_inversions.smap
+	written 10 lines

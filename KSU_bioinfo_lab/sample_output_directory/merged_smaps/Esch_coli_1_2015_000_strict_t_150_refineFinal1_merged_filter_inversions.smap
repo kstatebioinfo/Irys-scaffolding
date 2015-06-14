@@ -1,0 +1,20 @@
+# hostname=phihost-mic5.local.net
+# $ cd /home/bionano; /home/bionano/dev-tools/RefAligner.mic -i /home/bionano/sample_assembly_working_directory/strict_t_150/ref/NC_010473_mock_scaffolds_BspQI_res29.cmap -maxthreads 180 -i /home/bionano/sample_assembly_working_directory/strict_t_150/contigs/Esch_coli_1_2015_000_strict_t_150_refineFinal1_sv/Esch_coli_1_2015_000_strict_t_150_refineFinal1_contig1.cmap -o /home/bionano/sample_assembly_working_directory/strict_t_150/contigs/Esch_coli_1_2015_000_strict_t_150_refineFinal1_sv/Esch_coli_1_2015_000_strict_t_150_refineFinal1_contig1 -f -stdout -stderr -output-veto-filter .align$ -sv 3 -FP 0.6 -FN 0.06 -sf 0.20 -sd 0.10 -mres 1e-3 -T 1e-10 -A 8 -biaswt 0 -f -maxmem 4 -FP 0.015432 -readparameters /home/bionano/sample_assembly_working_directory/strict_t_150/contigs/Esch_coli_1_2015_000_strict_t_150_refineFinal1/alignref/ESCH_COLI_1_2015_000_STRICT_T_150_REFINEFINAL1.errbin -sr 0.009624 -bpp 496.62 -sf 0.167667 -FN 0.025773 -sd 0.053921
+# CompileDir= /home/users2/vdergachev/tools/tools.3625.3827/3625 SVNversion=3827 $Header: http://svn.bnm.local:81/svn/Informatics/RefAligner/branches/3625/RefAligner.cpp 3617 2015-03-06 23:19:53Z tanantharaman $
+# FLAGS: USE_SSE=0 USE_AVX=0 USE_MIC=1 USE_PFLOAT=1 USE_RFLOAT=1 DEBUG=1 VERB=1
+# SMAP File Version:	0.4
+# Reference Maps From:	/home/bionano/sample_assembly_working_directory/strict_t_150/contigs/Esch_coli_1_2015_000_strict_t_150_refineFinal1_sv/merged_smaps/Esch_coli_1_2015_000_strict_t_150_refineFinal1_merged_r.cmap
+# Query Maps From:	/home/bionano/sample_assembly_working_directory/strict_t_150/contigs/Esch_coli_1_2015_000_strict_t_150_refineFinal1_sv/merged_smaps/Esch_coli_1_2015_000_strict_t_150_refineFinal1_merged_q.cmap
+# Xmap Entries From:	/home/bionano/sample_assembly_working_directory/strict_t_150/contigs/Esch_coli_1_2015_000_strict_t_150_refineFinal1_sv/merged_smaps/Esch_coli_1_2015_000_strict_t_150_refineFinal1_merged.xmap
+#h SmapEntryID	QryContigID	RefcontigID1	RefcontigID2	QryStartPos	QryEndPos	RefStartPos	RefEndPos	Confidence	Type	XmapID1	XmapID2	LinkID	QryStartIdx	QryEndIdx	RefStartIdx	RefEndIdx
+#f int        	int        	int         	int         	float      	float    	float      	float     	float 	string 	int	int	int	int	int	int	int
+1	1	1	1	2186112.6	2281331.8	255780.0	315804.0	-1.00	insertion	2	3	-1	256	266	33	41
+2	1	1	4	1994467.6	1794915.2	64835.5	606892.0	-1.00	translocation_interchr	2	11	-1	234	207	12	65
+3	1	1	1	2539746.0	2546146.7	573796.0	692841.0	-1.00	deletion	3	4	-1	294	295	68	78
+4	1	1	1	2683723.6	2710345.4	830886.5	858853.0	-1.00	deletion	4	5	-1	308	312	90	93
+5	1	1	1	3092783.3	3129476.7	1242392.0	1264030.0	-1.00	insertion	5	6	-1	361	364	144	145
+6	1	1	1	3197933.8	3237584.3	1331965.0	1420859.0	-1.00	deletion	6	7	-1	374	377	155	164
+7	1	3	3	169318.0	174930.2	670522.0	677296.0	-1.00	deletion	8	9	-1	19	20	84	85
+8	1	3	3	363118.0	385709.1	866032.0	891181.0	-1.00	deletion	9	10	-1	45	48	109	112
+9	1	3	4	1180598.9	1192817.7	1683500.0	2332.0	-1.00	translocation_interchr	10	11	-1	142	144	206	1
+10	4	2	3	230812.2	242757.7	250186.0	953.0	-1.00	translocation_interchr	1	2	-1	19	20	21	1

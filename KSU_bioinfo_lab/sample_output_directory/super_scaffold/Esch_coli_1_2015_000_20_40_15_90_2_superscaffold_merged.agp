@@ -1,0 +1,8 @@
+##agp-version   2.0
+Super_scaffold_3	1	265323	1	W	scaffold2	1	265323	+
+Super_scaffold_3	265324	265423	2	U	100	scaffold	yes	map
+Super_scaffold_3	265424	1950183	3	W	scaffold3	1	1684760	+
+Super_scaffold_3	1950184	1964575	4	N	14392	scaffold	yes	map
+Super_scaffold_3	1964576	2624802	5	W	scaffold4	1	660227	+
+Super_scaffold_3	2624803	2682540	6	N	57738	scaffold	yes	map
+Super_scaffold_3	2682541	4753350	7	W	scaffold1	1	2070810	+
