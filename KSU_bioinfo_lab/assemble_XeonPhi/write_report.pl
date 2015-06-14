@@ -425,8 +425,10 @@ unless($de_novo)
     #           Prepare: structural variant calls
     ###########################################################
     print "Preparing structural variant calls...\n\n";
-    my $sv_directory = glob "${best_dir}/contigs/*refineFinal1_sv/merged_smaps";
-    my $sv_calls_worked = glob "${best_dir}/contigs/*refineFinal1_sv/merged_smaps/*_merged.bed"; # This file should exist if structural variants were found
+    my @sv_directories = glob "${best_dir}/contigs/*refineFinal1_sv/merged_smaps";
+    my @sv_calls_workeds = glob "${best_dir}/contigs/*refineFinal1_sv/merged_smaps/*_refineFinal1_merged_filter.bed"; # This file should exist if structural variants were found
+    my $sv_directory = $sv_directories[0];
+    my $sv_calls_worked = $sv_calls_workeds[0];
     if (($sv_directory) && (-d "$sv_directory"))
     {
         if ( -f "$sv_calls_worked")

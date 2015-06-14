@@ -17,12 +17,12 @@ use File::Basename; # enable manipulating of the full path
 ##############       Customize BioNano Script Settings        ##################
 ################################################################################
 # This pipeline was designed to run on a Xeon Phi server with 576 cores (48x12-core Intel Xeon CPUs), 256GB of RAM, and Linux CentOS 7 operating system. Customization of this section may be required to run the BioNano Assembler on a different machine. Customization of Irys-scaffolding/KSU_bioinfo_lab/assemble_XeonPhi/clusterArguments.xml may also be required for assembly to run successfully on a different cluster.
-my $pipelineCL = $ENV{"HOME"} ."/dev-scripts/pipelineCL.py"; #Change if not ~/scripts/pipelineCL.py
+my $pipelineCL = $ENV{"HOME"} ."/scripts/pipelineCL.py"; #Change if not ~/scripts/pipelineCL.py
 unless (-f $pipelineCL)
 {
     die "Can't find pipelineCL.py at $pipelineCL . Please add correct path to assemble.pl and retry:\n $!";
 }
-my $tools = $ENV{"HOME"} ."/dev-tools/"; #Change if not ~/tools
+my $tools = $ENV{"HOME"} ."/tools/"; #Change if not ~/tools
 unless (-d $tools)
 {
     die "Can't find the BioNano directory \"tools\" at $tools . Please add correct path to assemble.pl and retry:\n $!";
