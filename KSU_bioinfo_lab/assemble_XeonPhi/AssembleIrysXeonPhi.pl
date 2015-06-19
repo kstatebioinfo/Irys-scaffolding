@@ -19,7 +19,7 @@ use File::Spec;
 ##############         Print informative message              ##################
 ################################################################################
 print "###########################################################\n";
-print "#  AssembleIrysXeonPhi.pl Version 1.1.0                   #\n";
+print "#  AssembleIrysXeonPhi.pl Version 1.1.1                   #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 2/26/15                    #\n";
 print "#  github.com/i5K-KINBRE-script-share/Irys-scaffolding    #\n";
@@ -176,6 +176,10 @@ Script now reports when the path to reference fails rather than switching into d
 B<AssembleIrysXeonPhi.pl Version 1.1.0>
  
 Script now tested on RefAligner and Assembler binaries version 3827 and pipeline scripts version 3692.
+ 
+B<AssembleIrysXeonPhi.pl Version 1.1.1>
+ 
+Script now uses the most up-to-date optArguments.xml files for assembly.
 
 =head1 USAGE
 
