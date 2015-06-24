@@ -1,7 +1,9 @@
 Irys-scaffolding
 ================
 
-Citation: [![DOI](https://zenodo.org/badge/12929/i5K-KINBRE-script-share/Irys-scaffolding.svg)](http://dx.doi.org/10.5281/zenodo.17584)
+Software Citation: [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.18591.svg)](http://dx.doi.org/10.5281/zenodo.18591)
+
+Paper Citation: Jennifer Marie Shelton, Michelle C Coleman, Nic Herndon, Nanyan Lu, Ernest T Lam, Thomas Anantharaman, Palak Sheth, Susan J Brown. Tools and pipelines for BioNano data: molecule assembly pipeline and FASTA super scaffolding tool. bioRxiv doi: http://dx.doi.org/10.1101/020966
 
 scripts to parse IrysView output
 
