@@ -18,7 +18,7 @@ use File::Spec;
 ##############         Print informative message             ##################
 ###############################################################################
 print "###########################################################\n";
-print "#  assembly_qcXeonPhi.pl Version 1.0.0                    #\n";
+print "#  assembly_qcXeonPhi.pl Version 1.0.1                    #\n";
 print "#                                                         #\n";
 print "#  Created by Jennifer Shelton 03/03/15                   #\n";
 print "#  https://github.com/i5K-KINBRE-script-share             #\n";
@@ -304,7 +304,10 @@ The assemblies are created using AssembleIrysXeonPhi.pl from https://github.com/
 
 The parameter -a should be the same as the -a parameter used for the assembly script. It is the assembly working directory for a project.
  
+=head1 UPDATES
+B<assembly_qcXeonPhi.pl Version 1.0.1>
  
+Fixed typo in help menu to replace -b parameter with the correct -a parameter.
 
 =head1 USAGE
 
@@ -317,7 +320,7 @@ Documentation options:
  
 Required options:
  
-   -b	     bnx directory
+   -a	     assembly working directory
    -p	     project name for all assemblies
    -g	     genome size in Mb
  
